@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.4.2" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.4.2">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.4.2">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.4.2">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.4.2" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '6.4.2',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="本章主要介绍NS-3的对象框架当中的智能指针。任何类实现了Ref()和Unref()两个方法，并且能够维护一个内部引用变量都可能成为智能指针，从而无需自己释放内存空间。NS-3对象框架当中，提供了SimpleRefCount来支持智能指针。任何想要使用智能指针的类，只需简单地实现SimpleRefCount即可。">
+<meta name="keywords" content="NS-3,C++,Simulation,Object,SimpleRefCount,Ref,Unref,Ptr,Smart Pointer">
+<meta property="og:type" content="article">
+<meta property="og:title" content="NS-3学习笔记（三）：NS-3的对象框架 之 智能指针">
+<meta property="og:url" content="http://yoursite.com/2018/03/31/ns3-003/index.html">
+<meta property="og:site_name" content="Rain&#39;s Blog">
+<meta property="og:description" content="本章主要介绍NS-3的对象框架当中的智能指针。任何类实现了Ref()和Unref()两个方法，并且能够维护一个内部引用变量都可能成为智能指针，从而无需自己释放内存空间。NS-3对象框架当中，提供了SimpleRefCount来支持智能指针。任何想要使用智能指针的类，只需简单地实现SimpleRefCount即可。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://yoursite.com/2018/03/31/ns3-003/classns3_1_1_object__coll__graph.png">
+<meta property="og:updated_time" content="2018-06-24T09:26:04.607Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="NS-3学习笔记（三）：NS-3的对象框架 之 智能指针">
+<meta name="twitter:description" content="本章主要介绍NS-3的对象框架当中的智能指针。任何类实现了Ref()和Unref()两个方法，并且能够维护一个内部引用变量都可能成为智能指针，从而无需自己释放内存空间。NS-3对象框架当中，提供了SimpleRefCount来支持智能指针。任何想要使用智能指针的类，只需简单地实现SimpleRefCount即可。">
+<meta name="twitter:image" content="http://yoursite.com/2018/03/31/ns3-003/classns3_1_1_object__coll__graph.png">
+
+
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/03/31/ns3-003/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>NS-3学习笔记（三）：NS-3的对象框架 之 智能指针 | Rain's Blog</title>
+  
+
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?9d1df7de5bd3ea1d75446764f5075fe7";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Rain's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">记录、分享、技术</p>
+      
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/31/ns3-003/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Rain Sia <rainsia@163.com>">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Rain's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">NS-3学习笔记（三）：NS-3的对象框架 之 智能指针
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-03-31 17:28:21" itemprop="dateCreated datePublished" datetime="2018-03-31T17:28:21+08:00">2018-03-31</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-06-24 17:26:04" itemprop="dateModified" datetime="2018-06-24T17:26:04+08:00">2018-06-24</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/network/" itemprop="url" rel="index"><span itemprop="name">网络</span></a></span>
+
+                
+                
+                  ，
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/network/simulation/" itemprop="url" rel="index"><span itemprop="name">仿真</span></a></span>
+
+                
+                
+                  ，
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/network/simulation/NS-3/" itemprop="url" rel="index"><span itemprop="name">NS-3</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/03/31/ns3-003/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2018/03/31/ns3-003/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon"
+            >
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>本章主要介绍NS-3的对象框架当中的智能指针。任何类实现了Ref()和Unref()两个方法，并且能够维护一个内部引用变量都可能成为智能指针，从而无需自己释放内存空间。NS-3对象框架当中，提供了SimpleRefCount来支持智能指针。任何想要使用智能指针的类，只需简单地实现SimpleRefCount即可。</p>
+<a id="more"></a>
+<h1 id="NS-3对象框架概述"><a href="#NS-3对象框架概述" class="headerlink" title="NS-3对象框架概述"></a>NS-3对象框架概述</h1><h2 id="名称空间"><a href="#名称空间" class="headerlink" title="名称空间"></a>名称空间</h2><p>所有NS-3的类都被放在ns3这个名称空间下。为了调用方便，我们自己写的类最好也放在这个名称空间下。在调用类的时候，直接使用using namespace ns3即可导入所有的类。</p>
+<h2 id="对象体系"><a href="#对象体系" class="headerlink" title="对象体系"></a>对象体系</h2><p>NS-3的对象框架当中，有三个基类非常特殊，继承不同的基类，将得到不同的对象特性：</p>
+<ul>
+<li>SimpleRefCount：继承该类将得到智能指针特性</li>
+<li>ObjectBase：继承该类将得到NS-3的<em>属性系统支持</em></li>
+<li>Object：继承自该对象相当于继承了上面两个对象，此外还支持<em>聚合特性支持</em></li>
+</ul>
+<p>根据对不同的特性的需求，我们需要继承不同的基类。例如，如果我们不需要属性系统和聚合特性的支持，我们就直接继承SimpleRefCount即可。NS-3自带的类中最经典的继承自SinpleRefCount的类是Packet（表示网络中的一个数据包）。NS-3自带的类中最经典的继承自ObjectBase的类是Tag（表示包中的标记）。而继承自Object的最经典的类是Node（表示网络中的一个节点，可以是主机也可以是中继节点）。</p>
+<p>Object的继承关系，如下图所示：</p>
+<img src="/2018/03/31/ns3-003/classns3_1_1_object__coll__graph.png" title="Object类的继承关系">
+<h1 id="SimpleRefCount和智能指针Ptr"><a href="#SimpleRefCount和智能指针Ptr" class="headerlink" title="SimpleRefCount和智能指针Ptr"></a>SimpleRefCount和智能指针Ptr</h1><p>C++的对象和内存管理机制相对比较复杂。即使是拥有很多年开发经验的程序员，也很容易在创建和释放内存时出现各种问题，从而导致内存泄漏。我们通常在学习C++的时候所写的程序都相对较小，而运行时间也不长。因此，我们能体会到出现内存泄露的危害也比较小。然而，在实际的仿真当中，需要创建大量的对象（例如，几百万个Packet对象），而运行时间也非常长（例如仿真要不间断运行一个月），因此如果出现对象的内存泄露，将使得程序运行效率非常低下，甚至造成系统内存耗尽而使得仿真异常终止。</p>
+<p>NS-3提供了一套基于<strong>引用计数</strong>的智能指针系统，可以使得对象在不再被使用时自动被删除。这种机制不同于Java的垃圾回收机制，其主要使用一个垃圾回收线程来扫描垃圾对象（没有任何引用的对象），然后再删除。NS-3的智能指针简单地使用一个Ref()方法在有新的指针指向对象时，将其内部的计数加1；而在指针不再指向时调用UnRef()方法，将计数器减1。当计数器为0的时候，说明没有任何指针再指向该对象，那么说明对象不再被需要，从而可以直接删除。</p>
+<p>为了实现这种自动计数的智能指针机制，NS-3使用了两个类：SimpleRefCount和Ptr。</p>
+<h2 id="Ptr"><a href="#Ptr" class="headerlink" title="Ptr"></a>Ptr</h2><p>如果自己来维护Ref()和Unref()方法，需要自己判断什么时候指针指向对象，什么时候指针不再指向对象，将是非常复杂的，因此NS-3提供了一个Ptr类来代替传统的C++指针，从而帮助维护引用计数。如果一个类继承了SimpleRefCount或者自己实现了Ref()和Unref()两个方法，那么可以使用Ptr类，而不是传统指针来指向该类的任何实例。</p>
+<p>Ptr的具体代码实现：</p>
+<figure class="highlight cpp"><figcaption><span>ptr.cc</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">void</span> </span><br><span class="line">Ptr&lt;T&gt;::Acquire (<span class="keyword">void</span>) <span class="keyword">const</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="keyword">if</span> (m_ptr != <span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">      m_ptr-&gt;Ref ();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line">Ptr&lt;T&gt;::Ptr ()</span><br><span class="line">  : m_ptr (<span class="number">0</span>)</span><br><span class="line">&#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line">Ptr&lt;T&gt;::Ptr (T *ptr)</span><br><span class="line">  : m_ptr (ptr)</span><br><span class="line">&#123;</span><br><span class="line">  Acquire ();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line">Ptr&lt;T&gt;::Ptr (T *ptr, <span class="keyword">bool</span> ref)</span><br><span class="line">  : m_ptr (ptr)</span><br><span class="line">&#123;</span><br><span class="line">  <span class="keyword">if</span> (ref)</span><br><span class="line">    &#123;</span><br><span class="line">      Acquire ();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line">Ptr&lt;T&gt;::Ptr (Ptr <span class="keyword">const</span>&amp;o) </span><br><span class="line">  : m_ptr (PeekPointer (o))</span><br><span class="line">&#123;</span><br><span class="line">  Acquire ();</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> U&gt;</span><br><span class="line">Ptr&lt;T&gt;::Ptr (Ptr&lt;U&gt; <span class="keyword">const</span> &amp;o)</span><br><span class="line">  : m_ptr (PeekPointer (o))</span><br><span class="line">&#123;</span><br><span class="line">  Acquire ();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line">Ptr&lt;T&gt;::~Ptr () </span><br><span class="line">&#123;</span><br><span class="line">  <span class="keyword">if</span> (m_ptr != <span class="number">0</span>) </span><br><span class="line">    &#123;</span><br><span class="line">      m_ptr-&gt;Unref ();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line">Ptr&lt;T&gt; &amp;</span><br><span class="line">Ptr&lt;T&gt;::<span class="keyword">operator</span> = (Ptr <span class="keyword">const</span>&amp; o) </span><br><span class="line">&#123;</span><br><span class="line">  <span class="keyword">if</span> (&amp;o == <span class="keyword">this</span>)</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  <span class="keyword">if</span> (m_ptr != <span class="number">0</span>) </span><br><span class="line">    &#123;</span><br><span class="line">      m_ptr-&gt;Unref ();</span><br><span class="line">    &#125;</span><br><span class="line">  m_ptr = o.m_ptr;</span><br><span class="line">  Acquire ();</span><br><span class="line">  <span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line">T *</span><br><span class="line">Ptr&lt;T&gt;::<span class="keyword">operator</span> -&gt; () </span><br><span class="line">&#123;</span><br><span class="line">  <span class="keyword">return</span> m_ptr;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line">T *</span><br><span class="line">Ptr&lt;T&gt;::<span class="keyword">operator</span> -&gt; () <span class="keyword">const</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="keyword">return</span> m_ptr;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">const</span> T &amp;</span><br><span class="line">Ptr&lt;T&gt;::<span class="keyword">operator</span> * () <span class="keyword">const</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="keyword">return</span> *m_ptr;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line">T &amp;</span><br><span class="line">Ptr&lt;T&gt;::<span class="keyword">operator</span> * ()</span><br><span class="line">&#123;</span><br><span class="line">  <span class="keyword">return</span> *m_ptr;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">bool</span> </span><br><span class="line">Ptr&lt;T&gt;::<span class="keyword">operator</span>! () </span><br><span class="line">&#123;</span><br><span class="line">  <span class="keyword">return</span> m_ptr == <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>从代码中可以看出，Acquire()方法主要功能就是在Ptr真的引用了一个对象的时候将计数加1。调用了Acquire()方法的其他方法，都可以认为是产生了新的指向，具体情况有五种：</p>
+<ul>
+<li>Ptr ()：默认无参构造函数，如果构造一个空的Ptr对象，那么其指向的对象为空。</li>
+<li>Ptr (T *ptr)：如果构造函数传入的参数是一个指针，那么将引用加1。</li>
+<li>Ptr (Ptr const&amp;o)：拷贝构造函数，如果将一个Ptr对象复制了一次，那么引用加1。</li>
+<li>Ptr (Ptr<u> const &amp;o)：带类型转换的拷贝构造函数，如果将一个其他类型的Ptr对象复制了一次，那么引用也加1。</u></li>
+<li>operator = (Ptr const&amp; o)：赋值的时候，相当于改变了引用的指向，原来引用的对象的计数要减1，新引用的对象的计数要加1。</li>
+</ul>
+<p>这五个就是主要使得引用加1的例子。</p>
+<p>调用了Unref()方法的函数就是让引用减1，具体情况有如下两种：</p>
+<ul>
+<li>~Ptr ()：析构函数，当一个引用对象的Ptr被销毁的时候，说明指向少了一个</li>
+<li>operator = (Ptr const&amp; o)：使用赋值的时候，如果不是将自己赋值给自己，那么就有可能产生引用的增减。原来引用的对象的的引用要减1，新引用的对象的计数要加1。</li>
+</ul>
+<p>这两种情况基本涵盖了引用增加和减少的情况，当引用计数减为0的时候，对象将自动被销毁。然而，有些情况下，用户可能想自己维护引用的增减，不想让NS-3自动帮我们销毁对象。为此，Ptr类有一个特殊的构造函数，可以让用户在创建引用的时候，不产生任何的计数：</p>
+<ul>
+<li>Ptr (T *ptr, bool ref)：当构造函数的第二个参数为false时，将不再产生任何计数。此时用户可以自己维护对象的删除。</li>
+</ul>
+<p>使用了Ptr之后，可以不用new操作符去创建对象，而使用NS-3提供的Create方法。该方法将自动调用构造函数，并且将创建的对象转换成Ptr对象返回。Ptr对象内部维护了一个指向具体对象的指针，并且重载了大部分常用的指针操作符，因此完全可以将Ptr对象当成一个传统指针使用。使用Ptr的时候为了明确是哪个类型的指针，Ptr提供了模板类型。因此使用Ptr的时候一般写法是：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Ptr&lt;SomeObject&gt; obj = Create&lt;SomeObject&gt;(); <span class="comment">//创建智能指针指向的对象</span></span><br><span class="line">obj-&gt;SomeMethod();  <span class="comment">//当作普通指针使用</span></span><br></pre></td></tr></table></figure>
+<p>当Ptr对象销毁的时候，其内部维护的对象的计数器会自动减1。当没有任何一个Ptr再指向该对象时，该对象将被自动销毁。从而避免了内存泄露和用户自己维护对象生命周期的麻烦。</p>
+<h3 id="Ptr的例子"><a href="#Ptr的例子" class="headerlink" title="Ptr的例子"></a>Ptr的例子</h3><h4 id="创建智能指针"><a href="#创建智能指针" class="headerlink" title="创建智能指针"></a>创建智能指针</h4><p>要使用智能指针Ptr，维护的对象必须支持Ref和Unref两个方法。直接看如下的代码：</p>
+<figure class="highlight cpp"><figcaption><span>try-ptr.cc</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"ns3/core-module.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> ns3;</span><br><span class="line"></span><br><span class="line">NS_LOG_COMPONENT_DEFINE(<span class="string">"TryPtr"</span>);</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SelfRefObject</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	SelfRefObject():m_count(<span class="number">1</span>) </span><br><span class="line">  &#123;</span><br><span class="line">		NS_LOG_FUNCTION_NOARGS();</span><br><span class="line">		NS_LOG_LOGIC(<span class="string">"object created, ref_count is "</span> &lt;&lt; m_count);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">virtual</span> ~SelfRefObject() </span><br><span class="line">  &#123;</span><br><span class="line">		NS_LOG_FUNCTION_NOARGS();</span><br><span class="line">		NS_LOG_LOGIC(<span class="string">"object destructed, ref_count is "</span> &lt;&lt; m_count);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">inline</span> <span class="keyword">void</span> <span class="title">Ref</span> <span class="params">(<span class="keyword">void</span>)</span> <span class="keyword">const</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    NS_ASSERT (m_count &lt; <span class="built_in">std</span>::numeric_limits&lt;<span class="keyword">uint32_t</span>&gt;::max());</span><br><span class="line">    m_count++;</span><br><span class="line">		NS_LOG_LOGIC(<span class="string">"ref increased, ref_count is "</span> &lt;&lt; m_count);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">SomeMethod</span><span class="params">()</span> </span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">  	NS_LOG_UNCOND(<span class="string">"method called"</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">inline</span> <span class="keyword">void</span> <span class="title">Unref</span> <span class="params">(<span class="keyword">void</span>)</span> <span class="keyword">const</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    m_count--;</span><br><span class="line">		NS_LOG_LOGIC(<span class="string">"ref decreased, ref_count is "</span> &lt;&lt; m_count);</span><br><span class="line">    <span class="keyword">if</span> (m_count == <span class="number">0</span>)</span><br><span class="line">      &#123;</span><br><span class="line">        NS_LOG_LOGIC(<span class="string">"deleting myself"</span>);</span><br><span class="line">        <span class="keyword">delete</span> <span class="keyword">this</span>;</span><br><span class="line">      &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">  <span class="keyword">mutable</span> <span class="keyword">uint32_t</span> m_count;</span><br><span class="line"></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span></span><br><span class="line">main (<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span><br><span class="line">&#123;</span><br><span class="line">  NS_LOG_UNCOND(<span class="string">"entering main method"</span>);</span><br><span class="line"></span><br><span class="line">	LogComponentEnable(<span class="string">"TryPtr"</span>, LOG_LEVEL_LOGIC);</span><br><span class="line"></span><br><span class="line">	Ptr&lt;SelfRefObject&gt; obj = Create&lt;SelfRefObject&gt;();</span><br><span class="line">	obj-&gt;SomeMethod();</span><br><span class="line"></span><br><span class="line">	Simulator::Run ();</span><br><span class="line">	Simulator::Destroy ();</span><br><span class="line"></span><br><span class="line">  NS_LOG_UNCOND(<span class="string">"exiting main method"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>运行该程序，输出结果如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">Waf: Entering directory `/home/rainsia/Applications/ns-allinone-3.27/ns-3.27/build&apos;</span><br><span class="line">[1811/1947] Compiling scratch/try-ptr.cc</span><br><span class="line">[1936/1947] Linking build/scratch/try-ptr</span><br><span class="line">Waf: Leaving directory `/home/rainsia/Applications/ns-allinone-3.27/ns-3.27/build&apos;</span><br><span class="line">Build commands will be stored in build/compile_commands.json</span><br><span class="line">&apos;build&apos; finished successfully (2.740s)</span><br><span class="line">entering main method</span><br><span class="line">TryPtr:SelfRefObject()</span><br><span class="line">object created, ref_count is 1</span><br><span class="line">method called</span><br><span class="line">exiting main method</span><br><span class="line">ref decreased, ref_count is 0</span><br><span class="line">deleting myself</span><br><span class="line">TryPtr:~SelfRefObject()</span><br><span class="line">object destructed, ref_count is 0</span><br></pre></td></tr></table></figure>
+<p>可以看出，Ptr基本上可以当做传统的指针使用，可以使用-&gt;操作符去正确调用任何的函数。当退出main函数的时候，所有main函数的局部变量都要被销毁，包括Ptr对象，因此Ptr对象的析构函数，会调用Unref()方法，将其引用计数减为0，随后销毁该对象。</p>
+<h4 id="通过外来指针构造智能指针"><a href="#通过外来指针构造智能指针" class="headerlink" title="通过外来指针构造智能指针"></a>通过外来指针构造智能指针</h4><p>接下来，我们修改一下代码，不调用Create方法，而直接创建指针，然后再转换成Ptr对象：</p>
+<figure class="highlight cpp"><figcaption><span>try-ptr.cc</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"ns3/core-module.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> ns3;</span><br><span class="line"></span><br><span class="line">NS_LOG_COMPONENT_DEFINE(<span class="string">"TryPtr"</span>);</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SelfRefObject</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	SelfRefObject():m_count(<span class="number">1</span>) </span><br><span class="line">  &#123;</span><br><span class="line">		NS_LOG_FUNCTION_NOARGS();</span><br><span class="line">		NS_LOG_LOGIC(<span class="string">"object created, ref_count is "</span> &lt;&lt; m_count);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">virtual</span> ~SelfRefObject() </span><br><span class="line">  &#123;</span><br><span class="line">		NS_LOG_FUNCTION_NOARGS();</span><br><span class="line">		NS_LOG_LOGIC(<span class="string">"object destructed, ref_count is "</span> &lt;&lt; m_count);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">inline</span> <span class="keyword">void</span> <span class="title">Ref</span> <span class="params">(<span class="keyword">void</span>)</span> <span class="keyword">const</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    NS_ASSERT (m_count &lt; <span class="built_in">std</span>::numeric_limits&lt;<span class="keyword">uint32_t</span>&gt;::max());</span><br><span class="line">    m_count++;</span><br><span class="line">		NS_LOG_LOGIC(<span class="string">"ref increased, ref_count is "</span> &lt;&lt; m_count);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">SomeMethod</span><span class="params">()</span> </span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">  	NS_LOG_UNCOND(<span class="string">"method called"</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * Decrement the reference count. This method should not be called</span></span><br><span class="line"><span class="comment">   * by user code. SimpleRefCount instances are expected to be used in</span></span><br><span class="line"><span class="comment">   * conjunction with the Ptr template which would make calling Ref</span></span><br><span class="line"><span class="comment">   * unnecessary and dangerous.</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  <span class="function"><span class="keyword">inline</span> <span class="keyword">void</span> <span class="title">Unref</span> <span class="params">(<span class="keyword">void</span>)</span> <span class="keyword">const</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    m_count--;</span><br><span class="line">		NS_LOG_LOGIC(<span class="string">"ref decreased, ref_count is "</span> &lt;&lt; m_count);</span><br><span class="line">    <span class="keyword">if</span> (m_count == <span class="number">0</span>)</span><br><span class="line">      &#123;</span><br><span class="line">        NS_LOG_LOGIC(<span class="string">"deleting myself"</span>);</span><br><span class="line">        <span class="keyword">delete</span> <span class="keyword">this</span>;</span><br><span class="line">      &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">  <span class="keyword">mutable</span> <span class="keyword">uint32_t</span> m_count;</span><br><span class="line"></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span></span><br><span class="line">main (<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span><br><span class="line">&#123;</span><br><span class="line">  NS_LOG_UNCOND(<span class="string">"entering main method"</span>);</span><br><span class="line"></span><br><span class="line">	LogComponentEnable(<span class="string">"TryPtr"</span>, LOG_LEVEL_LOGIC);</span><br><span class="line"></span><br><span class="line">	<marked style="border-bottom: 2px solid red;">SelfRefObject * p_obj = <span class="keyword">new</span> SelfRefObject();</marked></span><br><span class="line"></span><br><span class="line">	<marked style="border-bottom: 2px solid red;">Ptr&lt;SelfRefObject&gt; obj = Ptr&lt;SelfRefObject&gt;(p_obj);</marked></span><br><span class="line">	obj-&gt;SomeMethod();</span><br><span class="line"></span><br><span class="line">	Simulator::Run ();</span><br><span class="line">	Simulator::Destroy ();</span><br><span class="line"></span><br><span class="line">  NS_LOG_UNCOND(<span class="string">"exiting main method"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>随后，运行程序，得到输出结果：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">Waf: Entering directory `/home/rainsia/Applications/ns-allinone-3.27/ns-3.27/build&apos;</span><br><span class="line">[ 931/1947] Compiling scratch/try-ptr.cc</span><br><span class="line">[1916/1947] Linking build/scratch/try-ptr</span><br><span class="line">Waf: Leaving directory `/home/rainsia/Applications/ns-allinone-3.27/ns-3.27/build&apos;</span><br><span class="line">Build commands will be stored in build/compile_commands.json</span><br><span class="line">&apos;build&apos; finished successfully (2.098s)</span><br><span class="line">entering main method</span><br><span class="line">TryPtr:SelfRefObject()</span><br><span class="line">object created, ref_count is 1</span><br><span class="line">ref increased, ref_count is 2</span><br><span class="line">method called</span><br><span class="line">exiting main method</span><br><span class="line">ref decreased, ref_count is 1</span><br></pre></td></tr></table></figure>
+<p>从程序的运行过程可以看出，由于创建对象的时候，其基本计数已经为1，调用Ptr构造函数的时候，其引用计数将加1，因此计数为2。销毁Ptr对象的时候，引用计数减1，恢复为1，不满足销毁对象的条件，因此对象并没有被销毁。因此，如果对象不是通过Create()方法创建的，而是通过构造函数传入的，那么，将不会自动被销毁。其原因在于，NS-3认为这个对象开始并没有被智能指针维护，因此如果NS-3销毁了这个对象，可能会影响其他地方继续使用该对象，从而引起错误。因此，程序员应该自动维护该对象占用的空间。</p>
+<p>从这个例子得出的结论是，要使用NS-3的智能指针，最方便的方法就是所有指针都通过NS-3的Create方法创建。然而，有些时候，无法通过NS-3的Create方法创建对象，例如，有些指针是第三方方法创建并返回的。在这种情况下，如果要让NS-3帮我们维护智能指针，我们可以使用另外一个Ptr的构造函数，传入参数false让Ptr不再增加引用计数。具体例子如下：</p>
+<figure class="highlight cpp"><figcaption><span>try-ptr.cc</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">……</span><br><span class="line">	SelfRefObject * p_obj = <span class="keyword">new</span> SelfRefObject();</span><br><span class="line">	<marked style="border-bottom: 2px solid red;">Ptr&lt;SelfRefObject&gt; obj = Ptr&lt;SelfRefObject&gt;(p_obj, <span class="literal">false</span>);</marked></span><br><span class="line">	obj-&gt;SomeMethod();</span><br><span class="line">……</span><br></pre></td></tr></table></figure>
+<p>这个例子跟上面一个相比，最大的区别就是调用Ptr的构造函数时，传入了第二个参数false。因此，构造函数不会对计数器加1。因此，可以让NS-3帮我们维护智能指针。其运行结果如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">Waf: Entering directory `/home/rainsia/Applications/ns-allinone-3.27/ns-3.27/build&apos;</span><br><span class="line">[1811/1947] Compiling scratch/try-ptr.cc</span><br><span class="line">[1936/1947] Linking build/scratch/try-ptr</span><br><span class="line">Waf: Leaving directory `/home/rainsia/Applications/ns-allinone-3.27/ns-3.27/build&apos;</span><br><span class="line">Build commands will be stored in build/compile_commands.json</span><br><span class="line">&apos;build&apos; finished successfully (2.358s)</span><br><span class="line">entering main method</span><br><span class="line">TryPtr:SelfRefObject()</span><br><span class="line">object created, ref_count is 1</span><br><span class="line">method called</span><br><span class="line">exiting main method</span><br><span class="line">ref decreased, ref_count is 0</span><br><span class="line">deleting myself</span><br><span class="line">TryPtr:~SelfRefObject()</span><br><span class="line">object destructed, ref_count is 0</span><br></pre></td></tr></table></figure>
+<p>由此可见，NS-3已经能够获得正确计数，并帮我们销毁了对象。</p>
+<p><strong>警告</strong>：然而需要注意的是，如果NS-3以智能指针的方式帮我们维护了一个外来的指针，那么这个智能指针的对象销毁之后，外来指针指向的对象也将无法继续使用。</p>
+<h4 id="智能指针的拷贝构造函数"><a href="#智能指针的拷贝构造函数" class="headerlink" title="智能指针的拷贝构造函数"></a>智能指针的拷贝构造函数</h4><p>前面已经提到，在调用Ptr的拷贝构造函数的时候，引用计数也会增加。下面我们来看一个具体的例子，将上面的例子稍作修改：</p>
+<figure class="highlight cpp"><figcaption><span>try-ptr.cc</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"ns3/core-module.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> ns3;</span><br><span class="line"></span><br><span class="line">NS_LOG_COMPONENT_DEFINE(<span class="string">"TryPtr"</span>);</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SelfRefObject</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	SelfRefObject():m_count(<span class="number">1</span>) </span><br><span class="line">  &#123;</span><br><span class="line">		NS_LOG_FUNCTION_NOARGS();</span><br><span class="line">		NS_LOG_LOGIC(<span class="string">"object created, ref_count is "</span> &lt;&lt; m_count);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">virtual</span> ~SelfRefObject() </span><br><span class="line">  &#123;</span><br><span class="line">		NS_LOG_FUNCTION_NOARGS();</span><br><span class="line">		NS_LOG_LOGIC(<span class="string">"object destructed, ref_count is "</span> &lt;&lt; m_count);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">inline</span> <span class="keyword">void</span> <span class="title">Ref</span> <span class="params">(<span class="keyword">void</span>)</span> <span class="keyword">const</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    NS_ASSERT (m_count &lt; <span class="built_in">std</span>::numeric_limits&lt;<span class="keyword">uint32_t</span>&gt;::max());</span><br><span class="line">    m_count++;</span><br><span class="line">		NS_LOG_LOGIC(<span class="string">"ref increased, ref_count is "</span> &lt;&lt; m_count);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">SomeMethod</span><span class="params">()</span> </span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">  	NS_LOG_UNCOND(<span class="string">"method called"</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * Decrement the reference count. This method should not be called</span></span><br><span class="line"><span class="comment">   * by user code. SimpleRefCount instances are expected to be used in</span></span><br><span class="line"><span class="comment">   * conjunction with the Ptr template which would make calling Ref</span></span><br><span class="line"><span class="comment">   * unnecessary and dangerous.</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  <span class="function"><span class="keyword">inline</span> <span class="keyword">void</span> <span class="title">Unref</span> <span class="params">(<span class="keyword">void</span>)</span> <span class="keyword">const</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    m_count--;</span><br><span class="line">		NS_LOG_LOGIC(<span class="string">"ref decreased, ref_count is "</span> &lt;&lt; m_count);</span><br><span class="line">    <span class="keyword">if</span> (m_count == <span class="number">0</span>)</span><br><span class="line">      &#123;</span><br><span class="line">        NS_LOG_LOGIC(<span class="string">"deleting myself"</span>);</span><br><span class="line">        <span class="keyword">delete</span> <span class="keyword">this</span>;</span><br><span class="line">      &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">  <span class="keyword">mutable</span> <span class="keyword">uint32_t</span> m_count;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> </span><br><span class="line">UseObject(Ptr&lt;SelfRefObject&gt; obj) </span><br><span class="line">&#123;</span><br><span class="line">	NS_LOG_FUNCTION(PeekPointer(obj));</span><br><span class="line"></span><br><span class="line">  NS_LOG_LOGIC(<span class="string">"entering use object"</span>);</span><br><span class="line">	obj-&gt;SomeMethod();</span><br><span class="line">	NS_LOG_LOGIC(<span class="string">"exiting use object"</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span></span><br><span class="line">main (<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span><br><span class="line">&#123;</span><br><span class="line">  NS_LOG_UNCOND(<span class="string">"entering main method"</span>);</span><br><span class="line"></span><br><span class="line">	LogComponentEnable(<span class="string">"TryPtr"</span>, LOG_LEVEL_LOGIC);</span><br><span class="line"></span><br><span class="line">	Ptr&lt;SelfRefObject&gt; obj = Create&lt;SelfRefObject&gt;();</span><br><span class="line">	UseObject(obj);</span><br><span class="line"></span><br><span class="line">	Simulator::Run ();</span><br><span class="line">	Simulator::Destroy ();</span><br><span class="line"></span><br><span class="line">  NS_LOG_UNCOND(<span class="string">"exiting main method"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们通过调用UseObject，而传入Ptr<slefrefobject>。此处需要理解的是，Ptr虽然名字是指针，但是实际上是一个对象，只不过其中m_ptr维护了一个指向SelfRefObject对象的指针成员变量。因此，按值传入Ptr对象的时候必然会调用Ptr类的拷贝构造函数。运行该程序，得到输出为：</slefrefobject></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">Waf: Entering directory `/home/rainsia/Applications/ns-allinone-3.27/ns-3.27/build&apos;</span><br><span class="line">[ 931/1947] Compiling scratch/try-ptr.cc</span><br><span class="line">[1936/1947] Linking build/scratch/try-ptr</span><br><span class="line">Waf: Leaving directory `/home/rainsia/Applications/ns-allinone-3.27/ns-3.27/build&apos;</span><br><span class="line">Build commands will be stored in build/compile_commands.json</span><br><span class="line">&apos;build&apos; finished successfully (2.168s)</span><br><span class="line">entering main method</span><br><span class="line">TryPtr:SelfRefObject()</span><br><span class="line">object created, ref_count is 1</span><br><span class="line">ref increased, ref_count is 2</span><br><span class="line">TryPtr:UseObject(0x163efc0)</span><br><span class="line">entering use object</span><br><span class="line">method called</span><br><span class="line">exiting use object</span><br><span class="line">ref decreased, ref_count is 1</span><br><span class="line">exiting main method</span><br><span class="line">ref decreased, ref_count is 0</span><br><span class="line">deleting myself</span><br><span class="line">TryPtr:~SelfRefObject()</span><br><span class="line">object destructed, ref_count is 0</span><br></pre></td></tr></table></figure>
+<p>从运行结果可以看出，在调用UseObject的时候。Ptr会被拷贝一次，从而调用了Acquire()方法，导致引用计数增加为2。在退出UseObject()方法的时候，其拷贝的参数obj将被销毁，从而导致引用计数降为1。</p>
+<p><strong>注意</strong>：记录函数调用的日志NS_LOG_FUNCTION()中，传入了一个PeekPointer(Ptr)的函数，表示在不增加引用计数的情况下，获取其真实的指针，以便输出地址。如果此处不获取指针，而是直接使用Ptr对象，由于NS_LOG_FUNCTION()宏实际上最终也是扩展成一个函数，因此也会调用一次Ptr的拷贝构造函数，从而引起引用计数被增加为3。有兴趣的读者可以自行修改尝试，我在此不再赘述。</p>
+<p><strong>回顾</strong>：总体来说，在C++中，有三种情况会调用拷贝构造函数：</p>
+<ul>
+<li>一个对象以值传递的方式传入函数体</li>
+<li>一个对象以值传递的方式从函数返回</li>
+<li>一个对象需要通过另外一个对象进行初始化</li>
+</ul>
+<p>其中第一种情况就是我们例子中的情况，情况二和情况一非常类类似，但是是以返回值的形式存在的。第三种情况很容易和赋值操作符混淆，接下来我们和赋值操作符一起分析第三种情况。</p>
+<h4 id="智能指针的赋值操作符重载"><a href="#智能指针的赋值操作符重载" class="headerlink" title="智能指针的赋值操作符重载"></a>智能指针的赋值操作符重载</h4><p>在C++中，将一个对象赋值给另外一个对象，可能会调用拷贝构造函数，也可能会调用赋值操作符重载函数。究竟执行的是哪一种，C++中有如下的规则：</p>
+<blockquote>
+<p>对象在声明的同时将另一个已存在的对象赋给它，就会调用拷贝构造函数；<br>如果对象已经存在了，然后再将另一个已存在的对象赋给它，调用的就是重载赋值运算符。</p>
+</blockquote>
+<p>我们通过下面的例子来解释这两句话的意思：</p>
+<figure class="highlight cpp"><figcaption><span>try-operator-assign.cc</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"ns3/core-module.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> ns3;</span><br><span class="line"></span><br><span class="line">NS_LOG_COMPONENT_DEFINE(<span class="string">"TryOperatorAssign"</span>);</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	<span class="keyword">int</span> m_num;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	A (): m_num(<span class="number">0</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		NS_LOG_LOGIC(<span class="string">"调用了构造函数"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">virtual</span> ~A ()</span><br><span class="line">	&#123;</span><br><span class="line">		NS_LOG_LOGIC(<span class="string">"调用了析构函数"</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">//拷贝构造函数</span></span><br><span class="line">	A (<span class="keyword">const</span> A &amp;a):m_num(a.m_num)</span><br><span class="line">	&#123;</span><br><span class="line">		NS_LOG_LOGIC(<span class="string">"调用了拷贝构造函数"</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">//赋值操作符重载</span></span><br><span class="line">	A&amp; <span class="keyword">operator</span>= (<span class="keyword">const</span> A &amp;a)</span><br><span class="line">	&#123;</span><br><span class="line">		NS_LOG_LOGIC(<span class="string">"这是赋值重载"</span>);</span><br><span class="line">		<span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span></span><br><span class="line">main (<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span><br><span class="line">&#123;</span><br><span class="line">	LogComponentEnable(<span class="string">"TryOperatorAssign"</span>, LOG_LEVEL_LOGIC);</span><br><span class="line">	NS_LOG_UNCOND(<span class="string">"进入Main函数"</span>);</span><br><span class="line"></span><br><span class="line">	NS_LOG_UNCOND(<span class="string">"创建对象a"</span>);</span><br><span class="line">	A a;</span><br><span class="line">	NS_LOG_UNCOND(<span class="string">"通过对象a构造对象b"</span>);</span><br><span class="line">	<span class="function">A <span class="title">b</span> <span class="params">(a)</span></span>;</span><br><span class="line">	NS_LOG_UNCOND(<span class="string">"通过对象b赋值给c的申明"</span>);</span><br><span class="line">	A c = b;</span><br><span class="line">	NS_LOG_UNCOND(<span class="string">"通过对象b赋值给c的对象"</span>);</span><br><span class="line">	c = a;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>程序中，定义了一个类A，和A的构造函数和析构函数。除此之外，还重写了A的拷贝构造函数和A的赋值运算符。在程序中，首先创建了一个A对象a，然后使用a创建了对象b。然后使用两种不同的方式将b对象赋值给对象c。运行程序，得到运行结果如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">Waf: Entering directory `/home/rainsia/Applications/ns-allinone-3.27/ns-3.27/build&apos;</span><br><span class="line">[ 931/1949] Compiling scratch/try-operator-assign.cc</span><br><span class="line">[1938/1949] Linking build/scratch/try-operator-assign</span><br><span class="line">Waf: Leaving directory `/home/rainsia/Applications/ns-allinone-3.27/ns-3.27/build&apos;</span><br><span class="line">Build commands will be stored in build/compile_commands.json</span><br><span class="line">&apos;build&apos; finished successfully (2.119s)</span><br><span class="line">进入Main函数</span><br><span class="line">创建对象a</span><br><span class="line">调用了构造函数</span><br><span class="line">通过对象a构造对象b</span><br><span class="line">调用了拷贝构造函数</span><br><span class="line">通过对象b赋值给c的申明</span><br><span class="line">调用了拷贝构造函数</span><br><span class="line">通过对象b赋值给c的对象</span><br><span class="line">这是赋值重载</span><br><span class="line">调用了析构函数</span><br><span class="line">调用了析构函数</span><br><span class="line">调用了析构函数</span><br></pre></td></tr></table></figure>
+<p>从运行结果中，可以看出：</p>
+<ol>
+<li>创建A的对象a，调用了构造函数</li>
+<li>创建A的对象b，调用了拷贝构造函数</li>
+<li>使用第一种方式赋值，调用了拷贝构造函数。这就是上面引用中第一句话的意思：在申明c的同时赋值，将调用拷贝构造函数</li>
+<li>使用第二种方式赋值，调用了赋值运算符重载。这就是上面引用中第二句话的意思：在c已经存在的情况下赋值，将调用赋值运算符</li>
+<li>系统中一共只有3个A的对象，因为第二次调用赋值运算时，并没有生成新的对象</li>
+</ol>
+<p>当然，如果使用了NS-3的智能指针，那么使用第一种赋值方式，仅会让b对象的引用计数加一；而使用第二种赋值方式，会先让原c对象的引用计数减1（因为原来引用c对象的引用现在准备指向a了），然后让a对象的引用计数加1（因为现在多了一个引用c指向它）。</p>
+<h2 id="SimpleRefCount"><a href="#SimpleRefCount" class="headerlink" title="SimpleRefCount"></a>SimpleRefCount</h2><p>如果理解了上面的例子，那么基本就理解了NS-3当中的智能指针的概念了。然而，每个类要使用智能指针的类都去自己实现Ref()和Unref()方法，并且维护自己的引用计数其，那么会非常繁琐，并无法体现智能指针方便的优势。基于面向对象的可重用性，NS-3提供了一个最简单的SimpleRefCount类，该类已经实现Ref()和Unref()方法，并且在内部维护了引用计数，可以和Ptr智能指针完美结合，比自己实现Ref和Unref方法更加安全可靠。</p>
+<h3 id="SimpleRefCount的实现"><a href="#SimpleRefCount的实现" class="headerlink" title="SimpleRefCount的实现"></a>SimpleRefCount的实现</h3><p>SimpleRefCount的实现代码如下：</p>
+<figure class="highlight cpp"><figcaption><span>simple-ref-count.cc</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span> PARENT = empty, <span class="keyword">typename</span> DELETER = DefaultDeleter&lt;T&gt; &gt;</span><br><span class="line">class SimpleRefCount : <span class="keyword">public</span> PARENT</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="comment">/** Default constructor.  */</span></span><br><span class="line">  SimpleRefCount ()</span><br><span class="line">    : m_count (<span class="number">1</span>)</span><br><span class="line">  &#123;&#125;</span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * Copy constructor</span></span><br><span class="line"><span class="comment">   * \param [in] o The object to copy into this one.</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  SimpleRefCount (<span class="keyword">const</span> SimpleRefCount &amp;o)</span><br><span class="line">    : m_count (<span class="number">1</span>)</span><br><span class="line">  &#123;&#125;</span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * Assignment operator</span></span><br><span class="line"><span class="comment">   * \param [in] o The object to copy</span></span><br><span class="line"><span class="comment">   * \returns The copy of \p o</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  SimpleRefCount &amp;<span class="keyword">operator</span> = (<span class="keyword">const</span> SimpleRefCount &amp;o)</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * Increment the reference count. This method should not be called</span></span><br><span class="line"><span class="comment">   * by user code. SimpleRefCount instances are expected to be used in</span></span><br><span class="line"><span class="comment">   * conjunction with the Ptr template which would make calling Ref</span></span><br><span class="line"><span class="comment">   * unnecessary and dangerous.</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  <span class="function"><span class="keyword">inline</span> <span class="keyword">void</span> <span class="title">Ref</span> <span class="params">(<span class="keyword">void</span>)</span> <span class="keyword">const</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    NS_ASSERT (m_count &lt; <span class="built_in">std</span>::numeric_limits&lt;<span class="keyword">uint32_t</span>&gt;::max());</span><br><span class="line">    m_count++;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * Decrement the reference count. This method should not be called</span></span><br><span class="line"><span class="comment">   * by user code. SimpleRefCount instances are expected to be used in </span></span><br><span class="line"><span class="comment">   * conjunction with the Ptr template which would make calling Ref</span></span><br><span class="line"><span class="comment">   * unnecessary and dangerous.</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  <span class="function"><span class="keyword">inline</span> <span class="keyword">void</span> <span class="title">Unref</span> <span class="params">(<span class="keyword">void</span>)</span> <span class="keyword">const</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    m_count--;</span><br><span class="line">    <span class="keyword">if</span> (m_count == <span class="number">0</span>)</span><br><span class="line">      &#123;</span><br><span class="line">        DELETER::Delete (<span class="keyword">static_cast</span>&lt;T*&gt; (<span class="keyword">const_cast</span>&lt;SimpleRefCount *&gt; (<span class="keyword">this</span>)));</span><br><span class="line">      &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * Get the reference count of the object.</span></span><br><span class="line"><span class="comment">   * Normally not needed; for language bindings.</span></span><br><span class="line"><span class="comment">   *</span></span><br><span class="line"><span class="comment">   * \return The reference count.</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  <span class="function"><span class="keyword">inline</span> uint32_t <span class="title">GetReferenceCount</span> <span class="params">(<span class="keyword">void</span>)</span> <span class="keyword">const</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> m_count;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * The reference count.</span></span><br><span class="line"><span class="comment">   *</span></span><br><span class="line"><span class="comment">   * \internal</span></span><br><span class="line"><span class="comment">   * Note we make this mutable so that the const methods can still</span></span><br><span class="line"><span class="comment">   * change it.</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  <span class="keyword">mutable</span> <span class="keyword">uint32_t</span> m_count;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>和我们自己实现的代码类似地，其内部也有一个可变的私有变量m_count记录了当前指向该对象的指针数。当这个类刚被创建的时候，计数器为1，说明只有一个指针指向了该类。调用Ref()方法，将计数其加1，而调用Unref()方法将对计数其减一，并且当计数等于0的时候，将删除该对象。除此之外SimpleRefCount还可以指定删除器(DELETER)，在绝大部分场景下，直接使用默认删除器即可（缺省情况下就是使用默认删除器）。</p>
+<h3 id="SimpleRefCount使用的例子"><a href="#SimpleRefCount使用的例子" class="headerlink" title="SimpleRefCount使用的例子"></a>SimpleRefCount使用的例子</h3><p>下面的例子演示了如何使用SimpleRefCount来配合Ptr实现智能指针功能。</p>
+<figure class="highlight cpp"><figcaption><span>try-ptr2.cc</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"ns3/core-module.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> ns3;</span><br><span class="line"></span><br><span class="line">NS_LOG_COMPONENT_DEFINE(<span class="string">"TryPtr"</span>);</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SelfRefObject</span>:</span> <span class="keyword">public</span> SimpleRefCount&lt;SelfRefObject&gt; &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	SelfRefObject():SimpleRefCount&lt;SelfRefObject&gt;() &#123;</span><br><span class="line">		NS_LOG_FUNCTION_NOARGS();</span><br><span class="line">		NS_LOG_LOGIC(<span class="string">"object created, ref_count is "</span> &lt;&lt; <span class="keyword">this</span>-&gt;GetReferenceCount());</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">virtual</span> ~SelfRefObject() &#123;</span><br><span class="line">		NS_LOG_FUNCTION_NOARGS();</span><br><span class="line">		NS_LOG_LOGIC(<span class="string">"object destructed, ref_count is "</span> &lt;&lt; <span class="keyword">this</span>-&gt;GetReferenceCount());</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">SomeMethod</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  	NS_LOG_UNCOND(<span class="string">"method called"</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">UseObject</span><span class="params">(Ptr&lt;SelfRefObject&gt; obj)</span> </span>&#123;</span><br><span class="line">	NS_LOG_FUNCTION(PeekPointer(obj));</span><br><span class="line"></span><br><span class="line">	NS_LOG_LOGIC(<span class="string">"entering use object"</span>);</span><br><span class="line">	obj-&gt;SomeMethod();</span><br><span class="line">	NS_LOG_LOGIC(<span class="string">"exiting use object"</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span></span><br><span class="line">main (<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span><br><span class="line">&#123;</span><br><span class="line">  NS_LOG_UNCOND(<span class="string">"entering main method"</span>);</span><br><span class="line"></span><br><span class="line">	LogComponentEnable(<span class="string">"TryPtr"</span>, LOG_LEVEL_LOGIC);</span><br><span class="line"></span><br><span class="line">	Ptr&lt;SelfRefObject&gt; obj = Create&lt;SelfRefObject&gt;();</span><br><span class="line">	UseObject(obj);</span><br><span class="line"></span><br><span class="line">	Simulator::Run ();</span><br><span class="line">	Simulator::Destroy ();</span><br><span class="line"></span><br><span class="line">  NS_LOG_UNCOND(<span class="string">"exiting main method"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>和之前的例子相同，程序还是使用智能指针Ptr来引用SelfRefObject，然而此时SelfRefObject直接继承自SimpleRefObject，而无需自己实现Ref()和Unref()方法。值得注意的是，由于SimpleRefObject是一个模板类，因此必须在使用时指定其模板类型。本例子中模板是SelfRefObject。此外，要想获得对象内部的引用计数，可以直接调用SimpleRefObject提供的GetReferenceCount()方法。</p>
+<p>运行上面的程序，可以得到如下的执行结果：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">Waf: Entering directory `/home/rainsia/Applications/ns-allinone-3.27/ns-3.27/build&apos;</span><br><span class="line">[1813/1951] Compiling scratch/try-ptr2.cc</span><br><span class="line">[1915/1951] Linking build/scratch/try-ptr2</span><br><span class="line">Waf: Leaving directory `/home/rainsia/Applications/ns-allinone-3.27/ns-3.27/build&apos;</span><br><span class="line">Build commands will be stored in build/compile_commands.json</span><br><span class="line">&apos;build&apos; finished successfully (2.962s)</span><br><span class="line">entering main method</span><br><span class="line">TryPtr:SelfRefObject()</span><br><span class="line">object created, ref_count is 1</span><br><span class="line">TryPtr:UseObject(0x1762fc0)</span><br><span class="line">entering use object</span><br><span class="line">method called</span><br><span class="line">exiting use object</span><br><span class="line">exiting main method</span><br><span class="line">TryPtr:~SelfRefObject()</span><br><span class="line">object destructed, ref_count is 0</span><br></pre></td></tr></table></figure>
+<p>可以看出，当退出main函数时，由于Ptr对象被销毁，引起引用计数降低为0，从而引起Ptr所维护的对象SelfRefObject被销毁。使用SimpleRefCount达到了同样的效果，而无需自己维护引用计数。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+		<div>
+					
+						
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+  
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script src="https://cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <p><span>本文标题:</span><a href="/2018/03/31/ns3-003/">NS-3学习笔记（三）：NS-3的对象框架 之 智能指针</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 Rain Sia <rainsia@163.com> 的个人博客">Rain Sia <rainsia@163.com></a></p>
+  <p><span>发布时间:</span>2018年03月31日 - 17:03</p>
+  <p><span>最后更新:</span>2018年06月24日 - 17:06</p>
+  <p><span>原始链接:</span><a href="/2018/03/31/ns3-003/" title="NS-3学习笔记（三）：NS-3的对象框架 之 智能指针">https://rainsia.github.io/2018/03/31/ns3-003/</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="http://yoursite.com/2018/03/31/ns3-003/"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>版权信息:</span>本文为作者原创文章，如需进行非商业性转载，请注明出处并保留原文链接及作者。如要进行商业性转载，请获得作者授权！</p>  
+  <p><span>联系方式:</span>rainsia@163.com</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+      $(".fa-clipboard").click(function(){
+      clipboard.on('success', function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success", 
+          showConfirmButton: true
+          });
+        });
+    });  
+</script>
+
+
+					
+		</div>
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/NS-3/" rel="tag"># NS-3</a>
+          
+            <a href="/tags/C/" rel="tag"># C++</a>
+          
+            <a href="/tags/Simulation/" rel="tag"># Simulation</a>
+          
+            <a href="/tags/Object/" rel="tag"># Object</a>
+          
+            <a href="/tags/SimpleRefCount/" rel="tag"># SimpleRefCount</a>
+          
+            <a href="/tags/Ref/" rel="tag"># Ref</a>
+          
+            <a href="/tags/Unref/" rel="tag"># Unref</a>
+          
+            <a href="/tags/Ptr/" rel="tag"># Ptr</a>
+          
+            <a href="/tags/Smart-Pointer/" rel="tag"># Smart Pointer</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/03/30/ns3-002/" rel="next" title="NS-3学习笔记（二）：NS-3的日志系统">
+                <i class="fa fa-chevron-left"></i> NS-3学习笔记（二）：NS-3的日志系统
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/04/08/ns3-004/" rel="prev" title="NS-3学习笔记（四）：NS-3的对象框架 之 TypeId">
+                NS-3学习笔记（四）：NS-3的对象框架 之 TypeId <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.gif"
+                alt="Rain Sia <rainsia@163.com>" />
+            
+              <p class="site-author-name" itemprop="name">Rain Sia <rainsia@163.com></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">12</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">6</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">29</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#NS-3对象框架概述"><span class="nav-number">1.</span> <span class="nav-text">NS-3对象框架概述</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#名称空间"><span class="nav-number">1.1.</span> <span class="nav-text">名称空间</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#对象体系"><span class="nav-number">1.2.</span> <span class="nav-text">对象体系</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SimpleRefCount和智能指针Ptr"><span class="nav-number">2.</span> <span class="nav-text">SimpleRefCount和智能指针Ptr</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Ptr"><span class="nav-number">2.1.</span> <span class="nav-text">Ptr</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Ptr的例子"><span class="nav-number">2.1.1.</span> <span class="nav-text">Ptr的例子</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#创建智能指针"><span class="nav-number">2.1.1.1.</span> <span class="nav-text">创建智能指针</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#通过外来指针构造智能指针"><span class="nav-number">2.1.1.2.</span> <span class="nav-text">通过外来指针构造智能指针</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#智能指针的拷贝构造函数"><span class="nav-number">2.1.1.3.</span> <span class="nav-text">智能指针的拷贝构造函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#智能指针的赋值操作符重载"><span class="nav-number">2.1.1.4.</span> <span class="nav-text">智能指针的赋值操作符重载</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SimpleRefCount"><span class="nav-number">2.2.</span> <span class="nav-text">SimpleRefCount</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#SimpleRefCount的实现"><span class="nav-number">2.2.1.</span> <span class="nav-text">SimpleRefCount的实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SimpleRefCount使用的例子"><span class="nav-number">2.2.2.</span> <span class="nav-text">SimpleRefCount使用的例子</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Rain Sia, All rights reversed.<br/>本站所有原创文章，如进行非商业目的转载，请注明出处。若要进行商业目的转载，必须取得授权。<br/>--作者</span>
+
+  
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动 v3.5.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Gemini</a> v6.4.2</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv" title="总访客量">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="site-pv" title="总访问量">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.4.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.4.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.4.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.4.2"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.4.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.4.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.4.2"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  
+  
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(function (item) {
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'KSHKjGm3HfpWAPzaHoA4NV0H-gzGzoHsz',
+        appKey: '55JA7fexBRQej1dHDpuxfTA0',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        meta:guest,
+        pageSize:'10' || 10,
+        visitor: false
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

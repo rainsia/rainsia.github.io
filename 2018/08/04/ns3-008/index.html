@@ -1,0 +1,1060 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.4.2" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.4.2">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.4.2">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.4.2">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.4.2" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '6.4.2',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="本章主要介绍NS-3当中对象的初始化与释放。传统C++对象可以在构造函数中来初始化，然而由于NS-3对象的属性是在构造函数之后才初始化的，因此必须使用特定的初始化方法来得到正确的结果。除此之外，对象在使用完成之后也应该正确释放使用的资源。NS-3也提供了专门的方法来完成资源的释放，并且充分地考虑了聚合的因素，使得对象的释放非常完善。本章将介绍NS-3当中对象的正确初始化和释放的方法。">
+<meta name="keywords" content="NS-3,C++,Simulation,Intialization,Dispose">
+<meta property="og:type" content="article">
+<meta property="og:title" content="NS-3学习笔记（八）：NS-3的对象框架 之 对象初始化与释放">
+<meta property="og:url" content="http://yoursite.com/2018/08/04/ns3-008/index.html">
+<meta property="og:site_name" content="Rain&#39;s Blog">
+<meta property="og:description" content="本章主要介绍NS-3当中对象的初始化与释放。传统C++对象可以在构造函数中来初始化，然而由于NS-3对象的属性是在构造函数之后才初始化的，因此必须使用特定的初始化方法来得到正确的结果。除此之外，对象在使用完成之后也应该正确释放使用的资源。NS-3也提供了专门的方法来完成资源的释放，并且充分地考虑了聚合的因素，使得对象的释放非常完善。本章将介绍NS-3当中对象的正确初始化和释放的方法。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-10-19T13:35:45.491Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="NS-3学习笔记（八）：NS-3的对象框架 之 对象初始化与释放">
+<meta name="twitter:description" content="本章主要介绍NS-3当中对象的初始化与释放。传统C++对象可以在构造函数中来初始化，然而由于NS-3对象的属性是在构造函数之后才初始化的，因此必须使用特定的初始化方法来得到正确的结果。除此之外，对象在使用完成之后也应该正确释放使用的资源。NS-3也提供了专门的方法来完成资源的释放，并且充分地考虑了聚合的因素，使得对象的释放非常完善。本章将介绍NS-3当中对象的正确初始化和释放的方法。">
+
+
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/08/04/ns3-008/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>NS-3学习笔记（八）：NS-3的对象框架 之 对象初始化与释放 | Rain's Blog</title>
+  
+
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?9d1df7de5bd3ea1d75446764f5075fe7";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Rain's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">记录、分享、技术</p>
+      
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/04/ns3-008/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Rain Sia <rainsia@163.com>">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Rain's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">NS-3学习笔记（八）：NS-3的对象框架 之 对象初始化与释放
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-08-04 18:42:21" itemprop="dateCreated datePublished" datetime="2018-08-04T18:42:21+08:00">2018-08-04</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-10-19 21:35:45" itemprop="dateModified" datetime="2018-10-19T21:35:45+08:00">2018-10-19</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/network/" itemprop="url" rel="index"><span itemprop="name">网络</span></a></span>
+
+                
+                
+                  ，
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/network/simulation/" itemprop="url" rel="index"><span itemprop="name">仿真</span></a></span>
+
+                
+                
+                  ，
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/network/simulation/NS-3/" itemprop="url" rel="index"><span itemprop="name">NS-3</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/08/04/ns3-008/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2018/08/04/ns3-008/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon"
+            >
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>本章主要介绍NS-3当中对象的初始化与释放。传统C++对象可以在构造函数中来初始化，然而由于NS-3对象的属性是在构造函数之后才初始化的，因此必须使用特定的初始化方法来得到正确的结果。除此之外，对象在使用完成之后也应该正确释放使用的资源。NS-3也提供了专门的方法来完成资源的释放，并且充分地考虑了聚合的因素，使得对象的释放非常完善。本章将介绍NS-3当中对象的正确初始化和释放的方法。</p>
+<a id="more"></a>
+<h1 id="对象的初始化"><a href="#对象的初始化" class="headerlink" title="对象的初始化"></a>对象的初始化</h1><p>在C++当中创建对象的时候一般需要对对象进行初始化。大部分初始化的代码都在构造函数当中完成，或者独立成一个函数然后通过构造函数调用来完成。例如，如果我们用传统C++类写一个套接字(Socket)用来实现一个服务器程序，需要监听一个端口。一般程序都使用构造函数来传入端口号。然后再构造函数当中进行初始化。这里我们需要在构造函数当中初始化的时候判断一下用户程序的端口使用是否正确，因为一般的用户程序是不能使用1024以下的端口的。因此，我们使用如下的程序来使用构造函数来检查程序的端口号是否正确：</p>
+<figure class="highlight cpp"><figcaption><span>try-normal-initialization.cc</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;fstream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"ns3/core-module.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"ns3/network-module.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> ns3;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> ns3 &#123;</span><br><span class="line"></span><br><span class="line">  NS_LOG_COMPONENT_DEFINE (<span class="string">"MySocket"</span>);			<span class="comment">//定义一个日志组件</span></span><br><span class="line"></span><br><span class="line">	<span class="class"><span class="keyword">class</span> <span class="title">MyServerSocket</span></span></span><br><span class="line"><span class="class">	&#123;</span></span><br><span class="line">	<span class="keyword">public</span>:</span><br><span class="line">		MyServerSocket(<span class="keyword">uint32_t</span> port);</span><br><span class="line">		<span class="keyword">virtual</span> ~MyServerSocket()&#123;&#125;;</span><br><span class="line"></span><br><span class="line">		<span class="function"><span class="keyword">void</span> <span class="title">StartServer</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span>:</span><br><span class="line">		<span class="keyword">uint32_t</span> m_listenPort;</span><br><span class="line">		<span class="keyword">bool</span> m_valid &#123;<span class="literal">false</span>&#125;;</span><br><span class="line"></span><br><span class="line">	&#125;;</span><br><span class="line"></span><br><span class="line">	MyServerSocket::MyServerSocket(<span class="keyword">uint32_t</span> port)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">if</span>(port &gt;= <span class="number">1024</span>)</span><br><span class="line">    &#123;</span><br><span class="line">				m_valid = <span class="literal">true</span>;</span><br><span class="line">      m_listenPort = port;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">void</span></span><br><span class="line">	MyServerSocket::StartServer()</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">if</span>(m_valid == <span class="literal">false</span>)</span><br><span class="line">    &#123;</span><br><span class="line">				NS_LOG_INFO(<span class="string">"Server start failed."</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span></span><br><span class="line">    	&#123;</span><br><span class="line">    		NS_LOG_INFO(<span class="string">"Server started on port "</span> &lt;&lt; m_listenPort &lt;&lt; <span class="string">"."</span>);</span><br><span class="line">    &#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span></span><br><span class="line">main (<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span><br><span class="line">&#123;</span><br><span class="line">	LogComponentEnable(<span class="string">"MySocket"</span>, LOG_LEVEL_LOGIC);</span><br><span class="line"></span><br><span class="line">	<span class="function">MyServerSocket <span class="title">socket</span><span class="params">(<span class="number">9</span>)</span></span>;</span><br><span class="line">	socket.StartServer();</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>当我们运行程序的时候，会得到如下输出：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Waf: Entering directory `/home/rainsia/Applications/ns-allinone-3.27/ns-3.27/build&apos;</span><br><span class="line">[1831/1983] Compiling scratch/try-normal-initialization.cc</span><br><span class="line">[1937/1983] Linking build/scratch/try-normal-initialization</span><br><span class="line">Waf: Leaving directory `/home/rainsia/Applications/ns-allinone-3.27/ns-3.27/build&apos;</span><br><span class="line">Build commands will be stored in build/compile_commands.json</span><br><span class="line">&apos;build&apos; finished successfully (2.951s)</span><br><span class="line">Server start failed.</span><br></pre></td></tr></table></figure>
+<p>因为传入的端口好小于1024因此，程序无法正确启动服务器。如果我们将端口号改成1024，在此运行程序，就会得到如下的结果：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Waf: Entering directory `/home/rainsia/Applications/ns-allinone-3.27/ns-3.27/build&apos;</span><br><span class="line">[ 931/1983] Compiling scratch/try-normal-initialization.cc</span><br><span class="line">[1961/1983] Linking build/scratch/try-normal-initialization</span><br><span class="line">Waf: Leaving directory `/home/rainsia/Applications/ns-allinone-3.27/ns-3.27/build&apos;</span><br><span class="line">Build commands will be stored in build/compile_commands.json</span><br><span class="line">&apos;build&apos; finished successfully (2.652s)</span><br><span class="line">Server started on port 1024.</span><br></pre></td></tr></table></figure>
+<p>可以看出，现在已经可以正确启动服务器了。当然了，这只是一个例子，并没有真正去实现一个服务器程序。</p>
+<h1 id="使用属性框架"><a href="#使用属性框架" class="headerlink" title="使用属性框架"></a>使用属性框架</h1><p>这个程序本身并没有什么问题，但是在NS3当中写程序，很多时候不会直接使用构造函数传输参数，而是使用属性来实现，例如，我们可以将端口号作为一个属性，让用户构造对象的时候直接设置该属性（回顾属性框架一章）。</p>
+<p>要使用属性框架，对象本身必须继承自NS3的Object类，然后在其TypeId当中添加具体的属性并绑定至具体的实例变量：</p>
+<figure class="highlight cpp"><figcaption><span>try-attribute-intialization.cc</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;fstream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"ns3/core-module.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"ns3/network-module.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> ns3;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> ns3 &#123;</span><br><span class="line"></span><br><span class="line">  NS_LOG_COMPONENT_DEFINE (<span class="string">"MySocket"</span>);			<span class="comment">//定义一个日志组件</span></span><br><span class="line"></span><br><span class="line">	<span class="class"><span class="keyword">class</span> <span class="title">MyServerSocket</span>:</span> <span class="keyword">public</span> Object</span><br><span class="line">	&#123;</span><br><span class="line">	<span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">static</span> TypeId <span class="title">GetTypeId</span> <span class="params">()</span></span>;				<span class="comment">//必须实现此方法</span></span><br><span class="line"></span><br><span class="line">		MyServerSocket();</span><br><span class="line">		<span class="keyword">virtual</span> ~MyServerSocket()&#123;&#125;;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> TypeId <span class="title">GetInstanceTypeId</span> <span class="params">()</span> <span class="keyword">const</span></span>;	<span class="comment">//必须实现此方法</span></span><br><span class="line"></span><br><span class="line">		<span class="function"><span class="keyword">void</span> <span class="title">StartServer</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span>:</span><br><span class="line">		<span class="keyword">uint32_t</span> m_listenPort;</span><br><span class="line">		<span class="keyword">bool</span> m_valid &#123;<span class="literal">false</span>&#125;;</span><br><span class="line"></span><br><span class="line">	&#125;;</span><br><span class="line"></span><br><span class="line">  NS_OBJECT_ENSURE_REGISTERED (MyServerSocket);		<span class="comment">//不要忘记调用</span></span><br><span class="line"></span><br><span class="line">  TypeId</span><br><span class="line">  MyServerSocket::GetTypeId ()</span><br><span class="line">  &#123;</span><br><span class="line">  	<span class="keyword">static</span> TypeId tid = TypeId(<span class="string">"ns3::MyServerSocket"</span>)		<span class="comment">//创建TypeId，</span></span><br><span class="line">  		.SetParent(Object::GetTypeId())</span><br><span class="line">      .AddConstructor&lt;MyServerSocket&gt;()</span><br><span class="line">      .AddAttribute (<span class="string">"port"</span>, <span class="string">"port number to listen to"</span>,</span><br><span class="line">										 PointerValue(<span class="number">0</span>),</span><br><span class="line">                     MakeIntegerAccessor (&amp;MyServerSocket::m_listenPort),</span><br><span class="line">                     MakeIntegerChecker &lt;<span class="keyword">uint32_t</span>&gt;())</span><br><span class="line">			;</span><br><span class="line">  	<span class="keyword">return</span> tid;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">	MyServerSocket::MyServerSocket()</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">if</span>(m_listenPort &gt;= <span class="number">1024</span>)</span><br><span class="line">    &#123;</span><br><span class="line">      m_valid = <span class="literal">true</span>;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">  TypeId</span><br><span class="line">  MyServerSocket::GetInstanceTypeId () <span class="keyword">const</span></span><br><span class="line">  &#123;</span><br><span class="line">  	<span class="keyword">return</span> MyServerSocket::GetTypeId();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">void</span></span><br><span class="line">	MyServerSocket::StartServer()</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">if</span>(m_valid == <span class="literal">false</span>)</span><br><span class="line">    &#123;</span><br><span class="line">      NS_LOG_INFO(<span class="string">"Server start failed."</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">      NS_LOG_INFO(<span class="string">"Server started on port "</span> &lt;&lt; m_listenPort &lt;&lt; <span class="string">"."</span>);</span><br><span class="line">    &#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span></span><br><span class="line">main (<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span><br><span class="line">&#123;</span><br><span class="line">	LogComponentEnable(<span class="string">"MySocket"</span>, LOG_LEVEL_LOGIC);</span><br><span class="line"></span><br><span class="line">	<span class="function">ObjectFactory <span class="title">factory</span><span class="params">(<span class="string">"ns3::MyServerSocket"</span>)</span></span>;	<span class="comment">//创建对象工厂</span></span><br><span class="line">	factory.Set(<span class="string">"port"</span>, IntegerValue(<span class="number">9</span>));	<span class="comment">//设置属性</span></span><br><span class="line"></span><br><span class="line">	Ptr&lt;MyServerSocket&gt; socket = factory.Create&lt;MyServerSocket&gt;();</span><br><span class="line">	socket-&gt;StartServer();</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>程序当中，我们为MyServerSocket类创建了一个属性port。主程序当中，我们使用对象工厂创建了MyServerSocket的一个实例，并且给其属性port赋值为9。随后我们启动程序，得到如下的运行结果：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Waf: Entering directory `/home/rainsia/Applications/ns-allinone-3.27/ns-3.27/build&apos;</span><br><span class="line">[1830/1985] Compiling scratch/try-attribute-initialization.cc</span><br><span class="line">[1971/1985] Linking build/scratch/try-attribute-initialization</span><br><span class="line">Waf: Leaving directory `/home/rainsia/Applications/ns-allinone-3.27/ns-3.27/build&apos;</span><br><span class="line">Build commands will be stored in build/compile_commands.json</span><br><span class="line">&apos;build&apos; finished successfully (3.038s)</span><br><span class="line">Server started on port 9.</span><br></pre></td></tr></table></figure>
+<p>这个结果是很气怪的，为什么端口号小于1024竟然可以成功启动，这跟我们程序的逻辑不符（需要注意的是，在其他的编译器上也有可能得到正确的结果，也就是程序启动失败。其主要还是看编译器对未初始化的属性的赋值情况而定：如果编译器将所有未初始化的变量初始化为0，那么结果就是正确的。在我的编译器上，所有未初始化的变量保留其内存上原来的值。）。我们在构造函数当中已经检查了属性port的值，为什么没有成功？最后输出的时候端口号的值确实也是9啊！</p>
+<p>我们将程序进行一点点修改，在构造函数当中也输出port属性的值：</p>
+<figure class="highlight cpp"><figcaption><span>try-attribute-intialization.cc</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;fstream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"ns3/core-module.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"ns3/network-module.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> ns3;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> ns3 &#123;</span><br><span class="line"></span><br><span class="line">	NS_LOG_COMPONENT_DEFINE (<span class="string">"MySocket"</span>);			<span class="comment">//定义一个日志组件</span></span><br><span class="line"></span><br><span class="line">	<span class="class"><span class="keyword">class</span> <span class="title">MyServerSocket</span>:</span> <span class="keyword">public</span> Object</span><br><span class="line">	&#123;</span><br><span class="line">	<span class="keyword">public</span>:</span><br><span class="line">		<span class="function"><span class="keyword">static</span> TypeId <span class="title">GetTypeId</span> <span class="params">()</span></span>;				<span class="comment">//必须实现此方法</span></span><br><span class="line"></span><br><span class="line">		MyServerSocket();</span><br><span class="line">		<span class="keyword">virtual</span> ~MyServerSocket()&#123;&#125;;</span><br><span class="line"></span><br><span class="line">		<span class="function"><span class="keyword">virtual</span> TypeId <span class="title">GetInstanceTypeId</span> <span class="params">()</span> <span class="keyword">const</span></span>;	<span class="comment">//必须实现此方法</span></span><br><span class="line"></span><br><span class="line">		<span class="function"><span class="keyword">void</span> <span class="title">StartServer</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span>:</span><br><span class="line">		<span class="keyword">uint32_t</span> m_listenPort;</span><br><span class="line">		<span class="keyword">bool</span> m_valid &#123;<span class="literal">false</span>&#125;;</span><br><span class="line"></span><br><span class="line">	&#125;;</span><br><span class="line"></span><br><span class="line">	NS_OBJECT_ENSURE_REGISTERED (MyServerSocket);		<span class="comment">//不要忘记调用</span></span><br><span class="line"></span><br><span class="line">	TypeId</span><br><span class="line">	MyServerSocket::GetTypeId ()</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">static</span> TypeId tid = TypeId(<span class="string">"ns3::MyServerSocket"</span>)		<span class="comment">//创建TypeId，</span></span><br><span class="line">			.SetParent(Object::GetTypeId())</span><br><span class="line">			.AddConstructor&lt;MyServerSocket&gt;()</span><br><span class="line">			.AddAttribute (<span class="string">"port"</span>, <span class="string">"port number to listen to"</span>,</span><br><span class="line">						PointerValue(<span class="number">0</span>),</span><br><span class="line">						MakeIntegerAccessor (&amp;MyServerSocket::m_listenPort),</span><br><span class="line">						MakeIntegerChecker &lt;<span class="keyword">uint32_t</span>&gt;())</span><br><span class="line">				;</span><br><span class="line">		<span class="keyword">return</span> tid;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	MyServerSocket::MyServerSocket()</span><br><span class="line">	&#123;</span><br><span class="line">		<marked style="border-bottom: 2px solid red;">NS_LOG_INFO(<span class="string">"Port is "</span> &lt;&lt; m_listenPort);</marked></span><br><span class="line">		<span class="keyword">if</span>(m_listenPort &gt;= <span class="number">1024</span>)</span><br><span class="line">		&#123;</span><br><span class="line">			m_valid = <span class="literal">true</span>;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	TypeId</span><br><span class="line">	MyServerSocket::GetInstanceTypeId () <span class="keyword">const</span></span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">return</span> MyServerSocket::GetTypeId();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">void</span></span><br><span class="line">	MyServerSocket::StartServer()</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">if</span>(m_valid == <span class="literal">false</span>)</span><br><span class="line">		&#123;</span><br><span class="line">		NS_LOG_INFO(<span class="string">"Server start failed."</span>);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span></span><br><span class="line">		&#123;</span><br><span class="line">		NS_LOG_INFO(<span class="string">"Server started on port "</span> &lt;&lt; m_listenPort &lt;&lt; <span class="string">"."</span>);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span></span><br><span class="line">main (<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span><br><span class="line">&#123;</span><br><span class="line">	LogComponentEnable(<span class="string">"MySocket"</span>, LOG_LEVEL_LOGIC);</span><br><span class="line"></span><br><span class="line">	<span class="function">ObjectFactory <span class="title">factory</span><span class="params">(<span class="string">"ns3::MyServerSocket"</span>)</span></span>;	<span class="comment">//创建对象工厂</span></span><br><span class="line">	factory.Set(<span class="string">"port"</span>, IntegerValue(<span class="number">9</span>));	<span class="comment">//设置属性</span></span><br><span class="line"></span><br><span class="line">	Ptr&lt;MyServerSocket&gt; socket = factory.Create&lt;MyServerSocket&gt;();</span><br><span class="line">	socket-&gt;StartServer();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>此时，我们再次运行程序，可以得到如下的结果：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Waf: Leaving directory `/home/rainsia/Applications/ns-allinone-3.27/ns-3.27/build&apos;</span><br><span class="line">Build commands will be stored in build/compile_commands.json</span><br><span class="line">&apos;build&apos; finished successfully (2.737s)</span><br><span class="line">Port is 1852793701</span><br><span class="line">Server started on port 9.</span><br></pre></td></tr></table></figure>
+<p>很奇怪，在构造函数当中检查port属性的值时，是一个奇怪的数字。而在StartServer当中检查属性的值时，却是正确的。这个例子让我们了解了NS3属性初始化的时机应该是在构造函数之后，但是应该在调用StartServer之前。换句话说，我们不能在构造函数当中对NS3的属性进行判断和检查，即不能在构造函数当中去使用NS3的属性的值，因为在这个时候，属性的值实际上还没有被初始化成功（即使是属性的默认值也都还未被初始化）。那么问题来了，我们该在什么时候使用属性的值来进行对象的初始化呢？</p>
+<h1 id="NS3对象的初始化"><a href="#NS3对象的初始化" class="headerlink" title="NS3对象的初始化"></a>NS3对象的初始化</h1><p>在NS3当中，Object类提供了一个Initialize()方法。理论上这个对象可以用来作为对象初始化的方法，然而可惜的是，这个方法并不是virtual方法，因此在使用其他指针初始化对象的时候，会出现问题。然而，我们在继续在Object类当中查找，可以发现一个DoInitialize()方法，它是proected和virtual的。这个方法就是对象的初始化的方法。</p>
+<p>接下来我们为上面的程序加上初始化方法，并将原来构造函数里面的代码放到初始化方法当中去：</p>
+<figure class="highlight cpp"><figcaption><span>try-attribute-intialization.cc</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;fstream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"ns3/core-module.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"ns3/network-module.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> ns3;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> ns3</span><br><span class="line">&#123;</span><br><span class="line"></span><br><span class="line">	NS_LOG_COMPONENT_DEFINE(<span class="string">"MySocket"</span>);			<span class="comment">//定义一个日志组件</span></span><br><span class="line"></span><br><span class="line">	<span class="class"><span class="keyword">class</span> <span class="title">MyServerSocket</span> :</span> <span class="keyword">public</span> Object</span><br><span class="line">	&#123;</span><br><span class="line">	<span class="keyword">public</span>:</span><br><span class="line">		<span class="keyword">static</span> TypeId</span><br><span class="line">		GetTypeId ();				<span class="comment">//必须实现此方法</span></span><br><span class="line"></span><br><span class="line">		MyServerSocket ();</span><br><span class="line">		<span class="keyword">virtual</span></span><br><span class="line">		~MyServerSocket () &#123;&#125;;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">virtual</span> TypeId</span><br><span class="line">		GetInstanceTypeId () <span class="keyword">const</span>;	<span class="comment">//必须实现此方法</span></span><br><span class="line"></span><br><span class="line">		<span class="keyword">void</span></span><br><span class="line">		StartServer ();</span><br><span class="line"></span><br><span class="line">	<span class="keyword">protected</span>:</span><br><span class="line">		<span class="keyword">virtual</span> <span class="keyword">void</span></span><br><span class="line">		DoInitialize ();</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span>:</span><br><span class="line">		<span class="keyword">uint32_t</span> m_listenPort;</span><br><span class="line">		<span class="keyword">bool</span> m_valid &#123; <span class="literal">false</span> &#125;;</span><br><span class="line">	&#125;;</span><br><span class="line"></span><br><span class="line">	NS_OBJECT_ENSURE_REGISTERED(MyServerSocket);		<span class="comment">//不要忘记调用</span></span><br><span class="line"></span><br><span class="line">	TypeId</span><br><span class="line">	MyServerSocket::GetTypeId ()</span><br><span class="line">	&#123;</span><br><span class="line">    <span class="keyword">static</span> TypeId tid = TypeId(<span class="string">"ns3::MyServerSocket"</span>)		<span class="comment">//创建TypeId，</span></span><br><span class="line">  		.SetParent(Object::GetTypeId())</span><br><span class="line">      .AddConstructor&lt;MyServerSocket&gt;()</span><br><span class="line">      .AddAttribute (<span class="string">"port"</span>, <span class="string">"port number to listen to"</span>,</span><br><span class="line">					PointerValue(<span class="number">0</span>),</span><br><span class="line">                     MakeIntegerAccessor (&amp;MyServerSocket::m_listenPort),</span><br><span class="line">                     MakeIntegerChecker &lt;<span class="keyword">uint32_t</span>&gt;())</span><br><span class="line">			;</span><br><span class="line">  	<span class="keyword">return</span> tid;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	MyServerSocket::MyServerSocket ()</span><br><span class="line">	&#123;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	TypeId</span><br><span class="line">	MyServerSocket::GetInstanceTypeId () <span class="keyword">const</span></span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">return</span> MyServerSocket::GetTypeId ();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">void</span></span><br><span class="line">	MyServerSocket::DoInitialize ()</span><br><span class="line">	&#123;</span><br><span class="line">		NS_LOG_INFO(<span class="string">"Port is "</span> &lt;&lt; m_listenPort);</span><br><span class="line">		<span class="keyword">if</span> (m_listenPort &gt;= <span class="number">1024</span>)</span><br><span class="line">			&#123;</span><br><span class="line">				m_valid = <span class="literal">true</span>;</span><br><span class="line">			&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">void</span></span><br><span class="line">	MyServerSocket::StartServer ()</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">if</span> (m_valid == <span class="literal">false</span>)</span><br><span class="line">			&#123;</span><br><span class="line">				NS_LOG_INFO(<span class="string">"Server start failed."</span>);</span><br><span class="line">			&#125;</span><br><span class="line">		<span class="keyword">else</span></span><br><span class="line">			&#123;</span><br><span class="line">				NS_LOG_INFO(<span class="string">"Server started on port "</span> &lt;&lt; m_listenPort &lt;&lt; <span class="string">"."</span>);</span><br><span class="line">			&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span></span><br><span class="line">main (<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span><br><span class="line">&#123;</span><br><span class="line">	LogComponentEnable (<span class="string">"MySocket"</span>, LOG_LEVEL_LOGIC);</span><br><span class="line"></span><br><span class="line">	<span class="function">ObjectFactory <span class="title">factory</span> <span class="params">(<span class="string">"ns3::MyServerSocket"</span>)</span></span>;	<span class="comment">//创建对象工厂</span></span><br><span class="line">	factory.Set (<span class="string">"port"</span>, IntegerValue (<span class="number">9</span>));	<span class="comment">//设置属性</span></span><br><span class="line"></span><br><span class="line">	Ptr&lt;MyServerSocket&gt; socket = factory.Create&lt;MyServerSocket&gt; ();</span><br><span class="line">	socket-&gt;Initialize();</span><br><span class="line">	socket-&gt;StartServer ();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>当我们在此运行程序：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Waf: Entering directory `/home/rainsia/Applications/ns-allinone-3.27/ns-3.27/build&apos;</span><br><span class="line">Waf: Leaving directory `/home/rainsia/Applications/ns-allinone-3.27/ns-3.27/build&apos;</span><br><span class="line">Build commands will be stored in build/compile_commands.json</span><br><span class="line">&apos;build&apos; finished successfully (1.151s)</span><br><span class="line">Port is 9</span><br><span class="line">Server start failed.</span><br></pre></td></tr></table></figure>
+<p>我们发现只要我们调用Initialize()来初始化对象，那么其结果一定是正确的。因此，我们可以得出结论，在调用Intialize()方法的时候对象的属性一定已经被ObjectFactory初始化完成了，因此我们可以放心地使用其值。在这个例子当中，不手动调用Initialize()方法是不行的，即使当端口号正确也不能正常启动服务器，原因自己体会。</p>
+<h1 id="Intialize-和DoIntialize-的特性"><a href="#Intialize-和DoIntialize-的特性" class="headerlink" title="Intialize()和DoIntialize()的特性"></a>Intialize()和DoIntialize()的特性</h1><p>NS3当中对象的初始化有一些有趣的特性，下面我们通过例子来一一说明。</p>
+<h2 id="自动调用Intialize-方法"><a href="#自动调用Intialize-方法" class="headerlink" title="自动调用Intialize()方法"></a>自动调用Intialize()方法</h2><p>从上面的例子当中我们可以看出，每个对象构造完成之后都需要调用Intialize()方法，非常麻烦。我们不禁要问，能不能让Intialize()方法自动被调用，例如在ObjectFactory构造对象的时候直接调用行不行？</p>
+<p>理论上是可以的，只要在ObjectFactory的Create方法当中直接调用一次对象的Initialize()方法即可，简单干脆。然而，NS3并没有选择这种方案。其原因在于有时候对象的初始化还依赖于其他的因素，因此必须等到仿真开始的时候才进行初始化。NS3给出的解决方案是将初始化和对象聚合合并起来一起作。只要将任何的对象聚合到Node对象当中，那么即可以在仿真开始的时候（即Simulator::RuN()方法被调用的时候）自动初始化。例如我们将上面的代码改为：</p>
+<figure class="highlight cpp"><figcaption><span>try-attribute-intialization.cc</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span></span><br><span class="line">main (<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span><br><span class="line">&#123;</span><br><span class="line">	LogComponentEnable (<span class="string">"MySocket"</span>, LOG_LEVEL_LOGIC);</span><br><span class="line">	LogComponentEnable (<span class="string">"MySocket"</span>, LOG_PREFIX_TIME);		<span class="comment">//打开仿真时间前缀</span></span><br><span class="line">	LogComponentEnable (<span class="string">"MySocket"</span>, LOG_PREFIX_NODE);		<span class="comment">//打开节点前缀</span></span><br><span class="line"></span><br><span class="line">	<span class="function">ObjectFactory <span class="title">factory</span> <span class="params">(<span class="string">"ns3::MyServerSocket"</span>)</span></span>;	<span class="comment">//创建对象工厂</span></span><br><span class="line">	factory.Set (<span class="string">"port"</span>, IntegerValue (<span class="number">9</span>));	<span class="comment">//设置属性</span></span><br><span class="line"></span><br><span class="line">	Ptr&lt;MyServerSocket&gt; socket = factory.Create&lt;MyServerSocket&gt; ();</span><br><span class="line"></span><br><span class="line">	Simulator::Schedule(Seconds(<span class="number">1</span>), &amp;MyServerSocket::StartServer, socket);</span><br><span class="line"></span><br><span class="line">	Ptr&lt;Node&gt; node = CreateObject&lt;Node&gt;();</span><br><span class="line">	node-&gt;AggregateObject(socket);</span><br><span class="line"></span><br><span class="line">	Simulator::Run();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>程序计划在仿真时间一秒的时候调用socket对象的StartServer()方法，并且创建一个node对象，然后将socket对象聚合到node对象当中。当仿真启动的时候（仿真时间的第0秒），socket对象的Intialize()方法将被调用。然后一秒的时候，其StartServer()方法将被调用。为了更好地显示执行的过程，我在程序当中打开了MySocket日志模块的时间和节点两个前缀（忘了的话请复习日志章节）。</p>
+<p>最后运行程序得到如下结果：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Waf: Entering directory `/home/rainsia/Applications/ns-allinone-3.27/ns-3.27/build&apos;</span><br><span class="line">[ 931/1985] Compiling scratch/try-attribute-initialization.cc</span><br><span class="line">[1914/1985] Linking build/scratch/try-attribute-initialization</span><br><span class="line">Waf: Leaving directory `/home/rainsia/Applications/ns-allinone-3.27/ns-3.27/build&apos;</span><br><span class="line">Build commands will be stored in build/compile_commands.json</span><br><span class="line">&apos;build&apos; finished successfully (2.838s)</span><br><span class="line">+0.000000000s 0 Port is 9</span><br><span class="line">+1.000000000s -1 Server start failed.</span><br></pre></td></tr></table></figure>
+<p>可见，确实是在0秒的时候进行对象初始化，在1秒的时候调用StartServer()方法。</p>
+<p>可是为什么只要将对象聚合到Node当中，就可以自动被初始化？其实原因非常简单，NS3在设计Object类的时候，将相互聚合的对象的初始化方法可以相互调用。因此，只要初始化主类，那么聚合类的初始化方法便会自动被调用。可以参看Object的Intialize()方法的代码：</p>
+<figure class="highlight cpp"><figcaption><span>object.cc</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span></span><br><span class="line">Object::Initialize (<span class="keyword">void</span>)</span><br><span class="line">&#123;</span><br><span class="line">  NS_LOG_FUNCTION (<span class="keyword">this</span>);</span><br><span class="line">restart:</span><br><span class="line">  <span class="keyword">uint32_t</span> n = m_aggregates-&gt;n;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">uint32_t</span> i = <span class="number">0</span>; i &lt; n; i++)</span><br><span class="line">    &#123;</span><br><span class="line">      Object *current = m_aggregates-&gt;buffer[i];</span><br><span class="line">      <span class="keyword">if</span> (!current-&gt;m_initialized)</span><br><span class="line">        &#123;</span><br><span class="line">          current-&gt;DoInitialize ();</span><br><span class="line">          current-&gt;m_initialized = <span class="literal">true</span>;</span><br><span class="line">          <span class="keyword">goto</span> restart;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以看出，只要初始化任何一个对象，那么跟他聚合的对象的初始化方法将被自动调用。</p>
+<h2 id="初始化的时候聚合对象"><a href="#初始化的时候聚合对象" class="headerlink" title="初始化的时候聚合对象"></a>初始化的时候聚合对象</h2><p>在我们可以放心大胆的乱写初始化代码之前，我们还有一点顾虑，那就是万一我们在初始化代码当中聚合了新的对象怎么办？新聚合的对象能够被正确初始化吗？</p>
+<p>从上面的Initialize()的代码当中可以看到，每次只要成功执行了一个聚合对象的DoInitialize()方法之后，都会从聚合列表的开头在重新执行一遍初始化。咋一看这段代码这么执行是没有必要的。但是Initialize()方法当中完全不知道聚合对象的DoInitialize()方法当中究竟会执行什么代码。如果其中包含了对象聚合的代码，那么聚合列表就会改变。为了以防万一，程序只能重头再将聚合列表当中的对象再次重新初始化（还记得聚合一章当中讲过所有相互聚合的对象维护的是同一张聚合列表吗？）。</p>
+<p>我们使用下面的例子来演示在对象初始化的过程当中再次聚合对象的话也能够成功被初始化。</p>
+<h2 id="对象不会重复初始化"><a href="#对象不会重复初始化" class="headerlink" title="对象不会重复初始化"></a>对象不会重复初始化</h2><p>NS3在实现对象初始化特性的时候，已经考虑了重复初始化的问题。其实将Intialize()方法和DoInitialize()方法分开也是因为这个原因。从上一段代码中间也可以看出，每个对象都包含了一个m_initialized属性（包含在Object对象当中）。只有在对象的m_initialized属性为false的时候才会进行初始化，因此可以保证一个对象只会初始化一次。</p>
+<figure class="highlight cpp"><figcaption><span>try-initialization-once.cc</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;fstream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"ns3/core-module.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"ns3/network-module.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> ns3;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> ns3</span><br><span class="line">&#123;</span><br><span class="line"></span><br><span class="line">	NS_LOG_COMPONENT_DEFINE(<span class="string">"MySocket"</span>);			<span class="comment">//定义一个日志组件</span></span><br><span class="line"></span><br><span class="line">	<span class="class"><span class="keyword">class</span> <span class="title">MyServerSocket</span> :</span> <span class="keyword">public</span> Object</span><br><span class="line">	&#123;</span><br><span class="line">	<span class="keyword">public</span>:</span><br><span class="line">		<span class="keyword">static</span> TypeId</span><br><span class="line">		GetTypeId ();				<span class="comment">//必须实现此方法</span></span><br><span class="line"></span><br><span class="line">		MyServerSocket ();</span><br><span class="line">		<span class="keyword">virtual</span></span><br><span class="line">		~MyServerSocket () &#123;&#125;;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">virtual</span> TypeId</span><br><span class="line">		GetInstanceTypeId () <span class="keyword">const</span>;	<span class="comment">//必须实现此方法</span></span><br><span class="line"></span><br><span class="line">		<span class="keyword">void</span></span><br><span class="line">		StartServer ();</span><br><span class="line"></span><br><span class="line">	<span class="keyword">protected</span>:</span><br><span class="line">		<span class="keyword">virtual</span> <span class="keyword">void</span></span><br><span class="line">		DoInitialize ();</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span>:</span><br><span class="line">		<span class="keyword">uint32_t</span> m_listenPort;</span><br><span class="line">		<span class="keyword">bool</span> m_valid &#123; <span class="literal">false</span> &#125;;</span><br><span class="line">		<span class="keyword">uint32_t</span> m_count &#123; <span class="number">0</span> &#125;;</span><br><span class="line"></span><br><span class="line">	&#125;;</span><br><span class="line"></span><br><span class="line">	NS_OBJECT_ENSURE_REGISTERED(MyServerSocket);		<span class="comment">//不要忘记调用</span></span><br><span class="line"></span><br><span class="line">	TypeId</span><br><span class="line">	MyServerSocket::GetTypeId ()</span><br><span class="line">	&#123;</span><br><span class="line">    <span class="keyword">static</span> TypeId tid = TypeId(<span class="string">"ns3::MyServerSocket"</span>)		<span class="comment">//创建TypeId，</span></span><br><span class="line">  		.SetParent(Object::GetTypeId())</span><br><span class="line">      .AddConstructor&lt;MyServerSocket&gt;()</span><br><span class="line">      .AddAttribute (<span class="string">"port"</span>, <span class="string">"port number to listen to"</span>,</span><br><span class="line">										 PointerValue(<span class="number">0</span>),</span><br><span class="line">                     MakeIntegerAccessor (&amp;MyServerSocket::m_listenPort),</span><br><span class="line">                     MakeIntegerChecker &lt;<span class="keyword">uint32_t</span>&gt;())</span><br><span class="line">			;</span><br><span class="line">  	<span class="keyword">return</span> tid;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	MyServerSocket::MyServerSocket ()</span><br><span class="line">	&#123;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	TypeId</span><br><span class="line">	MyServerSocket::GetInstanceTypeId () <span class="keyword">const</span></span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">return</span> MyServerSocket::GetTypeId ();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">void</span></span><br><span class="line">	MyServerSocket::DoInitialize ()</span><br><span class="line">	&#123;</span><br><span class="line">		m_count++;</span><br><span class="line">		NS_LOG_INFO(<span class="string">"Initialized "</span> &lt;&lt; m_count &lt;&lt; <span class="string">" times."</span>);</span><br><span class="line">		NS_LOG_INFO(<span class="string">"Port is "</span> &lt;&lt; m_listenPort);</span><br><span class="line">		<span class="keyword">if</span> (m_listenPort &gt;= <span class="number">1024</span>)</span><br><span class="line">			&#123;</span><br><span class="line">				m_valid = <span class="literal">true</span>;</span><br><span class="line">			&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">void</span></span><br><span class="line">	MyServerSocket::StartServer ()</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">if</span> (m_valid == <span class="literal">false</span>)</span><br><span class="line">			&#123;</span><br><span class="line">				NS_LOG_INFO(<span class="string">"Server start failed."</span>);</span><br><span class="line">			&#125;</span><br><span class="line">		<span class="keyword">else</span></span><br><span class="line">			&#123;</span><br><span class="line">				NS_LOG_INFO(<span class="string">"Server started on port "</span> &lt;&lt; m_listenPort &lt;&lt; <span class="string">"."</span>);</span><br><span class="line">			&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span></span><br><span class="line">main (<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span><br><span class="line">&#123;</span><br><span class="line">	LogComponentEnable (<span class="string">"MySocket"</span>, LOG_LEVEL_LOGIC);</span><br><span class="line">	LogComponentEnable (<span class="string">"MySocket"</span>, LOG_PREFIX_TIME);		<span class="comment">//打开仿真时间前缀</span></span><br><span class="line">	LogComponentEnable (<span class="string">"MySocket"</span>, LOG_PREFIX_NODE);		<span class="comment">//打开节点前缀</span></span><br><span class="line"></span><br><span class="line">	<span class="function">ObjectFactory <span class="title">factory</span> <span class="params">(<span class="string">"ns3::MyServerSocket"</span>)</span></span>;	<span class="comment">//创建对象工厂</span></span><br><span class="line">	factory.Set (<span class="string">"port"</span>, IntegerValue (<span class="number">9</span>));	<span class="comment">//设置属性</span></span><br><span class="line"></span><br><span class="line">	Ptr&lt;MyServerSocket&gt; socket = factory.Create&lt;MyServerSocket&gt; ();</span><br><span class="line">	socket-&gt;Initialize();</span><br><span class="line">	socket-&gt;Initialize();</span><br><span class="line">	socket-&gt;Initialize();</span><br><span class="line">	socket-&gt;Initialize();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>程序当中调用了socket对象的初始化方法多次，但是，我们可以发现，最终初始化方法仅仅执行了一次。因此，我们可以放心大胆的实现初始化方法？</p>
+<h2 id="新聚合的对象初始化"><a href="#新聚合的对象初始化" class="headerlink" title="新聚合的对象初始化"></a>新聚合的对象初始化</h2><p>（未完待续……）</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+		<div>
+					
+						
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+  
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script src="https://cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <p><span>本文标题:</span><a href="/2018/08/04/ns3-008/">NS-3学习笔记（八）：NS-3的对象框架 之 对象初始化与释放</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 Rain Sia <rainsia@163.com> 的个人博客">Rain Sia <rainsia@163.com></a></p>
+  <p><span>发布时间:</span>2018年08月04日 - 18:08</p>
+  <p><span>最后更新:</span>2018年10月19日 - 21:10</p>
+  <p><span>原始链接:</span><a href="/2018/08/04/ns3-008/" title="NS-3学习笔记（八）：NS-3的对象框架 之 对象初始化与释放">https://rainsia.github.io/2018/08/04/ns3-008/</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="http://yoursite.com/2018/08/04/ns3-008/"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>版权信息:</span>本文为作者原创文章，如需进行非商业性转载，请注明出处并保留原文链接及作者。如要进行商业性转载，请获得作者授权！</p>  
+  <p><span>联系方式:</span>rainsia@163.com</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+      $(".fa-clipboard").click(function(){
+      clipboard.on('success', function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success", 
+          showConfirmButton: true
+          });
+        });
+    });  
+</script>
+
+
+					
+		</div>
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/NS-3/" rel="tag"># NS-3</a>
+          
+            <a href="/tags/C/" rel="tag"># C++</a>
+          
+            <a href="/tags/Simulation/" rel="tag"># Simulation</a>
+          
+            <a href="/tags/Intialization/" rel="tag"># Intialization</a>
+          
+            <a href="/tags/Dispose/" rel="tag"># Dispose</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/06/04/ns3-007/" rel="next" title="NS-3学习笔记（七）：NS-3的对象框架 之 聚合">
+                <i class="fa fa-chevron-left"></i> NS-3学习笔记（七）：NS-3的对象框架 之 聚合
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.gif"
+                alt="Rain Sia <rainsia@163.com>" />
+            
+              <p class="site-author-name" itemprop="name">Rain Sia <rainsia@163.com></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">12</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">6</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">29</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#对象的初始化"><span class="nav-number">1.</span> <span class="nav-text">对象的初始化</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#使用属性框架"><span class="nav-number">2.</span> <span class="nav-text">使用属性框架</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#NS3对象的初始化"><span class="nav-number">3.</span> <span class="nav-text">NS3对象的初始化</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Intialize-和DoIntialize-的特性"><span class="nav-number">4.</span> <span class="nav-text">Intialize()和DoIntialize()的特性</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#自动调用Intialize-方法"><span class="nav-number">4.1.</span> <span class="nav-text">自动调用Intialize()方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#初始化的时候聚合对象"><span class="nav-number">4.2.</span> <span class="nav-text">初始化的时候聚合对象</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#对象不会重复初始化"><span class="nav-number">4.3.</span> <span class="nav-text">对象不会重复初始化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#新聚合的对象初始化"><span class="nav-number">4.4.</span> <span class="nav-text">新聚合的对象初始化</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Rain Sia, All rights reversed.<br/>本站所有原创文章，如进行非商业目的转载，请注明出处。若要进行商业目的转载，必须取得授权。<br/>--作者</span>
+
+  
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动 v3.5.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Gemini</a> v6.4.2</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv" title="总访客量">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="site-pv" title="总访问量">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.4.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.4.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.4.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.4.2"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.4.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.4.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.4.2"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  
+  
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(function (item) {
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'KSHKjGm3HfpWAPzaHoA4NV0H-gzGzoHsz',
+        appKey: '55JA7fexBRQej1dHDpuxfTA0',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        meta:guest,
+        pageSize:'10' || 10,
+        visitor: false
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

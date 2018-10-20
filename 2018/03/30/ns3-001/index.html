@@ -1,0 +1,1166 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.4.2" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.4.2">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.4.2">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.4.2">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.4.2" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '6.4.2',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="本章主要介绍如何在Linux平台（主要使用Ubuntu系统）下，建立NS-3的运行环境。可以进行NS-3程序的仿真工作。">
+<meta name="keywords" content="NS-3,C++,Simulation,Environment">
+<meta property="og:type" content="article">
+<meta property="og:title" content="NS-3学习笔记（一）：NS-3的运行环境搭建">
+<meta property="og:url" content="http://yoursite.com/2018/03/30/ns3-001/index.html">
+<meta property="og:site_name" content="Rain&#39;s Blog">
+<meta property="og:description" content="本章主要介绍如何在Linux平台（主要使用Ubuntu系统）下，建立NS-3的运行环境。可以进行NS-3程序的仿真工作。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://yoursite.com/2018/03/30/ns3-001/shot_2018-04-03_22-55-28.png">
+<meta property="og:image" content="http://yoursite.com/2018/03/30/ns3-001/shot_2018-04-05_00-21-48.png">
+<meta property="og:image" content="http://yoursite.com/2018/03/30/ns3-001/shot_2018-04-05_00-48-23.png">
+<meta property="og:image" content="http://yoursite.com/2018/03/30/ns3-001/shot_2018-04-05_00-52-01.png">
+<meta property="og:image" content="http://yoursite.com/2018/03/30/ns3-001/shot_2018-04-05_01-36-30.png">
+<meta property="og:image" content="http://yoursite.com/2018/03/30/ns3-001/shot_2018-04-05_01-39-44.png">
+<meta property="og:image" content="http://yoursite.com/2018/03/30/ns3-001/shot_2018-04-05_01-49-44.png">
+<meta property="og:updated_time" content="2018-10-20T03:30:33.037Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="NS-3学习笔记（一）：NS-3的运行环境搭建">
+<meta name="twitter:description" content="本章主要介绍如何在Linux平台（主要使用Ubuntu系统）下，建立NS-3的运行环境。可以进行NS-3程序的仿真工作。">
+<meta name="twitter:image" content="http://yoursite.com/2018/03/30/ns3-001/shot_2018-04-03_22-55-28.png">
+
+
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/03/30/ns3-001/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>NS-3学习笔记（一）：NS-3的运行环境搭建 | Rain's Blog</title>
+  
+
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?9d1df7de5bd3ea1d75446764f5075fe7";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Rain's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">记录、分享、技术</p>
+      
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/30/ns3-001/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Rain Sia <rainsia@163.com>">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Rain's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">NS-3学习笔记（一）：NS-3的运行环境搭建
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-03-30 18:01:01" itemprop="dateCreated datePublished" datetime="2018-03-30T18:01:01+08:00">2018-03-30</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-10-20 11:30:33" itemprop="dateModified" datetime="2018-10-20T11:30:33+08:00">2018-10-20</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/network/" itemprop="url" rel="index"><span itemprop="name">网络</span></a></span>
+
+                
+                
+                  ，
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/network/simulation/" itemprop="url" rel="index"><span itemprop="name">仿真</span></a></span>
+
+                
+                
+                  ，
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/network/simulation/NS-3/" itemprop="url" rel="index"><span itemprop="name">NS-3</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/03/30/ns3-001/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2018/03/30/ns3-001/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon"
+            >
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>本章主要介绍如何在Linux平台（主要使用Ubuntu系统）下，建立NS-3的运行环境。可以进行NS-3程序的仿真工作。</p>
+<a id="more"></a>
+<h1 id="NS-3简介"><a href="#NS-3简介" class="headerlink" title="NS-3简介"></a>NS-3简介</h1><p>NS-3是一个离散事件驱动网络模拟器。是为了取代知名的NS-2模拟器而开发的另外一个开源项目。官网为：<a href="http://www.nsnam.org/。" target="_blank" rel="noopener">http://www.nsnam.org/。</a></p>
+<p>NS-3本身也是多个项目合并而成。使用C++作为后台，并淘汰了NS-2当中的TCL脚本，而使用Python取代（实际也可以完全不是Python的部分，而完全使用C++编写仿真）。</p>
+<p>NS-3实现了大部分的Internet协议和算法，可以进行多种网络的仿真，包括有线网络、WIFI、4G等。</p>
+<p>对于比较复杂的技术NS-3包含一个DCE模块，可以直接运行原生Linux程序作为仿真的一部分。这样可以方便地调用原生的应用程序、路由算法、协议栈等等，以获得更加真实的仿真效果。</p>
+<h2 id="NS-3和NS-2的联系与区别"><a href="#NS-3和NS-2的联系与区别" class="headerlink" title="NS-3和NS-2的联系与区别"></a>NS-3和NS-2的联系与区别</h2><p>NS-3虽然叫做NS的版本3，但事实上跟它广泛流行的前任NS-2并非完全一致。它仅仅继承了NS-2的名称而已。NS-3是一个全新的模拟器，不支持NS-2的API，也不支持任何已经存在的NS-2的模块或者脚本。</p>
+<p>但是NS-3当中的很多算法和协议确是受到了NS-2的启发。或者说有很多算法和协议都是从NS-2的模块中移植（当然是基本都重写了一遍）过来的。</p>
+<p>NS-3当中支持很多NS-2所不支持的特性。例如：正确的多网卡处理、IP寻址策略的使用、更详细的802.11模块等等。NS-3能生成pcap文件，因此可以使用类似于WireShark的软件对数据进行分析。</p>
+<h2 id="NS-3的开发环境"><a href="#NS-3的开发环境" class="headerlink" title="NS-3的开发环境"></a>NS-3的开发环境</h2><p>NS-3的脚本由C++或者Python编写。从NS-3.2开始，NS3的API提供了python语言接口，但是所有的模块都是由C++编写的，Python仅仅是做了一种映射。NS-3使用<a href="https://waf.io/" target="_blank" rel="noopener">waf</a>作为其自动化编译工具（类似于流行的make），使用<a href="https://www.mercurial-scm.org/" target="_blank" rel="noopener">Mercurial</a>作为其版本管理系统（类似于流行的git）。</p>
+<p>NS-3基本上只能运行在Linux系统中，或者可以使用Windows系统安装虚拟机，或者安装Gygwin环境。但是Linux原生环境是最好的。本文中，我所使用的是Ubuntu环境，版本为16.04.4 LTS x64。</p>
+<h1 id="NS-3的编译"><a href="#NS-3的编译" class="headerlink" title="NS-3的编译"></a>NS-3的编译</h1><h2 id="环境配置"><a href="#环境配置" class="headerlink" title="环境配置"></a>环境配置</h2><p>使用Ubuntu来开发NS-3还是比较方便的。</p>
+<p>\1. 安装编译环境。直接运行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install build-essential</span><br></pre></td></tr></table></figure>
+<p>来安装编译所需的环境。实际上就是安装了GNU GCC编译工具套装和相关的库。</p>
+<p>\2. 安装Ubuntu Make工具</p>
+<p>Ubuntu Make（umake）前身是 Ubuntu Developer Tools Center。可在 Ubuntu 平台上快速安装各种语言的开发环境和开发工具。我们将使用umake来安装Eclipse工具，以便后面用来开发NS-3。</p>
+<p>直接运行命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo add-apt-repository ppa:ubuntu-desktop/ubuntu-make</span><br></pre></td></tr></table></figure>
+<p>来添加umake的ppa源。</p>
+<p>随后刷新软件仓库：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get update</span><br></pre></td></tr></table></figure>
+<p>然后安装umake软件：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install ubuntu-make</span><br></pre></td></tr></table></figure>
+<p>可以通过查看umake的帮助来了解umake的使用。其实使用过程非常简单，我们仅仅使用它来安装Eclipse工具，这里就不过多讲解。</p>
+<p>\3. 安装JDK</p>
+<p>Eclipse是使用Java开发的，因此要运行Eclipse，必须先安装JDK。如果选择其他的C++开发工具来开发NS-3，则可以不用安装JDK和接下来的Eclipse了。</p>
+<p>在Ubuntu中安装JDK也比较简单。Linux中JDK有两种版本：OpenJDK和Oracle JDK。对于开发NS-3来说，安装两者都可以。由于我本身还需要开发Java程序，所以我还是选择Oracle官方的JDK版本。</p>
+<p>Ubuntu本身的源当中没有提供Oracle的JDK，因此需要添加第三方的ppa源。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo add-apt-repository ppa:webupd8team/java</span><br></pre></td></tr></table></figure>
+<p>然后更新软件仓库：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get update</span><br></pre></td></tr></table></figure>
+<p>最后安装JDK9：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install oracle-java9-installer</span><br></pre></td></tr></table></figure>
+<p>安装过程中，会要求我们接受授权说明。</p>
+<p>最后配置JDK的环境变量，PPA源中已经给我们写好了脚本，直接安装即可：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install oracle-java9-set-default</span><br></pre></td></tr></table></figure>
+<p>\4. 安装Eclipse-CPP</p>
+<p>Eclipse主要是作为开发Java的工具而广为人知的。其实Eclipse也具有CDT插件，可以用来开发C++程序。我比较熟悉Eclipse的各种功能，因此主要使用Eclipse作为开发工具。如果熟悉其他的工具，完全可以使用其他的IDE来开发NS-3。</p>
+<p>使用umake安装Eclipse：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ umake ide eclipse-cpp</span><br></pre></td></tr></table></figure>
+<p>运行完成后，Eclipse-CPP即安装完成。可以从程序中找到Eclipse，点击即可启动，如下图所示：</p>
+<img src="/2018/03/30/ns3-001/shot_2018-04-03_22-55-28.png" title="从菜单启动Eclipse-Cpp">
+<h2 id="下载NS-3"><a href="#下载NS-3" class="headerlink" title="下载NS-3"></a>下载NS-3</h2><p>最简单的下载NS-3的方法就是从官方网站下载最新的稳定版，下载之后会得到一个.tar.bz2的压缩包，将其解压到用户目录当中合适的路径下。我一般喜欢放在~/Applications/目录中。</p>
+<p>例如我下载的是ns-3.27版本，解压后得到如下的目录结构：</p>
+<p>ns-allinone-3.27<br>├── bake<br>├── build.py<br>├── constants.py<br>├── constants.pyc<br>├── netanim-3.108<br>├── ns-3.27<br>├── pybindgen-0.17.0.post58+ngcf00cc0<br>├── README<br>├── RemoteSystemsTempFiles<br>├── util.py<br>└── util.pyc</p>
+<p>其中build.py是整体编译的脚本，第一次可以是使用这个脚本进行编译。netanim-3.x是用来回放网络运行动画的工具。ns-3.x是正真的NS-3的核心部分，所有功能都有这个包提供。其中也包含了waf的编译脚本，未来更改了NS-3的代码之后，就要通过waf脚本进行编译。</p>
+<h2 id="NS-3的编译-1"><a href="#NS-3的编译-1" class="headerlink" title="NS-3的编译"></a>NS-3的编译</h2><p>第一次可以通过上面的build.py脚本进行编译。build实际上也是调用了waf系统进行编译的。执行build.py脚本之后，可以看到执行过程。</p>
+<p>如果不出意外，可以最终看到如下输出：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">……</span><br><span class="line"></span><br><span class="line">Waf: Leaving directory `/home/rainsia/Applications/ns-allinone-3.27/ns-3.27/build&apos;</span><br><span class="line">Build commands will be stored in build/compile_commands.json</span><br><span class="line">&apos;build&apos; finished successfully (6.830s)</span><br><span class="line"></span><br><span class="line">Modules built:</span><br><span class="line">antenna                   aodv                      applications              </span><br><span class="line">bridge                    buildings                 config-store              </span><br><span class="line">core                      csma                      csma-layout               </span><br><span class="line">dsdv                      dsr                       energy                    </span><br><span class="line">fd-net-device             flow-monitor              internet                  </span><br><span class="line">internet-apps             lr-wpan                   lte                       </span><br><span class="line">mesh                      mobility                  mpi                       </span><br><span class="line">netanim (no Python)       network                   nix-vector-routing        </span><br><span class="line">olsr                      point-to-point            point-to-point-layout     </span><br><span class="line">propagation               sixlowpan                 spectrum                  </span><br><span class="line">stats                     tap-bridge                test (no Python)          </span><br><span class="line">topology-read             traffic-control           uan                       </span><br><span class="line">virtual-net-device        wave                      wifi                      </span><br><span class="line">wimax                     </span><br><span class="line"></span><br><span class="line">Modules not built (see ns-3 tutorial for explanation):</span><br><span class="line">brite                     click                     openflow                  </span><br><span class="line">visualizer                </span><br><span class="line"></span><br><span class="line">Leaving directory `./ns-3.27&apos;</span><br></pre></td></tr></table></figure>
+<p>当看到上述输出的时候表示编译成功。并且会列出已经编译的NS-3模块和未编译的NS-3模块。</p>
+<p>如果编译失败，多半是由于某些依赖未满足，此时可以通过Ubuntu的apt-get命令安装相关的库即可。</p>
+<p>默认情况下，NS-3自带的所有的示例和测试代码是不会编译的。如果需要同时编译示例代码和测试代码，则可以在执行编译的时候添加参数：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ./build.py --enable-examples --enable-tests</span><br></pre></td></tr></table></figure>
+<p>则以后再次编译的时候例子和测试代码都会编译。</p>
+<p>第一此编译NS-3之后，我们大部分时候都只修改NS-3的代码，即ns-3.x里面的代码。修改完成之后，我们大部分时候都不需要再次执行build.py来编译，而是直接使用ns-3.x目录中的waf系统来编译。</p>
+<p>ns-3.27/<br>├── AUTHORS<br>├── bindings<br>├── build<br>├── CHANGES.html<br>├── contrib<br>├── doc<br>├── examples<br>├── LICENSE<br>├── Makefile<br>├── README<br>├── RELEASE_NOTES<br>├── scratch<br>├── src<br>├── test.py<br>├── testpy.supp<br>├── utils<br>├── utils.py<br>├── utils.pyc<br>├── VERSION<br>├── waf<br>├── waf.bat<br>├── waf-tools<br>├── wscript<br>├── wutils.py<br>└── wutils.pyc</p>
+<p>其中waf就是编译程序，他会读取wscript脚本的配置来进行编译。waf是一个用Python编写的程序。而wscript也是使用Python编写的。有兴趣可以打开查看。</p>
+<p>除了waf文件之外，还有一些常用的目录和文件：</p>
+<ul>
+<li>build目录，是存储编译之后的结果</li>
+<li>doc是文档目录，里面包含了文档的源文件，可以使用doxygen工具将源文件编译成html文件，需要注意的是，编译之后的内容会特别大，可能有1~2GB左右，要非常小心，如果系统具有文件预览功能，尽量不要直接打开该目录里面的内容</li>
+<li>examples目录，包含了所有NS-3内置的示例代码，如果默认不编译examples的话，可以将其复制到scratch目录中运行，效果是一样的</li>
+<li>scratch目录，包含了所有NS-3仿真的脚本，以后我们自己创建网络环境进行仿真的代码就放在这个目录中</li>
+<li>src目录，包含了所有NS-3的模块的代码，如果要修改NS-3的行为，主要就修改里面的文件</li>
+<li>test.py文件，主要是用于运行测试的，保证系统运行是正确的</li>
+</ul>
+<p>使用waf编译和使用build.py编译是差不多的，但是必须在ns-3.x目录下执行：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">$ pwd</span><br><span class="line">/home/rainsia/Applications/ns-allinone-3.27/ns-3.27</span><br><span class="line">rainsia@rainsia-ubuntu-desktop:~/Applications/ns-allinone-3.27/ns-3.27$ ./waf</span><br><span class="line">Waf: Entering directory `/home/rainsia/Applications/ns-allinone-3.27/ns-3.27/build&apos;</span><br><span class="line">Waf: Leaving directory `/home/rainsia/Applications/ns-allinone-3.27/ns-3.27/build&apos;</span><br><span class="line">Build commands will be stored in build/compile_commands.json</span><br><span class="line">&apos;build&apos; finished successfully (1.065s)</span><br><span class="line"></span><br><span class="line">Modules built:</span><br><span class="line">antenna                   aodv                      applications              </span><br><span class="line">bridge                    buildings                 config-store              </span><br><span class="line">core                      csma                      csma-layout               </span><br><span class="line">dsdv                      dsr                       energy                    </span><br><span class="line">fd-net-device             flow-monitor              internet                  </span><br><span class="line">internet-apps             lr-wpan                   lte                       </span><br><span class="line">mesh                      mobility                  mpi                       </span><br><span class="line">netanim (no Python)       network                   nix-vector-routing        </span><br><span class="line">olsr                      point-to-point            point-to-point-layout     </span><br><span class="line">propagation               sixlowpan                 spectrum                  </span><br><span class="line">stats                     tap-bridge                test (no Python)          </span><br><span class="line">topology-read             traffic-control           uan                       </span><br><span class="line">virtual-net-device        wave                      wifi                      </span><br><span class="line">wimax                     </span><br><span class="line"></span><br><span class="line">Modules not built (see ns-3 tutorial for explanation):</span><br><span class="line">brite                     click                     openflow                  </span><br><span class="line">visualizer                </span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>由于之前使用build.py编译成过，因此这次编译会特别快。原因在与waf系统只会编译最近更新过的文件，已经编译，但是未更新的程序文件并不会进行编译（除非它所以来的模块也被修改）。</p>
+<p>waf也可以启用和禁用示例代码和测试代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$./waf configure --enable-examples --enable-tests</span><br></pre></td></tr></table></figure>
+<h2 id="不同的编译配置"><a href="#不同的编译配置" class="headerlink" title="不同的编译配置"></a>不同的编译配置</h2><p>在NS-3当中，存在三种不同的编译配置：debug模式编译、release编译模式和optimized模式编译。</p>
+<p>在debug编译模式下，所有编译生成的结果都会携带调试符号，方便我们进行断点调试等等。但是，代价是运行效率会受一定的影响。release模式下，会去除最终文件中的调试信息。而optimized模式下，编译过程会尽量优化运行效率，从而使得调试没有那么方便。此外，需要特别注意的是，只有debug模式下，程序才会输出日志信息（NS-3日志将在下一章进行介绍）。</p>
+<p>正常来说，在编写仿真的时候多半使用debug模式。当仿真调试完成，准备进行大规模仿真的时候，再切换成optimized模式，因为一般大规模的网络仿真都会运行很久，例如一周甚至更久。</p>
+<p>要配置使用debug模式编译，需要使用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$./waf configure -d debug</span><br></pre></td></tr></table></figure>
+<p>命令。之后再使用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$./waf build</span><br></pre></td></tr></table></figure>
+<p>编译NS-3。其中build命令是默认命令，因此可以只写./waf。</p>
+<p>要配置使用release/optimized模式编译，需要使用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$./waf configure -d release/optimized</span><br></pre></td></tr></table></figure>
+<p>需要注意的是，每次更改编译模式之后，都需要重新运行编译命令。</p>
+<p>如果不知道当前是什么编译模式，可以使用如下命令查看：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$./waf --check-profile</span><br></pre></td></tr></table></figure>
+<p>可以看到结果，例如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Waf: Entering directory `/home/rainsia/Applications/ns-allinone-3.27/ns-3.27/build&apos;</span><br><span class="line">Build profile: debug</span><br></pre></td></tr></table></figure>
+<p>因此，可以知道目前处于debug编译模式。</p>
+<p>使用optimzied在编译一次系统，然后进入build目录查看文件：</p>
+<p><strong>Update</strong>: 在新版NS3版本3.28和3.29当中，编译后的生成的.so文件并不是直接放置到build目录当中，而是放置到其下的lib目录当中的。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">bindings                             libns3.27-dsdv-debug.so               libns3.27-mpi-optimized.so                    libns3.27-test-debug.so</span><br><span class="line">build-status.py                      libns3.27-dsdv-optimized.so           libns3.27-netanim-debug.so                    libns3.27-test-optimized.so</span><br><span class="line">c4che                                libns3.27-dsr-debug.so                libns3.27-netanim-optimized.so                libns3.27-topology-read-debug.so</span><br><span class="line">compile_commands.json                libns3.27-dsr-optimized.so            libns3.27-network-debug.so                    libns3.27-topology-read-optimized.so</span><br><span class="line">config.log                           libns3.27-energy-debug.so             libns3.27-network-optimized.so                libns3.27-traffic-control-debug.so</span><br><span class="line">libns3.27-antenna-debug.so           libns3.27-energy-optimized.so         libns3.27-nix-vector-routing-debug.so         libns3.27-traffic-control-optimized.so</span><br><span class="line">libns3.27-antenna-optimized.so       libns3.27-fd-net-device-debug.so      libns3.27-nix-vector-routing-optimized.so     libns3.27-uan-debug.so</span><br><span class="line">libns3.27-aodv-debug.so              libns3.27-fd-net-device-optimized.so  libns3.27-olsr-debug.so                       libns3.27-uan-optimized.so</span><br><span class="line">libns3.27-aodv-optimized.so          libns3.27-flow-monitor-debug.so       libns3.27-olsr-optimized.so                   libns3.27-virtual-net-device-debug.so</span><br><span class="line">libns3.27-applications-debug.so      libns3.27-flow-monitor-optimized.so   libns3.27-point-to-point-debug.so             libns3.27-virtual-net-device-optimized.so</span><br><span class="line">libns3.27-applications-optimized.so  libns3.27-internet-apps-debug.so      libns3.27-point-to-point-layout-debug.so      libns3.27-wave-debug.so</span><br><span class="line">libns3.27-bridge-debug.so            libns3.27-internet-apps-optimized.so  libns3.27-point-to-point-layout-optimized.so  libns3.27-wave-optimized.so</span><br><span class="line">libns3.27-bridge-optimized.so        libns3.27-internet-debug.so           libns3.27-point-to-point-optimized.so         libns3.27-wifi-debug.so</span><br><span class="line">libns3.27-buildings-debug.so         libns3.27-internet-optimized.so       libns3.27-propagation-debug.so                libns3.27-wifi-optimized.so</span><br><span class="line">libns3.27-buildings-optimized.so     libns3.27-lr-wpan-debug.so            libns3.27-propagation-optimized.so            libns3.27-wimax-debug.so</span><br><span class="line">libns3.27-config-store-debug.so      libns3.27-lr-wpan-optimized.so        libns3.27-sixlowpan-debug.so                  libns3.27-wimax-optimized.so</span><br><span class="line">libns3.27-config-store-optimized.so  libns3.27-lte-debug.so                libns3.27-sixlowpan-optimized.so              ns3</span><br><span class="line">libns3.27-core-debug.so              libns3.27-lte-optimized.so            libns3.27-spectrum-debug.so                   scratch</span><br><span class="line">libns3.27-core-optimized.so          libns3.27-mesh-debug.so               libns3.27-spectrum-optimized.so               src</span><br><span class="line">libns3.27-csma-debug.so              libns3.27-mesh-optimized.so           libns3.27-stats-debug.so                      utils</span><br><span class="line">libns3.27-csma-layout-debug.so       libns3.27-mobility-debug.so           libns3.27-stats-optimized.so</span><br><span class="line">libns3.27-csma-layout-optimized.so   libns3.27-mobility-optimized.so       libns3.27-tap-bridge-debug.so</span><br><span class="line">libns3.27-csma-optimized.so          libns3.27-mpi-debug.so                libns3.27-tap-bridge-optimized.so</span><br></pre></td></tr></table></figure>
+<p>可以发现既有debug.so文件，又有optimized.so文件。说明：</p>
+<ol>
+<li>不同的编译模式的编译结果是独立存储的，改变编译模式必须再次编译。</li>
+<li>默认情况下，每个Ns-3的模块是编译成一个动态链接库so的。</li>
+</ol>
+<p>实际上NS-3也提供了静态链接方式。每次编译NS-3的时候，最终脚本会成为一个可执行文件。这个可执行文件包含了所有的模块功能。使用静态链接理论上来说可以进一步提高运行效率（因为少了动态链接时，文件之间调用相互查找和加载的过程）。但是其问题在于每次改变一点点程序的内容，几乎所有模块都得重新编译，编译时间过长。</p>
+<p>使用静态模式的方法是在./waf configure命令时传入启动静态编译的参数：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ./waf configure --enalbe-static</span><br></pre></td></tr></table></figure>
+<p>静态模式的另外一个缺点是，不能使用python脚本来编写仿真。具体使用静态还是动态链接模式，要看具体情况而定。如果仿真都可以开发完成，仅仅是为了让运行效率更高，又不用频繁地修改仿真脚本，那么可以考虑静态链接模式。</p>
+<h1 id="开发NS-3程序"><a href="#开发NS-3程序" class="headerlink" title="开发NS-3程序"></a>开发NS-3程序</h1><p>一般自己写的NS-3的仿真程序都放置在scratch目录当中，只有自己需要修改或者自己创建模块才需要去修改src目录当中的程序。自己的写的仿真程序都必须放置在scratch目录运行。</p>
+<h1 id="运行方式"><a href="#运行方式" class="headerlink" title="运行方式"></a>运行方式</h1><p>在NS-3根目录当中（例如ns-3.27）目录当中执行命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./waf --run &quot;script-name&quot; </span><br></pre></td></tr></table></figure>
+<p>来运行脚本。其中script-name是放在scratch目录当中的脚本的名字（不带.cc后缀）。</p>
+<h2 id="调试"><a href="#调试" class="headerlink" title="调试"></a>调试</h2><p>如果程序当中有错，那么直接运行程序，会有错误提示，但这个错误提示没有任何帮助。需要进入调试模式进行程序调试。例如下面的程序：</p>
+<figure class="highlight cpp"><figcaption><span>try-debug.cc</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"ns3/core-module.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;vector&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> ns3;</span><br><span class="line"></span><br><span class="line">NS_LOG_COMPONENT_DEFINE (<span class="string">"DebugTest"</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> </span><br><span class="line">main (<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span><br><span class="line">&#123;</span><br><span class="line">	LogComponentEnable(<span class="string">"DebugTest"</span>, LOG_INFO);</span><br><span class="line"></span><br><span class="line">  NS_LOG_UNCOND (<span class="string">"Before Error"</span>);</span><br><span class="line"></span><br><span class="line">  <span class="built_in">std</span>::<span class="built_in">vector</span>&lt;<span class="keyword">uint32_t</span>&gt; v;</span><br><span class="line"></span><br><span class="line">  <span class="comment">//error point</span></span><br><span class="line">  NS_LOG_UNCOND(<span class="string">"the first element: "</span> &lt;&lt; v[<span class="number">0</span>]);</span><br><span class="line"></span><br><span class="line">  NS_LOG_UNCOND (<span class="string">"After Error"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>程序当中故意写了一个错误。我们使用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./waf --run &quot;try-debug&quot;</span><br></pre></td></tr></table></figure>
+<p>执行这个程序的时候，会得到如下结果：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Waf: Entering directory `/home/rainsia/Applications/ns-allinone-3.27/ns-3.27/build&apos;</span><br><span class="line">[1833/1989] Compiling scratch/try-debug.cc</span><br><span class="line">[1977/1989] Linking build/scratch/try-debug</span><br><span class="line">Waf: Leaving directory `/home/rainsia/Applications/ns-allinone-3.27/ns-3.27/build&apos;</span><br><span class="line">Build commands will be stored in build/compile_commands.json</span><br><span class="line">&apos;build&apos; finished successfully (14.006s)</span><br><span class="line">Before Error</span><br><span class="line">the first element: Command [&apos;/home/rainsia/Applications/ns-allinone-3.27/ns-3.27/build/scratch/try-debug&apos;] terminated with signal SIGSEGV. Run it under a debugger to get more information (./waf --run &lt;program&gt; --command-template=&quot;gdb --args %s &lt;args&gt;&quot;).</span><br></pre></td></tr></table></figure>
+<p>从结果当中可以看出，在错误出现之前的代码都是执行了的。在发生错误之后的代码都没有被执行。错误发生的时候，程序就终止运行了，并且系统提示程序输出了信号值SIGSEGV（在有些系统上直接提示segment fault，段错误消息）。这个C++程序出错的提示非常的不直观，但是waf工具会给我们一个提示：可以使用gdb来进行调试的格式。如果没有安装过gdb可以先安装gdb：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install gdb</span><br></pre></td></tr></table></figure>
+<p>安装完成之后可以运行如下命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./waf --run &quot;try-debug&quot; --commandtemplate=&quot;gdb %s&quot;</span><br></pre></td></tr></table></figure>
+<p>之后会进入gdb调试模式：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">Waf: Entering directory `/home/rainsia/Applications/ns-allinone-3.27/ns-3.27/build&apos;</span><br><span class="line">Waf: Leaving directory `/home/rainsia/Applications/ns-allinone-3.27/ns-3.27/build&apos;</span><br><span class="line">Build commands will be stored in build/compile_commands.json</span><br><span class="line">&apos;build&apos; finished successfully (1.189s)</span><br><span class="line">GNU gdb (Ubuntu 8.1-0ubuntu3) 8.1.0.20180409-git</span><br><span class="line">Copyright (C) 2018 Free Software Foundation, Inc.</span><br><span class="line">License GPLv3+: GNU GPL version 3 or later &lt;http://gnu.org/licenses/gpl.html&gt;</span><br><span class="line">This is free software: you are free to change and redistribute it.</span><br><span class="line">There is NO WARRANTY, to the extent permitted by law.  Type &quot;show copying&quot;</span><br><span class="line">and &quot;show warranty&quot; for details.</span><br><span class="line">This GDB was configured as &quot;x86_64-linux-gnu&quot;.</span><br><span class="line">Type &quot;show configuration&quot; for configuration details.</span><br><span class="line">For bug reporting instructions, please see:</span><br><span class="line">&lt;http://www.gnu.org/software/gdb/bugs/&gt;.</span><br><span class="line">Find the GDB manual and other documentation resources online at:</span><br><span class="line">&lt;http://www.gnu.org/software/gdb/documentation/&gt;.</span><br><span class="line">For help, type &quot;help&quot;.</span><br><span class="line">Type &quot;apropos word&quot; to search for commands related to &quot;word&quot;...</span><br><span class="line">Reading symbols from /home/rainsia/Applications/ns-allinone-3.27/ns-3.27/build/scratch/try-debug...done.</span><br><span class="line">(gdb) </span><br></pre></td></tr></table></figure>
+<p>然后就等待用户输入gdb命令。我们输入run运行程序，得到如下结果：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">(gdb) run</span><br><span class="line">Starting program: /home/rainsia/Applications/ns-allinone-3.27/ns-3.27/build/scratch/try-debug </span><br><span class="line">[Thread debugging using libthread_db enabled]</span><br><span class="line">Using host libthread_db library &quot;/lib/x86_64-linux-gnu/libthread_db.so.1&quot;.</span><br><span class="line">Before Error</span><br><span class="line">the first element: </span><br><span class="line">Program received signal SIGSEGV, Segmentation fault.</span><br><span class="line">0x0000555555555ef7 in main (argc=1, argv=0x7fffffffd788) at ../scratch/try-debug.cc:20</span><br><span class="line">20        NS_LOG_UNCOND(&quot;the first element: &quot; &lt;&lt; v[0]);</span><br><span class="line">(gdb) </span><br></pre></td></tr></table></figure>
+<p>这个输出比直接执行程序得到了更多的信息，例如代码错误在哪个文件里面，在具体的哪一行代码。我们可以使用list命令列出整个函数的代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">(gdb) list</span><br><span class="line">15        NS_LOG_UNCOND (&quot;Before Error&quot;);</span><br><span class="line">16</span><br><span class="line">17        std::vector&lt;int&gt; v;</span><br><span class="line">18</span><br><span class="line">19        //error point</span><br><span class="line">20        NS_LOG_UNCOND(&quot;the first element: &quot; &lt;&lt; v[0]);</span><br><span class="line">21</span><br><span class="line">22        NS_LOG_UNCOND (&quot;After Error&quot;);</span><br><span class="line">23</span><br><span class="line">24      &#125;</span><br></pre></td></tr></table></figure>
+<p>这样就方便我们查看究竟是为什么会引起这个错误。调试完成之后，使用quit命令退出（程序未结束的情况下退出，一般会进行询问是否退出，选择yes即可）。</p>
+<p>gdb也可以在使用run命令之前就为程序设置断点，然后进行单步调试，中间可以打印任何变量和表达式的值。具体内容请参考man gdb或者<a href="http://man.linuxde.net/gdb" target="_blank" rel="noopener">这个链接</a>。</p>
+<h1 id="使用Eclipse开发NS-3程序"><a href="#使用Eclipse开发NS-3程序" class="headerlink" title="使用Eclipse开发NS-3程序"></a>使用Eclipse开发NS-3程序</h1><h2 id="配置项目"><a href="#配置项目" class="headerlink" title="配置项目"></a>配置项目</h2><p>安装完Eclipse-CPP之后，就可以利用Eclipse来查看和编写NS-3代码了。Eclipse启动的时候，会要求选择一个Workspace。我习惯将Workspace建立在NS-3的主目录中，如下图所示：</p>
+<img src="/2018/03/30/ns3-001/shot_2018-04-05_00-21-48.png" title="设置Eclipse的Workspace">
+<p>然后启动Eclipse，并创建一个新的Eclipse工程。选择File -&gt; New -&gt; Project..，然后在弹出的新建工程对话框当中展开C/C++选项，随后选择Makefile Project with Existing Code，并点击Next。</p>
+<img src="/2018/03/30/ns3-001/shot_2018-04-05_00-48-23.png" title="使用已经存在的代码新建工程">
+<p>然后输入工程名称ns-3.27，并选择工程的目录到ns-3.27目录下。同时不要忘记在Toolchain中选择Linux GCC，这将向工程中添加标准的C++头文件。</p>
+<img src="/2018/03/30/ns3-001/shot_2018-04-05_00-52-01.png" title="创建新的NS-3工程">
+<p>随后点击Finish按钮完成工程的创建。工程第一次创建时，将进行源代码文件的解析工作，可能会消耗一些时间，耐心等待解析过程结束。当代码解析完成后，Eclipse会建立项目的符号库，方便以后编程的时候进行代码提示。</p>
+<h2 id="运行程序"><a href="#运行程序" class="headerlink" title="运行程序"></a>运行程序</h2><p>NS-3中所有的仿真脚本都在scratch目录中。每一个scratch脚本都会被编译成为一个可执行程序。要运行程序，直接运行这些程序即可。但是，如果使用动态链接库编译模式编译出的可执行文件需要配合动态链接文件才能运行。如果试图直接在Eclipse里面运行，会提示找不到相应的.so文件。因此需要添加动态链接库依赖。</p>
+<p>点击菜单：Run -&gt; Run Configurations，然后选择新建一个运行配置，选中新建的运行配置。在右边对话框中点击Search Project…，然后在弹出的列表中选择需要运行的程序，例如scratch-simulator，点击OK按钮确定。</p>
+<img src="/2018/03/30/ns3-001/shot_2018-04-05_01-36-30.png" title="创建运行选项">
+<p>然后添加动态链接库依赖。切换到Environment标签页，然后点击New按钮新建环境变量。变量名(name)为：LD_LIBRARY_PATH，变量值(value)为${project_loc}/build。</p>
+<p><strong>Update</strong>: 经过测试，最新版的NS3版本3.28和3.29下面，需要设置路径为${project_loc}/build/lib才能正常运行。如果这样设置还是提示无法找到.so文件，那么可以直接设置绝对路径到ns-3.29/build/lib目录下面。</p>
+<img src="/2018/03/30/ns3-001/shot_2018-04-05_01-39-44.png" title="设置运行环境变量">
+<p>点击OK完成环境变量设置。在对话框中点击Run按钮即可运行程序。此时程序应该可以正常执行，不会提示找不到so文件。</p>
+<p>如果要运行其他仿真脚本，则需要再次进入运行配置，然后再次点击Search Project…按钮，选择相应的程序。最后点击Run按钮运行程序。</p>
+<img src="/2018/03/30/ns3-001/shot_2018-04-05_01-49-44.png" title="重新选择执行的程序">
+<h2 id="跟踪调试程序"><a href="#跟踪调试程序" class="headerlink" title="跟踪调试程序"></a>跟踪调试程序</h2><p>如果要调试程序，可以选择在程序中设置好相应的断点（在要设置断点的那一句代码行号前面双击鼠标左键可以设置/取消断点）。随后选择菜单Run -&gt; Debug Configurations，然后在对话框中选择刚刚配置好的选项。然后点击Search Project…按钮选好要执行的程序。最后点击Debug按钮进行调试。</p>
+<p>程序进入调试模式之后，Eclipse会询问是否进入调试视图，选择是进入调试视图，然后进行程序的单步调试，并观察变量和表达式的值。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+		<div>
+					
+						
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+  
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script src="https://cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <p><span>本文标题:</span><a href="/2018/03/30/ns3-001/">NS-3学习笔记（一）：NS-3的运行环境搭建</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 Rain Sia <rainsia@163.com> 的个人博客">Rain Sia <rainsia@163.com></a></p>
+  <p><span>发布时间:</span>2018年03月30日 - 18:03</p>
+  <p><span>最后更新:</span>2018年10月20日 - 11:10</p>
+  <p><span>原始链接:</span><a href="/2018/03/30/ns3-001/" title="NS-3学习笔记（一）：NS-3的运行环境搭建">https://rainsia.github.io/2018/03/30/ns3-001/</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="http://yoursite.com/2018/03/30/ns3-001/"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>版权信息:</span>本文为作者原创文章，如需进行非商业性转载，请注明出处并保留原文链接及作者。如要进行商业性转载，请获得作者授权！</p>  
+  <p><span>联系方式:</span>rainsia@163.com</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+      $(".fa-clipboard").click(function(){
+      clipboard.on('success', function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success", 
+          showConfirmButton: true
+          });
+        });
+    });  
+</script>
+
+
+					
+		</div>
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/NS-3/" rel="tag"># NS-3</a>
+          
+            <a href="/tags/C/" rel="tag"># C++</a>
+          
+            <a href="/tags/Simulation/" rel="tag"># Simulation</a>
+          
+            <a href="/tags/Environment/" rel="tag"># Environment</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/03/18/hibernate-003/" rel="next" title="Hibernate学习笔记（三）Hibernate中的主键 之 Sequence">
+                <i class="fa fa-chevron-left"></i> Hibernate学习笔记（三）Hibernate中的主键 之 Sequence
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/03/30/ns3-002/" rel="prev" title="NS-3学习笔记（二）：NS-3的日志系统">
+                NS-3学习笔记（二）：NS-3的日志系统 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.gif"
+                alt="Rain Sia <rainsia@163.com>" />
+            
+              <p class="site-author-name" itemprop="name">Rain Sia <rainsia@163.com></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">12</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">6</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">29</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#NS-3简介"><span class="nav-number">1.</span> <span class="nav-text">NS-3简介</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#NS-3和NS-2的联系与区别"><span class="nav-number">1.1.</span> <span class="nav-text">NS-3和NS-2的联系与区别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#NS-3的开发环境"><span class="nav-number">1.2.</span> <span class="nav-text">NS-3的开发环境</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#NS-3的编译"><span class="nav-number">2.</span> <span class="nav-text">NS-3的编译</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#环境配置"><span class="nav-number">2.1.</span> <span class="nav-text">环境配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#下载NS-3"><span class="nav-number">2.2.</span> <span class="nav-text">下载NS-3</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#NS-3的编译-1"><span class="nav-number">2.3.</span> <span class="nav-text">NS-3的编译</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#不同的编译配置"><span class="nav-number">2.4.</span> <span class="nav-text">不同的编译配置</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#开发NS-3程序"><span class="nav-number">3.</span> <span class="nav-text">开发NS-3程序</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#运行方式"><span class="nav-number">4.</span> <span class="nav-text">运行方式</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#调试"><span class="nav-number">4.1.</span> <span class="nav-text">调试</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#使用Eclipse开发NS-3程序"><span class="nav-number">5.</span> <span class="nav-text">使用Eclipse开发NS-3程序</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#配置项目"><span class="nav-number">5.1.</span> <span class="nav-text">配置项目</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#运行程序"><span class="nav-number">5.2.</span> <span class="nav-text">运行程序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#跟踪调试程序"><span class="nav-number">5.3.</span> <span class="nav-text">跟踪调试程序</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Rain Sia, All rights reversed.<br/>本站所有原创文章，如进行非商业目的转载，请注明出处。若要进行商业目的转载，必须取得授权。<br/>--作者</span>
+
+  
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动 v3.5.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Gemini</a> v6.4.2</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv" title="总访客量">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="site-pv" title="总访问量">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.4.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.4.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.4.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.4.2"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.4.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.4.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.4.2"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  
+  
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(function (item) {
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'KSHKjGm3HfpWAPzaHoA4NV0H-gzGzoHsz',
+        appKey: '55JA7fexBRQej1dHDpuxfTA0',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        meta:guest,
+        pageSize:'10' || 10,
+        visitor: false
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

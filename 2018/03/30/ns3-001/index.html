@@ -127,7 +127,7 @@
 <meta property="og:image" content="http://rainsia.github.io/2018/03/30/ns3-001/shot_2018-04-05_01-36-30.png">
 <meta property="og:image" content="http://rainsia.github.io/2018/03/30/ns3-001/shot_2018-04-05_01-39-44.png">
 <meta property="og:image" content="http://rainsia.github.io/2018/03/30/ns3-001/shot_2018-04-05_01-49-44.png">
-<meta property="og:updated_time" content="2018-10-22T06:45:09.067Z">
+<meta property="og:updated_time" content="2018-10-22T15:33:58.964Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="NS-3学习笔记（一）：NS-3的运行环境搭建">
 <meta name="twitter:description" content="本章主要介绍如何在Linux平台（主要使用Ubuntu系统）下，建立NS-3的运行环境。可以进行NS-3程序的仿真工作。">
@@ -382,7 +382,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2018-10-22 14:45:09" itemprop="dateModified" datetime="2018-10-22T14:45:09+08:00">2018-10-22</time>
+                <time title="修改时间：2018-10-22 23:33:58" itemprop="dateModified" datetime="2018-10-22T23:33:58+08:00">2018-10-22</time>
               
             
           </span>
@@ -477,10 +477,14 @@
 <h2 id="NS-3的开发环境"><a href="#NS-3的开发环境" class="headerlink" title="NS-3的开发环境"></a>NS-3的开发环境</h2><p>NS-3的脚本由C++或者Python编写。从NS-3.2开始，NS3的API提供了python语言接口，但是所有的模块都是由C++编写的，Python仅仅是做了一种映射。NS-3使用<a href="https://waf.io/" target="_blank" rel="noopener">waf</a>作为其自动化编译工具（类似于流行的make），使用<a href="https://www.mercurial-scm.org/" target="_blank" rel="noopener">Mercurial</a>作为其版本管理系统（类似于流行的git）。</p>
 <p>NS-3基本上只能运行在Linux系统中，或者可以使用Windows系统安装虚拟机，或者安装Gygwin环境。但是Linux原生环境是最好的。本文中，我所使用的是Ubuntu环境，版本为16.04.4 LTS x64。</p>
 <h1 id="NS-3的编译"><a href="#NS-3的编译" class="headerlink" title="NS-3的编译"></a>NS-3的编译</h1><h2 id="环境配置"><a href="#环境配置" class="headerlink" title="环境配置"></a>环境配置</h2><p>使用Ubuntu来开发NS-3还是比较方便的。</p>
-<p>\1. 安装编译环境。直接运行</p>
+<ol>
+<li>安装编译环境。直接运行</li>
+</ol>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install build-essential</span><br></pre></td></tr></table></figure>
 <p>来安装编译所需的环境。实际上就是安装了GNU GCC编译工具套装和相关的库。</p>
-<p>\2. 安装Ubuntu Make工具</p>
+<ol>
+<li>安装Ubuntu Make工具</li>
+</ol>
 <p>Ubuntu Make（umake）前身是 Ubuntu Developer Tools Center。可在 Ubuntu 平台上快速安装各种语言的开发环境和开发工具。我们将使用umake来安装Eclipse工具，以便后面用来开发NS-3。</p>
 <p>直接运行命令：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo add-apt-repository ppa:ubuntu-desktop/ubuntu-make</span><br></pre></td></tr></table></figure>
@@ -490,7 +494,9 @@
 <p>然后安装umake软件：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install ubuntu-make</span><br></pre></td></tr></table></figure>
 <p>可以通过查看umake的帮助来了解umake的使用。其实使用过程非常简单，我们仅仅使用它来安装Eclipse工具，这里就不过多讲解。</p>
-<p>\3. 安装JDK</p>
+<ol>
+<li>安装JDK</li>
+</ol>
 <p>Eclipse是使用Java开发的，因此要运行Eclipse，必须先安装JDK。如果选择其他的C++开发工具来开发NS-3，则可以不用安装JDK和接下来的Eclipse了。</p>
 <p>在Ubuntu中安装JDK也比较简单。Linux中JDK有两种版本：OpenJDK和Oracle JDK。对于开发NS-3来说，安装两者都可以。由于我本身还需要开发Java程序，所以我还是选择Oracle官方的JDK版本。</p>
 <p>Ubuntu本身的源当中没有提供Oracle的JDK，因此需要添加第三方的ppa源。</p>
@@ -502,7 +508,21 @@
 <p>安装过程中，会要求我们接受授权说明。</p>
 <p>最后配置JDK的环境变量，PPA源中已经给我们写好了脚本，直接安装即可：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install oracle-java9-set-default</span><br></pre></td></tr></table></figure>
-<p>\4. 安装Eclipse-CPP</p>
+<p><strong>Update</strong>: 自从Oracle发布JDK11之后，Oracle改变了官方JDK的使用授权：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">You may not:  </span><br><span class="line">- use the Programs for any data processing or any commercial, production, or internal business purposes other than developing, testing, prototyping, and demonstrating your Application;</span><br></pre></td></tr></table></figure>
+<p>换句话说，JDK11已经不能在生产环境免费使用，因此我更加推荐安装OpenJDK。在ubuntu当中安装OpenJDK也更加的方便。推荐使用SDKMan来安装。</p>
+<p>打开终端输入（如果没有安装过curl需要先通过sudo apt-get install curl来安装）：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ curl -s &quot;https://get.sdkman.io&quot; | bash</span><br></pre></td></tr></table></figure>
+<p>来安装sdkman，这一步比较简单，直接按照提示做即可。安装完成之后执行如下命令进行初始化：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ source &quot;$HOME/.sdkman/bin/sdkman-init.sh&quot;</span><br></pre></td></tr></table></figure>
+<p>初始化完成之后执行如下命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sdk version</span><br></pre></td></tr></table></figure>
+<p>如果能够正常输出sdkman的版本，那么证明SDKMan已经配置完成了。最后运行：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sdk install java</span><br></pre></td></tr></table></figure>
+<p>即可安装OpenJDK11。安装完成后，SDKMan会询问是否要将OpenJDK11设置为默认JDK，选择是即可。</p>
+<ol>
+<li>安装Eclipse-CPP</li>
+</ol>
 <p>Eclipse主要是作为开发Java的工具而广为人知的。其实Eclipse也具有CDT插件，可以用来开发C++程序。我比较熟悉Eclipse的各种功能，因此主要使用Eclipse作为开发工具。如果熟悉其他的工具，完全可以使用其他的IDE来开发NS-3。</p>
 <p>使用umake安装Eclipse：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ umake ide eclipse-cpp</span><br></pre></td></tr></table></figure>
@@ -631,7 +651,7 @@
   <p><span>本文标题:</span><a href="/2018/03/30/ns3-001/">NS-3学习笔记（一）：NS-3的运行环境搭建</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 Rain Sia <rainsia@163.com> 的个人博客">Rain Sia <rainsia@163.com></a></p>
   <p><span>发布时间:</span>2018年03月30日 - 18:03</p>
-  <p><span>最后更新:</span>2018年10月22日 - 14:10</p>
+  <p><span>最后更新:</span>2018年10月22日 - 23:10</p>
   <p><span>原始链接:</span>
 		<a href="/2018/03/30/ns3-001/" title="NS-3学习笔记（一）：NS-3的运行环境搭建">
 			http://rainsia.github.io/2018/03/30/ns3-001/

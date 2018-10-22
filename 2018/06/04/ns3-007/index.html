@@ -120,14 +120,12 @@
 <meta property="og:site_name" content="Rain&#39;s Blog">
 <meta property="og:description" content="本章主要介绍NS-3的聚合。聚合是一种对象组合和功能扩展的设计范式。是一种比类的继承更加有效的类的功能扩展方式。NS-3在其对象框架当中实现了聚合的概念以及很多工具方法，使得我们在NS-3当中使用聚合变得非常的容易。同时，NS-3当中大量的使用了对象聚合的思想来进行设计，特别是网络协议的组合方面。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://rainsia.gitee.io/2018/06/04/ns3-007/printer-class.jpg">
-<meta property="og:image" content="http://rainsia.gitee.io/2018/06/04/ns3-007/printer-classes.jpg">
-<meta property="og:image" content="http://rainsia.gitee.io/2018/06/04/ns3-007/printer-classes-aggregation.jpg">
-<meta property="og:updated_time" content="2018-10-20T11:43:26.998Z">
+<meta property="og:image" content="http://rainsia.gitee.io/blog/2018/06/04/ns3-007/printer-class.jpg">
+<meta property="og:updated_time" content="2018-10-22T06:27:22.409Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="NS-3学习笔记（七）：NS-3的对象框架 之 聚合">
 <meta name="twitter:description" content="本章主要介绍NS-3的聚合。聚合是一种对象组合和功能扩展的设计范式。是一种比类的继承更加有效的类的功能扩展方式。NS-3在其对象框架当中实现了聚合的概念以及很多工具方法，使得我们在NS-3当中使用聚合变得非常的容易。同时，NS-3当中大量的使用了对象聚合的思想来进行设计，特别是网络协议的组合方面。">
-<meta name="twitter:image" content="http://rainsia.gitee.io/2018/06/04/ns3-007/printer-class.jpg">
+<meta name="twitter:image" content="http://rainsia.gitee.io/blog/2018/06/04/ns3-007/printer-class.jpg">
 
 
 
@@ -378,7 +376,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2018-10-20 19:43:26" itemprop="dateModified" datetime="2018-10-20T19:43:26+08:00">2018-10-20</time>
+                <time title="修改时间：2018-10-22 14:27:22" itemprop="dateModified" datetime="2018-10-22T14:27:22+08:00">2018-10-22</time>
               
             
           </span>
@@ -464,11 +462,11 @@
         <p>本章主要介绍NS-3的聚合。聚合是一种对象组合和功能扩展的设计范式。是一种比类的继承更加有效的类的功能扩展方式。NS-3在其对象框架当中实现了聚合的概念以及很多工具方法，使得我们在NS-3当中使用聚合变得非常的容易。同时，NS-3当中大量的使用了对象聚合的思想来进行设计，特别是网络协议的组合方面。</p>
 <a id="more"></a>
 <h1 id="聚合的概念"><a href="#聚合的概念" class="headerlink" title="聚合的概念"></a>聚合的概念</h1><p>在面向对象的程序设计当中，我们经常会使用继承来增强一个类。例如我们要实现打印机，那么我们首先会实现一个Printer抽象类。如果要增加打印机的功能，例如需要激光打印机和喷墨打印机，那么我们会通过继承Printer类来实现：LaserPrinter，InkJetPrinter。其类图关系如下所示：</p>
-<img src="/2018/06/04/ns3-007/printer-class.jpg" title="使用继承实现激光和喷墨打印机">
+<p><img src="printer-class.jpg" alt="使用继承实现激光和喷墨打印机"><br><!-- <img src="/blog/2018/06/04/ns3-007/printer-class.jpg" title="使用继承实现激光和喷墨打印机"> –&gt;</p>
 <p>这种继承关系是合理的，不管是激光打印机还是喷墨打印机都是打印机的一种。因此这是一个is-a关系。在大部分时候这种关系在面向对象程序设计当中都是使用继承来实现的。但是试想以下，这种继承情况不是永远适用的。例如，如果打印机又分为彩色的和黑白的，此外，不同的打印机能够打印的纸张型号也不同，那么再使用继承关系就变得非常不实际。因为激光打印机和喷墨打印机都需要实现不同的颜色和纸张。那么这种继承关系会变为乘法数量关系，如下图所示：</p>
-<img src="/2018/06/04/ns3-007/printer-classes.jpg" title="使用继承实现激光和喷墨打印机和颜色纸张的组合情况">
+<p><img src="printer-classes.jpg" alt="使用继承实现激光和喷墨打印机和颜色纸张的组合情况"><br><!-- <img src="/blog/2018/06/04/ns3-007/printer-classes.jpg" title="使用继承实现激光和喷墨打印机和颜色纸张的组合情况"> –&gt;</p>
 <p>这种关系不但不合理，而且看起来反而会觉得有点傻。傻的原因在于有太多的重复，代码复用性不高。我们从另外一个角度去考虑这个问题，打印机可以认为是墨盒、纸盒等元素组成的，那么我们能不能以组合的方式来思考这个问题？例如，打印机包含墨盒和纸张。然后墨盒和纸张又分为不同的型号。用类图来表示可以表示为：</p>
-<img src="/2018/06/04/ns3-007/printer-classes-aggregation.jpg" title="使用聚合实现激光和喷墨打印机和颜色纸张的组合情况">
+<p><img src="printer-classes-aggregation.jpg" alt="使用聚合实现激光和喷墨打印机和颜色纸张的组合情况 "><br><!-- <img src="/blog/2018/06/04/ns3-007/printer-classes-aggregation.jpg" title="使用聚合实现激光和喷墨打印机和颜色纸张的组合情况"> –&gt;</p>
 <p>由此可见类的数量减少了，更特别的是，如果以后要增加新的墨盒和纸张类型，相对也比较简单，仅需要在墨盒和纸张类下面进行继承即可，而无需继承打印机类。看起来这种方式更加合理。这种类和类之间的关系就称为聚合(Aggregation)。</p>
 <p>我们会发现，聚合主要是根据类型来识别的。例如Printer当中主要根据是Cartridge还是PrintPaper来识别其中主要是什么东西。</p>
 <h1 id="NS-3对象框架的聚合"><a href="#NS-3对象框架的聚合" class="headerlink" title="NS-3对象框架的聚合"></a>NS-3对象框架的聚合</h1><p>NS-3当中根据类型识别的原则实现了一个通用的聚合框架。在传统的聚合当中，我们会发现一个问题，如果我们想要在打印机当中再聚合另外一个东西，例如如果打印机未来要支持扫描功能的话，那么我们在当中要新增一个Scanner属性。这么做的过程当中，我们必须要修改Printer基类，否则无法添加Scanner属性。NS-3为了使得程序扩展过程当中不需要频繁更改基类，将其对象框架设计成了一种通用的聚合范式：一个对象只要继承了Object类，其当中就可以聚合各种各样的其他对象，这些对象通过类型进行识别，每个类型的对象只能聚合一次。聚合的对象必须继承自Object类，被继承的对象至少要实现智能指针。</p>
@@ -599,7 +597,7 @@
 <li>在NotifyNewAggregate()方法当中可以安全地再次聚合其他对象。</li>
 </ol>
 <p><strong>(具体例子待更新)</strong></p>
-
+--></p>
       
     </div>
 
@@ -625,7 +623,7 @@
   <p><span>本文标题:</span><a href="/blog/2018/06/04/ns3-007/">NS-3学习笔记（七）：NS-3的对象框架 之 聚合</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 Rain Sia <rainsia@163.com> 的个人博客">Rain Sia <rainsia@163.com></a></p>
   <p><span>发布时间:</span>2018年06月04日 - 13:06</p>
-  <p><span>最后更新:</span>2018年10月20日 - 19:10</p>
+  <p><span>最后更新:</span>2018年10月22日 - 14:10</p>
   <p><span>原始链接:</span><a href="/blog/2018/06/04/ns3-007/" title="NS-3学习笔记（七）：NS-3的对象框架 之 聚合">https://rainsia.github.io/blog/2018/06/04/ns3-007/</a>
     <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="http://rainsia.gitee.io/blog/2018/06/04/ns3-007/"  aria-label="复制成功！"></i></span>
   </p>
@@ -904,7 +902,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#聚合的概念"><span class="nav-number">1.</span> <span class="nav-text">聚合的概念</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#NS-3对象框架的聚合"><span class="nav-number">2.</span> <span class="nav-text">NS-3对象框架的聚合</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Object对聚合的支持"><span class="nav-number">2.1.</span> <span class="nav-text">Object对聚合的支持</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#聚合和获取对象的例子"><span class="nav-number">2.2.</span> <span class="nav-text">聚合和获取对象的例子</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#多次聚合对象"><span class="nav-number">2.3.</span> <span class="nav-text">多次聚合对象</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#聚合相同类型的对象"><span class="nav-number">2.4.</span> <span class="nav-text">聚合相同类型的对象</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#遍历聚合对象"><span class="nav-number">2.5.</span> <span class="nav-text">遍历聚合对象</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#奇怪的聚合方式"><span class="nav-number">2.6.</span> <span class="nav-text">奇怪的聚合方式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用GetObject-进行对象类型转换"><span class="nav-number">2.7.</span> <span class="nav-text">使用GetObject()进行对象类型转换</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#聚合通知"><span class="nav-number">2.8.</span> <span class="nav-text">聚合通知</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#聚合的概念"><span class="nav-number">1.</span> <span class="nav-text">聚合的概念</span></a></li></ol></div>
             
 
           </div>

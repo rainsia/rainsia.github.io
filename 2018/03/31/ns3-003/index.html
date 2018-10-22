@@ -52,7 +52,7 @@
 
   
   
-  <link href="/blog/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
 
 
 
@@ -60,21 +60,21 @@
 
 
 
-<link href="/blog/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
 
-<link href="/blog/css/main.css?v=6.4.2" rel="stylesheet" type="text/css" />
-
-
-  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png?v=6.4.2">
+<link href="/css/main.css?v=6.4.2" rel="stylesheet" type="text/css" />
 
 
-  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon-32x32-next.png?v=6.4.2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.4.2">
 
 
-  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon-16x16-next.png?v=6.4.2">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.4.2">
 
 
-  <link rel="mask-icon" href="/blog/images/logo.svg?v=6.4.2" color="#222">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.4.2">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.4.2" color="#222">
 
 
 
@@ -87,7 +87,7 @@
 <script type="text/javascript" id="hexo.configurations">
   var NexT = window.NexT || {};
   var CONFIG = {
-    root: '/blog/',
+    root: '/',
     scheme: 'Gemini',
     version: '6.4.2',
     sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
@@ -116,23 +116,23 @@
 <meta name="keywords" content="NS-3,C++,Simulation,Object,SimpleRefCount,Ref,Unref,Ptr,Smart Pointer">
 <meta property="og:type" content="article">
 <meta property="og:title" content="NS-3学习笔记（三）：NS-3的对象框架 之 智能指针">
-<meta property="og:url" content="http://rainsia.gitee.io/blog/2018/03/31/ns3-003/index.html">
+<meta property="og:url" content="http://rainsia.gitee.io/2018/03/31/ns3-003/index.html">
 <meta property="og:site_name" content="Rain&#39;s Blog">
 <meta property="og:description" content="本章主要介绍NS-3的对象框架当中的智能指针。任何类实现了Ref()和Unref()两个方法，并且能够维护一个内部引用变量都可能成为智能指针，从而无需自己释放内存空间。NS-3对象框架当中，提供了SimpleRefCount来支持智能指针。任何想要使用智能指针的类，只需简单地实现SimpleRefCount即可。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://rainsia.gitee.io/blog/2018/03/31/ns3-003/classns3_1_1_object__coll__graph.png">
+<meta property="og:image" content="http://rainsia.gitee.io/2018/03/31/ns3-003/classns3_1_1_object__coll__graph.png">
 <meta property="og:updated_time" content="2018-10-22T06:26:25.400Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="NS-3学习笔记（三）：NS-3的对象框架 之 智能指针">
 <meta name="twitter:description" content="本章主要介绍NS-3的对象框架当中的智能指针。任何类实现了Ref()和Unref()两个方法，并且能够维护一个内部引用变量都可能成为智能指针，从而无需自己释放内存空间。NS-3对象框架当中，提供了SimpleRefCount来支持智能指针。任何想要使用智能指针的类，只需简单地实现SimpleRefCount即可。">
-<meta name="twitter:image" content="http://rainsia.gitee.io/blog/2018/03/31/ns3-003/classns3_1_1_object__coll__graph.png">
+<meta name="twitter:image" content="http://rainsia.gitee.io/2018/03/31/ns3-003/classns3_1_1_object__coll__graph.png">
 
 
 
 
 
 
-  <link rel="canonical" href="http://rainsia.gitee.io/blog/2018/03/31/ns3-003/"/>
+  <link rel="canonical" href="http://rainsia.gitee.io/2018/03/31/ns3-003/"/>
 
 
 
@@ -208,7 +208,7 @@
     
 
     <div class="custom-logo-site-title">
-      <a href="/blog/" class="brand" rel="start">
+      <a href="/" class="brand" rel="start">
         <span class="logo-line-before"><i></i></span>
         <span class="site-title">Rain's Blog</span>
         <span class="logo-line-after"><i></i></span>
@@ -241,7 +241,7 @@
         
           
           <li class="menu-item menu-item-home">
-    <a href="/blog/" rel="section">
+    <a href="/" rel="section">
       <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
   </li>
         
@@ -249,7 +249,7 @@
         
           
           <li class="menu-item menu-item-tags">
-    <a href="/blog/tags/" rel="section">
+    <a href="/tags/" rel="section">
       <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
   </li>
         
@@ -257,7 +257,7 @@
         
           
           <li class="menu-item menu-item-categories">
-    <a href="/blog/categories/" rel="section">
+    <a href="/categories/" rel="section">
       <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
   </li>
         
@@ -265,7 +265,7 @@
         
           
           <li class="menu-item menu-item-archives">
-    <a href="/blog/archives/" rel="section">
+    <a href="/archives/" rel="section">
       <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
   </li>
 
@@ -317,12 +317,12 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://rainsia.gitee.io/blog/blog/2018/03/31/ns3-003/">
+    <link itemprop="mainEntityOfPage" href="http://rainsia.gitee.io/2018/03/31/ns3-003/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Rain Sia <rainsia@163.com>">
       <meta itemprop="description" content="">
-      <meta itemprop="image" content="/blog/images/avatar.gif">
+      <meta itemprop="image" content="/images/avatar.gif">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -393,21 +393,21 @@
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/blog/categories/network/" itemprop="url" rel="index"><span itemprop="name">网络</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/network/" itemprop="url" rel="index"><span itemprop="name">网络</span></a></span>
 
                 
                 
                   ，
                 
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/blog/categories/network/simulation/" itemprop="url" rel="index"><span itemprop="name">仿真</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/network/simulation/" itemprop="url" rel="index"><span itemprop="name">仿真</span></a></span>
 
                 
                 
                   ，
                 
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/blog/categories/network/simulation/NS-3/" itemprop="url" rel="index"><span itemprop="name">NS-3</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/network/simulation/NS-3/" itemprop="url" rel="index"><span itemprop="name">NS-3</span></a></span>
 
                 
                 
@@ -422,8 +422,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/blog/2018/03/31/ns3-003/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/blog/2018/03/31/ns3-003/" itemprop="commentCount"></span>
+                <a href="/2018/03/31/ns3-003/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2018/03/31/ns3-003/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -470,7 +470,7 @@
 </ul>
 <p>根据对不同的特性的需求，我们需要继承不同的基类。例如，如果我们不需要属性系统和聚合特性的支持，我们就直接继承SimpleRefCount即可。NS-3自带的类中最经典的继承自SinpleRefCount的类是Packet（表示网络中的一个数据包）。NS-3自带的类中最经典的继承自ObjectBase的类是Tag（表示包中的标记）。而继承自Object的最经典的类是Node（表示网络中的一个节点，可以是主机也可以是中继节点）。</p>
 <p>Object的继承关系，如下图所示：</p>
-<p><img src="classns3_1_1_object__coll__graph.png" alt="Object类的继承关系"><br><!-- <img src="/blog/2018/03/31/ns3-003/classns3_1_1_object__coll__graph.png" title="Object类的继承关系"> –&gt;</p>
+<p><img src="classns3_1_1_object__coll__graph.png" alt="Object类的继承关系"><br><!-- <img src="/2018/03/31/ns3-003/classns3_1_1_object__coll__graph.png" title="Object类的继承关系"> –&gt;</p>
 <h1 id="SimpleRefCount和智能指针Ptr"><a href="#SimpleRefCount和智能指针Ptr" class="headerlink" title="SimpleRefCount和智能指针Ptr"></a>SimpleRefCount和智能指针Ptr</h1><p>C++的对象和内存管理机制相对比较复杂。即使是拥有很多年开发经验的程序员，也很容易在创建和释放内存时出现各种问题，从而导致内存泄漏。我们通常在学习C++的时候所写的程序都相对较小，而运行时间也不长。因此，我们能体会到出现内存泄露的危害也比较小。然而，在实际的仿真当中，需要创建大量的对象（例如，几百万个Packet对象），而运行时间也非常长（例如仿真要不间断运行一个月），因此如果出现对象的内存泄露，将使得程序运行效率非常低下，甚至造成系统内存耗尽而使得仿真异常终止。</p>
 <p>NS-3提供了一套基于<strong>引用计数</strong>的智能指针系统，可以使得对象在不再被使用时自动被删除。这种机制不同于Java的垃圾回收机制，其主要使用一个垃圾回收线程来扫描垃圾对象（没有任何引用的对象），然后再删除。NS-3的智能指针简单地使用一个Ref()方法在有新的指针指向对象时，将其内部的计数加1；而在指针不再指向时调用UnRef()方法，将计数器减1。当计数器为0的时候，说明没有任何指针再指向该对象，那么说明对象不再被需要，从而可以直接删除。</p>
 <p>为了实现这种自动计数的智能指针机制，NS-3使用了两个类：SimpleRefCount和Ptr。</p>
@@ -577,12 +577,12 @@
   <!-- JS库 sweetalert 可修改路径 -->
   <script src="https://cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-  <p><span>本文标题:</span><a href="/blog/2018/03/31/ns3-003/">NS-3学习笔记（三）：NS-3的对象框架 之 智能指针</a></p>
+  <p><span>本文标题:</span><a href="/2018/03/31/ns3-003/">NS-3学习笔记（三）：NS-3的对象框架 之 智能指针</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 Rain Sia <rainsia@163.com> 的个人博客">Rain Sia <rainsia@163.com></a></p>
   <p><span>发布时间:</span>2018年03月31日 - 17:03</p>
   <p><span>最后更新:</span>2018年10月22日 - 14:10</p>
-  <p><span>原始链接:</span><a href="/blog/2018/03/31/ns3-003/" title="NS-3学习笔记（三）：NS-3的对象框架 之 智能指针">https://rainsia.github.io/blog/2018/03/31/ns3-003/</a>
-    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="http://rainsia.gitee.io/blog/2018/03/31/ns3-003/"  aria-label="复制成功！"></i></span>
+  <p><span>原始链接:</span><a href="/2018/03/31/ns3-003/" title="NS-3学习笔记（三）：NS-3的对象框架 之 智能指针">https://rainsia.github.io/2018/03/31/ns3-003/</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="http://rainsia.gitee.io/2018/03/31/ns3-003/"  aria-label="复制成功！"></i></span>
   </p>
   <p><span>版权信息:</span>本文为作者原创文章，如需进行非商业性转载，请注明出处并保留原文链接及作者。如要进行商业性转载，请获得作者授权！</p>  
   <p><span>联系方式:</span>rainsia@163.com</p>  
@@ -611,23 +611,23 @@
       
         <div class="post-tags">
           
-            <a href="/blog/tags/NS-3/" rel="tag"># NS-3</a>
+            <a href="/tags/NS-3/" rel="tag"># NS-3</a>
           
-            <a href="/blog/tags/C/" rel="tag"># C++</a>
+            <a href="/tags/C/" rel="tag"># C++</a>
           
-            <a href="/blog/tags/Simulation/" rel="tag"># Simulation</a>
+            <a href="/tags/Simulation/" rel="tag"># Simulation</a>
           
-            <a href="/blog/tags/Object/" rel="tag"># Object</a>
+            <a href="/tags/Object/" rel="tag"># Object</a>
           
-            <a href="/blog/tags/SimpleRefCount/" rel="tag"># SimpleRefCount</a>
+            <a href="/tags/SimpleRefCount/" rel="tag"># SimpleRefCount</a>
           
-            <a href="/blog/tags/Ref/" rel="tag"># Ref</a>
+            <a href="/tags/Ref/" rel="tag"># Ref</a>
           
-            <a href="/blog/tags/Unref/" rel="tag"># Unref</a>
+            <a href="/tags/Unref/" rel="tag"># Unref</a>
           
-            <a href="/blog/tags/Ptr/" rel="tag"># Ptr</a>
+            <a href="/tags/Ptr/" rel="tag"># Ptr</a>
           
-            <a href="/blog/tags/Smart-Pointer/" rel="tag"># Smart Pointer</a>
+            <a href="/tags/Smart-Pointer/" rel="tag"># Smart Pointer</a>
           
         </div>
       
@@ -640,7 +640,7 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/blog/2018/03/30/ns3-002/" rel="next" title="NS-3学习笔记（二）：NS-3的日志系统">
+              <a href="/2018/03/30/ns3-002/" rel="next" title="NS-3学习笔记（二）：NS-3的日志系统">
                 <i class="fa fa-chevron-left"></i> NS-3学习笔记（二）：NS-3的日志系统
               </a>
             
@@ -650,7 +650,7 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/blog/2018/04/08/ns3-004/" rel="prev" title="NS-3学习笔记（四）：NS-3的对象框架 之 TypeId">
+              <a href="/2018/04/08/ns3-004/" rel="prev" title="NS-3学习笔记（四）：NS-3的对象框架 之 TypeId">
                 NS-3学习笔记（四）：NS-3的对象框架 之 TypeId <i class="fa fa-chevron-right"></i>
               </a>
             
@@ -715,7 +715,7 @@
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
               <img class="site-author-image" itemprop="image"
-                src="/blog/images/avatar.gif"
+                src="/images/avatar.gif"
                 alt="Rain Sia <rainsia@163.com>" />
             
               <p class="site-author-name" itemprop="name">Rain Sia <rainsia@163.com></p>
@@ -727,7 +727,7 @@
               
                 <div class="site-state-item site-state-posts">
                 
-                  <a href="/blog/archives/">
+                  <a href="/archives/">
                 
                     <span class="site-state-item-count">13</span>
                     <span class="site-state-item-name">日志</span>
@@ -739,7 +739,7 @@
                 
                 
                 <div class="site-state-item site-state-categories">
-                  <a href="/blog/categories/index.html">
+                  <a href="/categories/index.html">
                     
                     
                       
@@ -764,7 +764,7 @@
                 
                 
                 <div class="site-state-item site-state-tags">
-                  <a href="/blog/tags/index.html">
+                  <a href="/tags/index.html">
                     
                     
                       
@@ -996,54 +996,54 @@
 
   
   
-    <script type="text/javascript" src="/blog/lib/jquery/index.js?v=2.1.3"></script>
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
   
 
   
   
-    <script type="text/javascript" src="/blog/lib/velocity/velocity.min.js?v=1.2.1"></script>
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
   
 
   
   
-    <script type="text/javascript" src="/blog/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
   
 
   
   
-    <script type="text/javascript" src="/blog/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
   
-
-
-  
-
-
-  <script type="text/javascript" src="/blog/js/src/utils.js?v=6.4.2"></script>
-
-  <script type="text/javascript" src="/blog/js/src/motion.js?v=6.4.2"></script>
-
-
-
-  
-  
-
-
-  <script type="text/javascript" src="/blog/js/src/affix.js?v=6.4.2"></script>
-
-  <script type="text/javascript" src="/blog/js/src/schemes/pisces.js?v=6.4.2"></script>
-
-
-
-  
-  <script type="text/javascript" src="/blog/js/src/scrollspy.js?v=6.4.2"></script>
-<script type="text/javascript" src="/blog/js/src/post-details.js?v=6.4.2"></script>
-
 
 
   
 
 
-  <script type="text/javascript" src="/blog/js/src/bootstrap.js?v=6.4.2"></script>
+  <script type="text/javascript" src="/js/src/utils.js?v=6.4.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.4.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.4.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.4.2"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.4.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.4.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.4.2"></script>
 
 
 

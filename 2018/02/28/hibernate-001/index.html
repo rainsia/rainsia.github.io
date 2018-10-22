@@ -52,7 +52,7 @@
 
   
   
-  <link href="./lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
 
 
 
@@ -60,21 +60,21 @@
 
 
 
-<link href="./lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
 
-<link href="./css/main.css?v=6.4.2" rel="stylesheet" type="text/css" />
-
-
-  <link rel="apple-touch-icon" sizes="180x180" href="./images/apple-touch-icon-next.png?v=6.4.2">
+<link href="/css/main.css?v=6.4.2" rel="stylesheet" type="text/css" />
 
 
-  <link rel="icon" type="image/png" sizes="32x32" href="./images/favicon-32x32-next.png?v=6.4.2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.4.2">
 
 
-  <link rel="icon" type="image/png" sizes="16x16" href="./images/favicon-16x16-next.png?v=6.4.2">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.4.2">
 
 
-  <link rel="mask-icon" href="./images/logo.svg?v=6.4.2" color="#222">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.4.2">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.4.2" color="#222">
 
 
 
@@ -87,7 +87,7 @@
 <script type="text/javascript" id="hexo.configurations">
   var NexT = window.NexT || {};
   var CONFIG = {
-    root: './',
+    root: '/',
     scheme: 'Gemini',
     version: '6.4.2',
     sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
@@ -120,12 +120,12 @@
 <meta property="og:site_name" content="Rain&#39;s Blog">
 <meta property="og:description" content="本章主要通过建立一个简单的Hibernate程序“Hello World”，以介绍如何配置Hibernate的运行环境。与传统的Hibernate运行环境不同的是，本文提供了一套通用的配置程序来初始化JPA/Hibernate的运行环境。此外，本文使用了JTA数据源的方法来连接数据库，使得程序具有了分布式事务管理的能力。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://rainsia.github.io/2018/02/28/hibernate-001/2018/02/28/hibernate-001/Snipaste_2018-03-17_08-27-49.png">
+<meta property="og:image" content="http://rainsia.github.io/2018/02/28/hibernate-001/Snipaste_2018-03-17_08-27-49.png">
 <meta property="og:updated_time" content="2018-10-20T11:43:26.843Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Hibernate学习笔记（一）建立Hibernate运行环境">
 <meta name="twitter:description" content="本章主要通过建立一个简单的Hibernate程序“Hello World”，以介绍如何配置Hibernate的运行环境。与传统的Hibernate运行环境不同的是，本文提供了一套通用的配置程序来初始化JPA/Hibernate的运行环境。此外，本文使用了JTA数据源的方法来连接数据库，使得程序具有了分布式事务管理的能力。">
-<meta name="twitter:image" content="http://rainsia.github.io/2018/02/28/hibernate-001/2018/02/28/hibernate-001/Snipaste_2018-03-17_08-27-49.png">
+<meta name="twitter:image" content="http://rainsia.github.io/2018/02/28/hibernate-001/Snipaste_2018-03-17_08-27-49.png">
 
 
 
@@ -208,7 +208,7 @@
     
 
     <div class="custom-logo-site-title">
-      <a href="./" class="brand" rel="start">
+      <a href="/" class="brand" rel="start">
         <span class="logo-line-before"><i></i></span>
         <span class="site-title">Rain's Blog</span>
         <span class="logo-line-after"><i></i></span>
@@ -241,7 +241,7 @@
         
           
           <li class="menu-item menu-item-home">
-    <a href="./" rel="section">
+    <a href="/" rel="section">
       <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
   </li>
         
@@ -249,7 +249,7 @@
         
           
           <li class="menu-item menu-item-tags">
-    <a href="./tags/" rel="section">
+    <a href="/tags/" rel="section">
       <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
   </li>
         
@@ -257,7 +257,7 @@
         
           
           <li class="menu-item menu-item-categories">
-    <a href="./categories/" rel="section">
+    <a href="/categories/" rel="section">
       <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
   </li>
         
@@ -265,7 +265,7 @@
         
           
           <li class="menu-item menu-item-archives">
-    <a href="./archives/" rel="section">
+    <a href="/archives/" rel="section">
       <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
   </li>
 
@@ -317,12 +317,12 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://rainsia.github.io./2018/02/28/hibernate-001/">
+    <link itemprop="mainEntityOfPage" href="http://rainsia.github.io/2018/02/28/hibernate-001/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Rain Sia <rainsia@163.com>">
       <meta itemprop="description" content="">
-      <meta itemprop="image" content="./images/avatar.gif">
+      <meta itemprop="image" content="/images/avatar.gif">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -393,21 +393,21 @@
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="./categories/programming/" itemprop="url" rel="index"><span itemprop="name">编程</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/programming/" itemprop="url" rel="index"><span itemprop="name">编程</span></a></span>
 
                 
                 
                   ，
                 
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="./categories/programming/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/programming/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a></span>
 
                 
                 
                   ，
                 
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="./categories/programming/Java/Hibernate/" itemprop="url" rel="index"><span itemprop="name">Hibernate</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/programming/Java/Hibernate/" itemprop="url" rel="index"><span itemprop="name">Hibernate</span></a></span>
 
                 
                 
@@ -422,8 +422,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="./2018/02/28/hibernate-001/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="./2018/02/28/hibernate-001/" itemprop="commentCount"></span>
+                <a href="/2018/02/28/hibernate-001/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2018/02/28/hibernate-001/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -521,7 +521,7 @@
 <figure class="highlight java"><figcaption><span>TransactionManagerSetup.java</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.rainsia.hibernate.app;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.naming.NamingException;</span><br><span class="line"><span class="keyword">import</span> javax.persistence.EntityManager;</span><br><span class="line"><span class="keyword">import</span> javax.transaction.NotSupportedException;</span><br><span class="line"><span class="keyword">import</span> javax.transaction.UserTransaction;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.slf4j.Logger;</span><br><span class="line"><span class="keyword">import</span> org.slf4j.LoggerFactory;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.rainsia.hibernate.env.JpaSetup;</span><br><span class="line"><span class="keyword">import</span> com.rainsia.hibernate.env.TransactionManagerSetup;</span><br><span class="line"><span class="keyword">import</span> com.rainsia.hibernate.model.Message;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HelloWorldApp</span> </span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 日志</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Logger logger = LoggerFactory.getLogger(HelloWorldApp.class);</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">		TransactionManagerSetup tm = <span class="keyword">null</span>;</span><br><span class="line">		EntityManager em = <span class="keyword">null</span>;</span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			logger.info(<span class="string">"正在创建事务管理器……"</span>);</span><br><span class="line">			tm = <span class="keyword">new</span> TransactionManagerSetup();</span><br><span class="line">			UserTransaction tx = tm.getUserTransaction();</span><br><span class="line">			logger.info(<span class="string">"事务管理器已创建"</span>);</span><br><span class="line">			</span><br><span class="line">			logger.info(<span class="string">"正在开始事务……"</span>);</span><br><span class="line">			tx.begin();							<span class="comment">//开始事务</span></span><br><span class="line">			logger.info(<span class="string">"事务已开始"</span>);</span><br><span class="line">			</span><br><span class="line">			logger.info(<span class="string">"正在创建实体管理器……"</span>);</span><br><span class="line">			JpaSetup jpa = <span class="keyword">new</span> JpaSetup(<span class="string">"HelloWorldPU"</span>);</span><br><span class="line">			em = jpa.createEntityManager();		<span class="comment">//创建实体管理器</span></span><br><span class="line">			logger.info(<span class="string">"实体管理器已创建"</span>);</span><br><span class="line">			</span><br><span class="line">			logger.info(<span class="string">"正在创建实体……"</span>);</span><br><span class="line">			Message message = <span class="keyword">new</span> Message();	<span class="comment">//创建实体</span></span><br><span class="line">			message.setText(<span class="string">"Hello World!"</span>);</span><br><span class="line">			logger.info(<span class="string">"实体以创建"</span>);</span><br><span class="line">			</span><br><span class="line">			<span class="comment">// 保存实体，注意这里仅仅是通知Hibernate需要保存数据，Hibernate此时并不会执行插入数据的SQL</span></span><br><span class="line">			<span class="comment">//	而是等到最后事务提交的时候才执行</span></span><br><span class="line">			logger.info(<span class="string">"正在持久化实体……"</span>);</span><br><span class="line">			em.persist(message);</span><br><span class="line">			logger.info(<span class="string">"实体已持久化"</span>);</span><br><span class="line"></span><br><span class="line">			<span class="comment">// 提交事务，此时Hibernate才真正执行insert语句</span></span><br><span class="line">			logger.info(<span class="string">"正在提交事务……"</span>);</span><br><span class="line">			tx.commit(); <span class="comment">// INSERT into MESSAGE (ID, TEXT) values (1, 'Hello World!')</span></span><br><span class="line">			logger.info(<span class="string">"事务已提交"</span>);</span><br><span class="line">		&#125; <span class="keyword">catch</span> (NamingException ex) &#123;</span><br><span class="line">			ex.printStackTrace();</span><br><span class="line">		&#125; <span class="keyword">catch</span> (NotSupportedException e) &#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">			<span class="keyword">if</span>(em != <span class="keyword">null</span> &amp;&amp; em.isOpen()) &#123;</span><br><span class="line">				logger.info(<span class="string">"正在关闭实体管理器……"</span>);</span><br><span class="line">				em.close();</span><br><span class="line">				logger.info(<span class="string">"实体管理器已关闭"</span>);</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">if</span>(tm != <span class="keyword">null</span>) &#123;</span><br><span class="line">				<span class="keyword">try</span> &#123;</span><br><span class="line">					logger.info(<span class="string">"正在停止事务管理器……"</span>);</span><br><span class="line">					tm.stop();</span><br><span class="line">					logger.info(<span class="string">"事务管理器已停止"</span>);</span><br><span class="line">				&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">					e.printStackTrace();</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">    &#125;	</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>可以看到，创建完实体对象之后，只要调用EntityManager的persist()方法即可将对象保存到数据库中。此处要注意的是，Hibernate不会在刚调用persist()方法的时候马上就执行insert语句来插入数据，而是先记录下用户想做的操作，然后等待事务提交的时候才执行插入。这其实也有利于任务的批量执行：先记录下用户要做的所有的操作，然后统一发送给数据库处理。</p>
 <p>运行该程序之后，可以看到Message实体的一个实例的数据已经插入到数据库中：</p>
-<img src="./2018/02/28/hibernate-001/Snipaste_2018-03-17_08-27-49.png" title="运行结果：Message表">
+<img src="/2018/02/28/hibernate-001/Snipaste_2018-03-17_08-27-49.png" title="运行结果：Message表">
 <p>并且在控制台有如下输出：</p>
 <div class="fold_area">
 		<div class="fold_hider">
@@ -561,11 +561,11 @@
   <!-- JS库 sweetalert 可修改路径 -->
   <script src="https://cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-  <p><span>本文标题:</span><a href="./2018/02/28/hibernate-001/">Hibernate学习笔记（一）建立Hibernate运行环境</a></p>
+  <p><span>本文标题:</span><a href="/2018/02/28/hibernate-001/">Hibernate学习笔记（一）建立Hibernate运行环境</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 Rain Sia <rainsia@163.com> 的个人博客">Rain Sia <rainsia@163.com></a></p>
   <p><span>发布时间:</span>2018年02月28日 - 22:02</p>
   <p><span>最后更新:</span>2018年10月20日 - 19:10</p>
-  <p><span>原始链接:</span><a href="./2018/02/28/hibernate-001/" title="Hibernate学习笔记（一）建立Hibernate运行环境">https://rainsia.github.io./2018/02/28/hibernate-001/</a>
+  <p><span>原始链接:</span><a href="/2018/02/28/hibernate-001/" title="Hibernate学习笔记（一）建立Hibernate运行环境">https://rainsia.github.io/2018/02/28/hibernate-001/</a>
     <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="http://rainsia.github.io/2018/02/28/hibernate-001/"  aria-label="复制成功！"></i></span>
   </p>
   <p><span>版权信息:</span>本文为作者原创文章，如需进行非商业性转载，请注明出处并保留原文链接及作者。如要进行商业性转载，请获得作者授权！</p>  
@@ -595,11 +595,11 @@
       
         <div class="post-tags">
           
-            <a href="./tags/Hibernate/" rel="tag"># Hibernate</a>
+            <a href="/tags/Hibernate/" rel="tag"># Hibernate</a>
           
-            <a href="./tags/Java/" rel="tag"># Java</a>
+            <a href="/tags/Java/" rel="tag"># Java</a>
           
-            <a href="./tags/JPA/" rel="tag"># JPA</a>
+            <a href="/tags/JPA/" rel="tag"># JPA</a>
           
         </div>
       
@@ -612,7 +612,7 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="./2018/01/01/hello-world/" rel="next" title="Hello World">
+              <a href="/2018/01/01/hello-world/" rel="next" title="Hello World">
                 <i class="fa fa-chevron-left"></i> Hello World
               </a>
             
@@ -622,7 +622,7 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="./2018/03/17/hibernate-002/" rel="prev" title="Hibernate学习笔记（二）记录生成SQL中的参数">
+              <a href="/2018/03/17/hibernate-002/" rel="prev" title="Hibernate学习笔记（二）记录生成SQL中的参数">
                 Hibernate学习笔记（二）记录生成SQL中的参数 <i class="fa fa-chevron-right"></i>
               </a>
             
@@ -687,7 +687,7 @@
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
               <img class="site-author-image" itemprop="image"
-                src="./images/avatar.gif"
+                src="/images/avatar.gif"
                 alt="Rain Sia <rainsia@163.com>" />
             
               <p class="site-author-name" itemprop="name">Rain Sia <rainsia@163.com></p>
@@ -699,7 +699,7 @@
               
                 <div class="site-state-item site-state-posts">
                 
-                  <a href="./archives/">
+                  <a href="/archives/">
                 
                     <span class="site-state-item-count">13</span>
                     <span class="site-state-item-name">日志</span>
@@ -711,7 +711,7 @@
                 
                 
                 <div class="site-state-item site-state-categories">
-                  <a href="./categories/index.html">
+                  <a href="/categories/index.html">
                     
                     
                       
@@ -736,7 +736,7 @@
                 
                 
                 <div class="site-state-item site-state-tags">
-                  <a href="./tags/index.html">
+                  <a href="/tags/index.html">
                     
                     
                       
@@ -968,54 +968,54 @@
 
   
   
-    <script type="text/javascript" src="./lib/jquery/index.js?v=2.1.3"></script>
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
   
 
   
   
-    <script type="text/javascript" src="./lib/velocity/velocity.min.js?v=1.2.1"></script>
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
   
 
   
   
-    <script type="text/javascript" src="./lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
   
 
   
   
-    <script type="text/javascript" src="./lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
   
-
-
-  
-
-
-  <script type="text/javascript" src="./js/src/utils.js?v=6.4.2"></script>
-
-  <script type="text/javascript" src="./js/src/motion.js?v=6.4.2"></script>
-
-
-
-  
-  
-
-
-  <script type="text/javascript" src="./js/src/affix.js?v=6.4.2"></script>
-
-  <script type="text/javascript" src="./js/src/schemes/pisces.js?v=6.4.2"></script>
-
-
-
-  
-  <script type="text/javascript" src="./js/src/scrollspy.js?v=6.4.2"></script>
-<script type="text/javascript" src="./js/src/post-details.js?v=6.4.2"></script>
-
 
 
   
 
 
-  <script type="text/javascript" src="./js/src/bootstrap.js?v=6.4.2"></script>
+  <script type="text/javascript" src="/js/src/utils.js?v=6.4.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.4.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.4.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.4.2"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.4.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.4.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.4.2"></script>
 
 
 

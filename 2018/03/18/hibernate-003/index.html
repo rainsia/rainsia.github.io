@@ -52,7 +52,7 @@
 
   
   
-  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+  <link href="./lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
 
 
 
@@ -60,21 +60,21 @@
 
 
 
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+<link href="./lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
 
-<link href="/css/main.css?v=6.4.2" rel="stylesheet" type="text/css" />
-
-
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.4.2">
+<link href="./css/main.css?v=6.4.2" rel="stylesheet" type="text/css" />
 
 
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.4.2">
+  <link rel="apple-touch-icon" sizes="180x180" href="./images/apple-touch-icon-next.png?v=6.4.2">
 
 
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.4.2">
+  <link rel="icon" type="image/png" sizes="32x32" href="./images/favicon-32x32-next.png?v=6.4.2">
 
 
-  <link rel="mask-icon" href="/images/logo.svg?v=6.4.2" color="#222">
+  <link rel="icon" type="image/png" sizes="16x16" href="./images/favicon-16x16-next.png?v=6.4.2">
+
+
+  <link rel="mask-icon" href="./images/logo.svg?v=6.4.2" color="#222">
 
 
 
@@ -87,7 +87,7 @@
 <script type="text/javascript" id="hexo.configurations">
   var NexT = window.NexT || {};
   var CONFIG = {
-    root: '/',
+    root: './',
     scheme: 'Gemini',
     version: '6.4.2',
     sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
@@ -116,33 +116,33 @@
 <meta name="keywords" content="Hibernate,Java,JPA,Primary Key,GeneratedValue,Id">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Hibernate学习笔记（三）Hibernate中的主键 之 Sequence">
-<meta property="og:url" content="http://yoursite.com/2018/03/18/hibernate-003/index.html">
+<meta property="og:url" content="http://rainsia.github.io/2018/03/18/hibernate-003/index.html">
 <meta property="og:site_name" content="Rain&#39;s Blog">
 <meta property="og:description" content="本章主要介绍如何在Hibernate中为实体定义主键，以及JPA中主键的常用生成策略。此外对这些主键生成策略进行了一些分析，以方便在现实实现中选择一种合适的策略。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://yoursite.com/2018/03/18/hibernate-003/Snipaste_2018-03-16_09-50-39.png">
-<meta property="og:image" content="http://yoursite.com/2018/03/18/hibernate-003/Snipaste_2018-03-16_10-38-48.png">
-<meta property="og:image" content="http://yoursite.com/2018/03/18/hibernate-003/Snipaste_2018-03-16_10-57-22.png">
-<meta property="og:image" content="http://yoursite.com/2018/03/18/hibernate-003/Snipaste_2018-03-19_18-23-26.png">
-<meta property="og:image" content="http://yoursite.com/2018/03/18/hibernate-003/Snipaste_2018-03-19_17-05-31.png">
-<meta property="og:image" content="http://yoursite.com/2018/03/18/hibernate-003/Snipaste_2018-03-19_18-25-11.png">
-<meta property="og:image" content="http://yoursite.com/2018/03/18/hibernate-003/Snipaste_2018-03-19_21-31-49.png">
-<meta property="og:image" content="http://yoursite.com/2018/03/18/hibernate-003/Snipaste_2018-03-19_21-32-56.png">
-<meta property="og:image" content="http://yoursite.com/2018/03/18/hibernate-003/Snipaste_2018-03-19_21-35-34.png">
-<meta property="og:image" content="http://yoursite.com/2018/03/18/hibernate-003/Snipaste_2018-03-20_22-34-50.png">
-<meta property="og:image" content="http://yoursite.com/2018/03/18/hibernate-003/Snipaste_2018-03-20_22-58-34.png">
+<meta property="og:image" content="http://rainsia.github.io/2018/03/18/hibernate-003/2018/03/18/hibernate-003/Snipaste_2018-03-16_09-50-39.png">
+<meta property="og:image" content="http://rainsia.github.io/2018/03/18/hibernate-003/2018/03/18/hibernate-003/Snipaste_2018-03-16_10-38-48.png">
+<meta property="og:image" content="http://rainsia.github.io/2018/03/18/hibernate-003/2018/03/18/hibernate-003/Snipaste_2018-03-16_10-57-22.png">
+<meta property="og:image" content="http://rainsia.github.io/2018/03/18/hibernate-003/2018/03/18/hibernate-003/Snipaste_2018-03-19_18-23-26.png">
+<meta property="og:image" content="http://rainsia.github.io/2018/03/18/hibernate-003/2018/03/18/hibernate-003/Snipaste_2018-03-19_17-05-31.png">
+<meta property="og:image" content="http://rainsia.github.io/2018/03/18/hibernate-003/2018/03/18/hibernate-003/Snipaste_2018-03-19_18-25-11.png">
+<meta property="og:image" content="http://rainsia.github.io/2018/03/18/hibernate-003/2018/03/18/hibernate-003/Snipaste_2018-03-19_21-31-49.png">
+<meta property="og:image" content="http://rainsia.github.io/2018/03/18/hibernate-003/2018/03/18/hibernate-003/Snipaste_2018-03-19_21-32-56.png">
+<meta property="og:image" content="http://rainsia.github.io/2018/03/18/hibernate-003/2018/03/18/hibernate-003/Snipaste_2018-03-19_21-35-34.png">
+<meta property="og:image" content="http://rainsia.github.io/2018/03/18/hibernate-003/2018/03/18/hibernate-003/Snipaste_2018-03-20_22-34-50.png">
+<meta property="og:image" content="http://rainsia.github.io/2018/03/18/hibernate-003/2018/03/18/hibernate-003/Snipaste_2018-03-20_22-58-34.png">
 <meta property="og:updated_time" content="2018-10-20T11:43:26.851Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Hibernate学习笔记（三）Hibernate中的主键 之 Sequence">
 <meta name="twitter:description" content="本章主要介绍如何在Hibernate中为实体定义主键，以及JPA中主键的常用生成策略。此外对这些主键生成策略进行了一些分析，以方便在现实实现中选择一种合适的策略。">
-<meta name="twitter:image" content="http://yoursite.com/2018/03/18/hibernate-003/Snipaste_2018-03-16_09-50-39.png">
+<meta name="twitter:image" content="http://rainsia.github.io/2018/03/18/hibernate-003/2018/03/18/hibernate-003/Snipaste_2018-03-16_09-50-39.png">
 
 
 
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/03/18/hibernate-003/"/>
+  <link rel="canonical" href="http://rainsia.github.io/2018/03/18/hibernate-003/"/>
 
 
 
@@ -218,7 +218,7 @@
     
 
     <div class="custom-logo-site-title">
-      <a href="/" class="brand" rel="start">
+      <a href="./" class="brand" rel="start">
         <span class="logo-line-before"><i></i></span>
         <span class="site-title">Rain's Blog</span>
         <span class="logo-line-after"><i></i></span>
@@ -251,7 +251,7 @@
         
           
           <li class="menu-item menu-item-home">
-    <a href="/" rel="section">
+    <a href="./" rel="section">
       <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
   </li>
         
@@ -259,7 +259,7 @@
         
           
           <li class="menu-item menu-item-tags">
-    <a href="/tags/" rel="section">
+    <a href="./tags/" rel="section">
       <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
   </li>
         
@@ -267,7 +267,7 @@
         
           
           <li class="menu-item menu-item-categories">
-    <a href="/categories/" rel="section">
+    <a href="./categories/" rel="section">
       <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
   </li>
         
@@ -275,7 +275,7 @@
         
           
           <li class="menu-item menu-item-archives">
-    <a href="/archives/" rel="section">
+    <a href="./archives/" rel="section">
       <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
   </li>
 
@@ -327,12 +327,12 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/18/hibernate-003/">
+    <link itemprop="mainEntityOfPage" href="http://rainsia.github.io./2018/03/18/hibernate-003/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Rain Sia <rainsia@163.com>">
       <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="image" content="./images/avatar.gif">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -403,21 +403,21 @@
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/programming/" itemprop="url" rel="index"><span itemprop="name">编程</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="./categories/programming/" itemprop="url" rel="index"><span itemprop="name">编程</span></a></span>
 
                 
                 
                   ，
                 
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/programming/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="./categories/programming/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a></span>
 
                 
                 
                   ，
                 
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/programming/Java/Hibernate/" itemprop="url" rel="index"><span itemprop="name">Hibernate</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="./categories/programming/Java/Hibernate/" itemprop="url" rel="index"><span itemprop="name">Hibernate</span></a></span>
 
                 
                 
@@ -432,8 +432,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2018/03/18/hibernate-003/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2018/03/18/hibernate-003/" itemprop="commentCount"></span>
+                <a href="./2018/03/18/hibernate-003/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="./2018/03/18/hibernate-003/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -494,7 +494,7 @@
 <p>一旦创建了实体并调用了持久化之后（在实际insert语句执行之前），便可以访问正确访问其主键值。直接看代码演示：</p>
 <figure class="highlight java"><figcaption><span>Message.java</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.rainsia.hibernate;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.naming.NamingException;</span><br><span class="line"><span class="keyword">import</span> javax.persistence.EntityManager;</span><br><span class="line"><span class="keyword">import</span> javax.transaction.NotSupportedException;</span><br><span class="line"><span class="keyword">import</span> javax.transaction.UserTransaction;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.rainsia.hibernate.env.JpaSetup;</span><br><span class="line"><span class="keyword">import</span> com.rainsia.hibernate.env.TransactionManagerSetup;</span><br><span class="line"><span class="keyword">import</span> com.rainsia.hibernate.model.Message;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HelloWorldJpa</span> </span>&#123;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">		TransactionManagerSetup tm = <span class="keyword">null</span>;</span><br><span class="line">		EntityManager em = <span class="keyword">null</span>;</span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			tm = <span class="keyword">new</span> TransactionManagerSetup();</span><br><span class="line">			JpaSetup jpa = <span class="keyword">new</span> JpaSetup(<span class="string">"HelloWorldPU"</span>);</span><br><span class="line">			UserTransaction tx = tm.getUserTransaction();</span><br><span class="line"></span><br><span class="line">			tx.begin();							<span class="comment">//开始事务</span></span><br><span class="line">			em = jpa.createEntityManager();		<span class="comment">//创建实体管理器</span></span><br><span class="line">			</span><br><span class="line">			Message message = <span class="keyword">new</span> Message();	<span class="comment">//创建实体</span></span><br><span class="line">			message.setText(<span class="string">"Hello World!"</span>);</span><br><span class="line">			</span><br><span class="line">			<span class="comment">// 保存实体，注意这里仅仅是通知Hibernate需要保存数据，Hibernate此时并不会执行插入数据的SQL</span></span><br><span class="line">			<span class="comment">//	而是等到最后事务提交的时候才执行，然而使用sequence主键的时候，可以在提交之前就获得主键的值</span></span><br><span class="line">			em.persist(message);</span><br><span class="line">			</span><br><span class="line">			System.out.println(message.getId());	<span class="comment">//persist之后可以获取id</span></span><br><span class="line"></span><br><span class="line">			<span class="comment">// 提交事务，此时Hibernate才真正执行insert语句</span></span><br><span class="line">			tx.commit(); <span class="comment">// INSERT into MESSAGE (ID, TEXT) values (1, 'Hello World!')</span></span><br><span class="line">		&#125; <span class="keyword">catch</span> (NamingException ex) &#123;</span><br><span class="line">			ex.printStackTrace();</span><br><span class="line">		&#125; <span class="keyword">catch</span> (NotSupportedException e) &#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">			<span class="keyword">if</span>(em != <span class="keyword">null</span> &amp;&amp; em.isOpen()) &#123;</span><br><span class="line">				em.close();</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">if</span>(tm != <span class="keyword">null</span>) &#123;</span><br><span class="line">				<span class="keyword">try</span> &#123;</span><br><span class="line">					tm.stop();</span><br><span class="line">				&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">					e.printStackTrace();</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 <p>执行程序之后，会产生一个HIBERNATE_SEQUENCE的表，其数据如下图所示：</p>
-<img src="/2018/03/18/hibernate-003/Snipaste_2018-03-16_09-50-39.png" title="运行结果HIBERNATE_SEQUENCE">
+<img src="./2018/03/18/hibernate-003/Snipaste_2018-03-16_09-50-39.png" title="运行结果HIBERNATE_SEQUENCE">
 <p>其中只有一列next_val，用于记录下一条数据的主键值是多少。在调用em.persist()方法的时候，Hibernate会为正在持久化的实体获取next_val的值，并使得next_val的值自增。同时Hibernate也考虑到并发插入的情况，所以在获取next_val值的时候使用了锁，例如下面代码中的第四行使用了for update锁：</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span></span><br><span class="line">    next_val <span class="keyword">as</span> id_val </span><br><span class="line"><span class="keyword">from</span></span><br><span class="line">    hibernate_sequence <span class="keyword">for</span> <span class="keyword">update</span></span><br></pre></td></tr></table></figure>
 <p>因此，可以认为即使是在并发插入的时候，要获取一个键值也只能等上一个键值获取并更新（增加1）完成之后才能够获取，因此可以保证实体实例的主键值不会重复。</p>
@@ -505,8 +505,8 @@
 <p>然后，交叉插入两个实体：</p>
 <figure class="highlight java"><figcaption><span>Message.java</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>
 <p>执行该程序，如下图所示，可以看到两个表的序列号，并不连续：</p>
-<img src="/2018/03/18/hibernate-003/Snipaste_2018-03-16_10-38-48.png" title="运行结果Message">
-<img src="/2018/03/18/hibernate-003/Snipaste_2018-03-16_10-57-22.png" title="运行结果Message2">
+<img src="./2018/03/18/hibernate-003/Snipaste_2018-03-16_10-38-48.png" title="运行结果Message">
+<img src="./2018/03/18/hibernate-003/Snipaste_2018-03-16_10-57-22.png" title="运行结果Message2">
 <p>每个实例的主键值将是整个数据库唯一的，而不是每个表唯一的。不同的实体之间也不会产生主键冲突。如果你担心为整个数据库创建一个序列可能会造成主键值溢出的问题，那么你可以不用太担心。我们使用Long类型作为主键值，在Java中，这是一个64位带符号的数据类型，其取值范围是$-\frac{1}{2}2^{64}$到$\frac{1}{2}2^{64}-1$之间。按照每毫秒产生一个id值计算，一个Long类型的序列可以持续生成键值大约3亿年。这几乎足以满足大部分的系统需求。</p>
 <h3 id="定制SEQUENCE"><a href="#定制SEQUENCE" class="headerlink" title="定制SEQUENCE"></a>定制SEQUENCE</h3><p>如果要改变默认的HIBERNATE_SEQUENCE表的名字，或者对SEQUENCE做其他的定制。可以使用@SequenceGenerator注解来定制SEQUENCE的行为。</p>
 <p>@SequenceGenerator有六个属性：name、catalog、schema、sequenceName、initialValue和allocationSize。</p>
@@ -537,15 +537,15 @@
 <p>在持久化第一个实体的实例时，Hibernate会调用序列的自增功能两次（原因待考证）：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">……</span><br><span class="line">三月 18, 2018 9:14:00 上午 com.rainsia.hibernate.app.HelloWorldApp main</span><br><span class="line">信息: 正在持久化实体1……</span><br><span class="line">Hibernate: </span><br><span class="line">    select</span><br><span class="line">        next_val as id_val </span><br><span class="line">    from</span><br><span class="line">        id_sequence for update</span><br><span class="line">            </span><br><span class="line">三月 18, 2018 9:14:00 上午 com.p6spy.engine.spy.appender.Slf4JLogger logSQL</span><br><span class="line">信息: 1521335640547|5|statement|connection0|select next_val as id_val from id_sequence for update</span><br><span class="line">Hibernate: </span><br><span class="line">    update</span><br><span class="line">        id_sequence </span><br><span class="line">    set</span><br><span class="line">        next_val= ? </span><br><span class="line">    where</span><br><span class="line">        next_val=?</span><br><span class="line">三月 18, 2018 9:14:00 上午 com.p6spy.engine.spy.appender.Slf4JLogger logSQL</span><br><span class="line">信息: 1521335640575|17|statement|connection0|update id_sequence set next_val= 15 where next_val=5</span><br><span class="line">Hibernate: </span><br><span class="line">    select</span><br><span class="line">        next_val as id_val </span><br><span class="line">    from</span><br><span class="line">        id_sequence for update</span><br><span class="line">            </span><br><span class="line">三月 18, 2018 9:14:00 上午 com.p6spy.engine.spy.appender.Slf4JLogger logSQL</span><br><span class="line">信息: 1521335640606|0|statement|connection0|select next_val as id_val from id_sequence for update</span><br><span class="line">Hibernate: </span><br><span class="line">    update</span><br><span class="line">        id_sequence </span><br><span class="line">    set</span><br><span class="line">        next_val= ? </span><br><span class="line">    where</span><br><span class="line">        next_val=?</span><br><span class="line">三月 18, 2018 9:14:00 上午 com.p6spy.engine.spy.appender.Slf4JLogger logSQL</span><br><span class="line">信息: 1521335640606|0|statement|connection0|update id_sequence set next_val= 25 where next_val=15</span><br><span class="line">三月 18, 2018 9:14:00 上午 com.rainsia.hibernate.app.HelloWorldApp main</span><br><span class="line">信息: 实体1已持久化</span><br><span class="line">……</span><br></pre></td></tr></table></figure>
 <p>由于序列初始值是5，设置的序列递增值是10，因此第一次更新序列值后，序列的下一个值变为15；第二次更新序列值后，序列的下一个值变为25。此后，每持久化10个实例，序列的下一个值自动更新10。 其生成的主键值，从初始值5开始，并且连续：</p>
-<img src="/2018/03/18/hibernate-003/Snipaste_2018-03-19_18-23-26.png" title="运行结果：Message表">
+<img src="./2018/03/18/hibernate-003/Snipaste_2018-03-19_18-23-26.png" title="运行结果：Message表">
 <p>此时，数据库中序列表的内容将变为下一个序列组的开始值45：</p>
-<img src="/2018/03/18/hibernate-003/Snipaste_2018-03-19_17-05-31.png" title="运行结果：id_sequence表">
+<img src="./2018/03/18/hibernate-003/Snipaste_2018-03-19_17-05-31.png" title="运行结果：id_sequence表">
 <p>从中可以看出，现在程序只要每持久化10个实体之后才需要从数据库重新获取序列值，降低了访问数据库的频率。那么，是不是allocationSize越大越好呢？因为这样就可以以尽量低的频率去访问数据库。例如，如果allocationSize是1000的话，我们是不是持久化1000个对象才需要访问一次数据库来获取下次序列的起点。</p>
 <h3 id="重启服务器后序列值的获取"><a href="#重启服务器后序列值的获取" class="headerlink" title="重启服务器后序列值的获取"></a>重启服务器后序列值的获取</h3><p>可以考虑这样一种情况：当Hibernate缓存的序列缓存值还没用完的时候，系统重启了，由于Hibernate无法记忆自己的缓存值，必须从数据库的序列表中获取下一次序列的起始值，那么没用完的序列缓存之就浪费了，这同时造成了主键的不连贯。直接看代码：</p>
 <p>首先将persistence中数据库表的生成模式改为update，这样每次重启程序的时候，就不会删除整个数据库表，重新创建：</p>
 <figure class="highlight xml"><figcaption><span>persistence.xml</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">……</span><br></pre></td></tr></table></figure>
 <p>上次运行程序时，其初始值为5，插入25个实例之后，其最终主键最大值为5+25-1=29。然后我们再次运行程序，可以看到Message表的情况：</p>
-<img src="/2018/03/18/hibernate-003/Snipaste_2018-03-19_18-25-11.png" title="运行结果Message表">
+<img src="./2018/03/18/hibernate-003/Snipaste_2018-03-19_18-25-11.png" title="运行结果Message表">
 <p>可以看出，其主键值跳过了29，而直接从36开始。其原因在于未使用的序列缓存值一直存在于Hibernate系统中，当重启之后，Hibernate也只能从序列表中恢复序列，因此未使用的序列缓存便无法继续使用。由于持久化第一个实体实例时，序列的值被增加了两次（原因不明），因此实际的缓存值应该要减掉一次间隔值：第一次程序运行完成后，序列表的next_val值为45，实际上下次分配的起始值为35。</p>
 <p>从这个例子中可以看出，allocationSize并不是越大越好。如果allocationSize值过大并且程序频繁重启，那么在多次重启程序后，很多缓存的序列值并无法使用，最终序列空间将被耗尽。</p>
 <h3 id="两个实体配置同一个序列的不同设置"><a href="#两个实体配置同一个序列的不同设置" class="headerlink" title="两个实体配置同一个序列的不同设置"></a>两个实体配置同一个序列的不同设置</h3><p>下面考虑另外一种特殊情况，两个实体都配置了同一个序列，但是两个实体配置的序列生成器的设置不一样，在这种情况下Hibernate将有什么表现。</p>
@@ -554,15 +554,15 @@
 <p>然后交叉插入两种不同的实体实例：</p>
 <figure class="highlight java"><figcaption><span>HelloWorldApp.java</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.rainsia.hibernate.app;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.naming.NamingException;</span><br><span class="line"><span class="keyword">import</span> javax.persistence.EntityManager;</span><br><span class="line"><span class="keyword">import</span> javax.transaction.NotSupportedException;</span><br><span class="line"><span class="keyword">import</span> javax.transaction.UserTransaction;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.slf4j.Logger;</span><br><span class="line"><span class="keyword">import</span> org.slf4j.LoggerFactory;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.rainsia.hibernate.env.JpaSetup;</span><br><span class="line"><span class="keyword">import</span> com.rainsia.hibernate.env.TransactionManagerSetup;</span><br><span class="line"><span class="keyword">import</span> com.rainsia.hibernate.model.Message;</span><br><span class="line"><span class="keyword">import</span> com.rainsia.hibernate.model.Message2;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HelloWorldApp</span> </span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 日志</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Logger logger = LoggerFactory.getLogger(HelloWorldApp.class);</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">		TransactionManagerSetup tm = <span class="keyword">null</span>;</span><br><span class="line">		EntityManager em = <span class="keyword">null</span>;</span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			logger.info(<span class="string">"正在创建事务管理器……"</span>);</span><br><span class="line">			tm = <span class="keyword">new</span> TransactionManagerSetup();</span><br><span class="line">			UserTransaction tx = tm.getUserTransaction();</span><br><span class="line">			logger.info(<span class="string">"事务管理器已创建"</span>);</span><br><span class="line">			</span><br><span class="line">			logger.info(<span class="string">"正在开始事务……"</span>);</span><br><span class="line">			tx.begin();							<span class="comment">//开始事务</span></span><br><span class="line">			logger.info(<span class="string">"事务已开始"</span>);</span><br><span class="line">			</span><br><span class="line">			logger.info(<span class="string">"正在创建实体管理器……"</span>);</span><br><span class="line">			JpaSetup jpa = <span class="keyword">new</span> JpaSetup(<span class="string">"HelloWorldPU"</span>);</span><br><span class="line">			em = jpa.createEntityManager();		<span class="comment">//创建实体管理器</span></span><br><span class="line">			logger.info(<span class="string">"实体管理器已创建"</span>);</span><br><span class="line">			</span><br><span class="line">			<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= <span class="number">25</span>; i++) &#123;</span><br><span class="line">				logger.info(<span class="string">"正在创建实体&#123;&#125;……"</span>, i);</span><br><span class="line">				Message message = <span class="keyword">new</span> Message();	<span class="comment">//创建实体</span></span><br><span class="line">				message.setText(<span class="string">"Hello World "</span> + i);</span><br><span class="line">				logger.info(<span class="string">"实体&#123;&#125;已创建"</span>, i);</span><br><span class="line"></span><br><span class="line">				<span class="comment">// 保存实体，注意这里仅仅是通知Hibernate需要保存数据，Hibernate此时并不会执行插入数据的SQL</span></span><br><span class="line">				<span class="comment">//	而是等到最后事务提交的时候才执行</span></span><br><span class="line">				logger.info(<span class="string">"正在持久化实体&#123;&#125;……"</span>, i);</span><br><span class="line">				em.persist(message);</span><br><span class="line">				logger.info(<span class="string">"实体&#123;&#125;(id:&#123;&#125;)已持久化"</span>, i, message.getId());</span><br><span class="line">				</span><br><span class="line">				<span class="comment">//=====================================</span></span><br><span class="line">				logger.info(<span class="string">"正在创建实体2,&#123;&#125;……"</span>, i);</span><br><span class="line">				Message2 message2 = <span class="keyword">new</span> Message2();	<span class="comment">//创建实体</span></span><br><span class="line">				message2.setText(<span class="string">"Hello World2 "</span> + i);</span><br><span class="line">				logger.info(<span class="string">"实体2,&#123;&#125;已创建"</span>, i);</span><br><span class="line"></span><br><span class="line">				<span class="comment">// 保存实体，注意这里仅仅是通知Hibernate需要保存数据，Hibernate此时并不会执行插入数据的SQL</span></span><br><span class="line">				<span class="comment">//	而是等到最后事务提交的时候才执行</span></span><br><span class="line">				logger.info(<span class="string">"正在持久化实体2,&#123;&#125;……"</span>, i);</span><br><span class="line">				em.persist(message2);</span><br><span class="line">				logger.info(<span class="string">"实体2,&#123;&#125;(id:&#123;&#125;)已持久化"</span>, i, message2.getId());</span><br><span class="line">			&#125;</span><br><span class="line">			</span><br><span class="line"></span><br><span class="line">			<span class="comment">// 提交事务，此时Hibernate才真正执行insert语句</span></span><br><span class="line">			logger.info(<span class="string">"正在提交事务……"</span>);</span><br><span class="line">			tx.commit(); <span class="comment">// INSERT into MESSAGE (ID, TEXT) values (1, 'Hello World!')</span></span><br><span class="line">			logger.info(<span class="string">"事务已提交"</span>);</span><br><span class="line">		&#125; <span class="keyword">catch</span> (NamingException ex) &#123;</span><br><span class="line">			ex.printStackTrace();</span><br><span class="line">		&#125; <span class="keyword">catch</span> (NotSupportedException e) &#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">			<span class="keyword">if</span>(em != <span class="keyword">null</span> &amp;&amp; em.isOpen()) &#123;</span><br><span class="line">				logger.info(<span class="string">"正在关闭实体管理器……"</span>);</span><br><span class="line">				em.close();</span><br><span class="line">				logger.info(<span class="string">"实体管理器已关闭"</span>);</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">if</span>(tm != <span class="keyword">null</span>) &#123;</span><br><span class="line">				<span class="keyword">try</span> &#123;</span><br><span class="line">					logger.info(<span class="string">"正在停止事务管理器……"</span>);</span><br><span class="line">					tm.stop();</span><br><span class="line">					logger.info(<span class="string">"事务管理器已停止"</span>);</span><br><span class="line">				&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">					e.printStackTrace();</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 <p>运行程序后，可以发现，同一个序列表当中出现了两个不同的列：</p>
-<img src="/2018/03/18/hibernate-003/Snipaste_2018-03-19_21-31-49.png" title="运行结果：id_sequence表">
+<img src="./2018/03/18/hibernate-003/Snipaste_2018-03-19_21-31-49.png" title="运行结果：id_sequence表">
 <p>数据的插入情况如下：</p>
 <div class="column">
-			<p><img src="/2018/03/18/hibernate-003/Snipaste_2018-03-19_21-32-56.png" title="运行结果：Message表"></p>
+			<p><img src="./2018/03/18/hibernate-003/Snipaste_2018-03-19_21-32-56.png" title="运行结果：Message表"></p>
 
 </div>
 
 <div class="column">
-			<p><img src="/2018/03/18/hibernate-003/Snipaste_2018-03-19_21-35-34.png" title="运行结果：Message2表"></p>
+			<p><img src="./2018/03/18/hibernate-003/Snipaste_2018-03-19_21-35-34.png" title="运行结果：Message2表"></p>
 
 </div>
 
@@ -588,12 +588,12 @@
 <figure class="highlight java"><figcaption><span>HelloWorldApp.java</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.rainsia.hibernate.app;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.naming.NamingException;</span><br><span class="line"><span class="keyword">import</span> javax.persistence.EntityManager;</span><br><span class="line"><span class="keyword">import</span> javax.transaction.NotSupportedException;</span><br><span class="line"><span class="keyword">import</span> javax.transaction.UserTransaction;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.slf4j.Logger;</span><br><span class="line"><span class="keyword">import</span> org.slf4j.LoggerFactory;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.rainsia.hibernate.env.JpaSetup;</span><br><span class="line"><span class="keyword">import</span> com.rainsia.hibernate.env.TransactionManagerSetup;</span><br><span class="line"><span class="keyword">import</span> com.rainsia.hibernate.model.Message;</span><br><span class="line"><span class="keyword">import</span> com.rainsia.hibernate.model.Message2;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HelloWorldApp</span> </span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 日志</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Logger logger = LoggerFactory.getLogger(HelloWorldApp.class);</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">		TransactionManagerSetup tm = <span class="keyword">null</span>;</span><br><span class="line">		EntityManager em = <span class="keyword">null</span>;</span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			logger.info(<span class="string">"正在创建事务管理器……"</span>);</span><br><span class="line">			tm = <span class="keyword">new</span> TransactionManagerSetup();</span><br><span class="line">			UserTransaction tx = tm.getUserTransaction();</span><br><span class="line">			logger.info(<span class="string">"事务管理器已创建"</span>);</span><br><span class="line">			</span><br><span class="line">			logger.info(<span class="string">"正在开始事务……"</span>);</span><br><span class="line">			tx.begin();							<span class="comment">//开始事务</span></span><br><span class="line">			logger.info(<span class="string">"事务已开始"</span>);</span><br><span class="line">			</span><br><span class="line">			logger.info(<span class="string">"正在创建实体管理器……"</span>);</span><br><span class="line">			JpaSetup jpa = <span class="keyword">new</span> JpaSetup(<span class="string">"HelloWorldPU"</span>);</span><br><span class="line">			em = jpa.createEntityManager();		<span class="comment">//创建实体管理器</span></span><br><span class="line">			logger.info(<span class="string">"实体管理器已创建"</span>);</span><br><span class="line">			</span><br><span class="line">			<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= <span class="number">25</span>; i++) &#123;</span><br><span class="line">				logger.info(<span class="string">"正在创建实体&#123;&#125;……"</span>, i);</span><br><span class="line">				Message message = <span class="keyword">new</span> Message();	<span class="comment">//创建实体</span></span><br><span class="line">				message.setText(<span class="string">"Hello World "</span> + i);</span><br><span class="line">				logger.info(<span class="string">"实体&#123;&#125;已创建"</span>, i);</span><br><span class="line"></span><br><span class="line">				<span class="comment">// 保存实体，注意这里仅仅是通知Hibernate需要保存数据，Hibernate此时并不会执行插入数据的SQL</span></span><br><span class="line">				<span class="comment">//	而是等到最后事务提交的时候才执行</span></span><br><span class="line">				logger.info(<span class="string">"正在持久化实体&#123;&#125;……"</span>, i);</span><br><span class="line">				em.persist(message);</span><br><span class="line">				logger.info(<span class="string">"实体&#123;&#125;(id:&#123;&#125;)已持久化"</span>, i, message.getId());</span><br><span class="line">			&#125;</span><br><span class="line">			</span><br><span class="line"></span><br><span class="line">			<span class="comment">// 提交事务，此时Hibernate才真正执行insert语句</span></span><br><span class="line">			logger.info(<span class="string">"正在提交事务……"</span>);</span><br><span class="line">			tx.commit(); <span class="comment">// INSERT into MESSAGE (ID, TEXT) values (1, 'Hello World!')</span></span><br><span class="line">			logger.info(<span class="string">"事务已提交"</span>);</span><br><span class="line">		&#125; <span class="keyword">catch</span> (NamingException ex) &#123;</span><br><span class="line">			ex.printStackTrace();</span><br><span class="line">		&#125; <span class="keyword">catch</span> (NotSupportedException e) &#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">			<span class="keyword">if</span>(em != <span class="keyword">null</span> &amp;&amp; em.isOpen()) &#123;</span><br><span class="line">				logger.info(<span class="string">"正在关闭实体管理器……"</span>);</span><br><span class="line">				em.close();</span><br><span class="line">				logger.info(<span class="string">"实体管理器已关闭"</span>);</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">if</span>(tm != <span class="keyword">null</span>) &#123;</span><br><span class="line">				<span class="keyword">try</span> &#123;</span><br><span class="line">					logger.info(<span class="string">"正在停止事务管理器……"</span>);</span><br><span class="line">					tm.stop();</span><br><span class="line">					logger.info(<span class="string">"事务管理器已停止"</span>);</span><br><span class="line">				&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">					e.printStackTrace();</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 <p>其运行结果和之前的例子一致：</p>
 <div class="column">
-			<p><img src="/2018/03/18/hibernate-003/Snipaste_2018-03-20_22-34-50.png" title="运行结果：Message表"></p>
+			<p><img src="./2018/03/18/hibernate-003/Snipaste_2018-03-20_22-34-50.png" title="运行结果：Message表"></p>
 
 </div>
 
 <div class="column">
-			<p><img src="/2018/03/18/hibernate-003/Snipaste_2018-03-20_22-58-34.png" title="运行结果：id_sequence表"></p>
+			<p><img src="./2018/03/18/hibernate-003/Snipaste_2018-03-20_22-58-34.png" title="运行结果：id_sequence表"></p>
 
 </div>
 
@@ -638,12 +638,12 @@
   <!-- JS库 sweetalert 可修改路径 -->
   <script src="https://cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-  <p><span>本文标题:</span><a href="/2018/03/18/hibernate-003/">Hibernate学习笔记（三）Hibernate中的主键 之 Sequence</a></p>
+  <p><span>本文标题:</span><a href="./2018/03/18/hibernate-003/">Hibernate学习笔记（三）Hibernate中的主键 之 Sequence</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 Rain Sia <rainsia@163.com> 的个人博客">Rain Sia <rainsia@163.com></a></p>
   <p><span>发布时间:</span>2018年03月18日 - 22:03</p>
   <p><span>最后更新:</span>2018年10月20日 - 19:10</p>
-  <p><span>原始链接:</span><a href="/2018/03/18/hibernate-003/" title="Hibernate学习笔记（三）Hibernate中的主键 之 Sequence">https://rainsia.github.io/2018/03/18/hibernate-003/</a>
-    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="http://yoursite.com/2018/03/18/hibernate-003/"  aria-label="复制成功！"></i></span>
+  <p><span>原始链接:</span><a href="./2018/03/18/hibernate-003/" title="Hibernate学习笔记（三）Hibernate中的主键 之 Sequence">https://rainsia.github.io./2018/03/18/hibernate-003/</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="http://rainsia.github.io/2018/03/18/hibernate-003/"  aria-label="复制成功！"></i></span>
   </p>
   <p><span>版权信息:</span>本文为作者原创文章，如需进行非商业性转载，请注明出处并保留原文链接及作者。如要进行商业性转载，请获得作者授权！</p>  
   <p><span>联系方式:</span>rainsia@163.com</p>  
@@ -672,17 +672,17 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Hibernate/" rel="tag"># Hibernate</a>
+            <a href="./tags/Hibernate/" rel="tag"># Hibernate</a>
           
-            <a href="/tags/Java/" rel="tag"># Java</a>
+            <a href="./tags/Java/" rel="tag"># Java</a>
           
-            <a href="/tags/JPA/" rel="tag"># JPA</a>
+            <a href="./tags/JPA/" rel="tag"># JPA</a>
           
-            <a href="/tags/Primary-Key/" rel="tag"># Primary Key</a>
+            <a href="./tags/Primary-Key/" rel="tag"># Primary Key</a>
           
-            <a href="/tags/GeneratedValue/" rel="tag"># GeneratedValue</a>
+            <a href="./tags/GeneratedValue/" rel="tag"># GeneratedValue</a>
           
-            <a href="/tags/Id/" rel="tag"># Id</a>
+            <a href="./tags/Id/" rel="tag"># Id</a>
           
         </div>
       
@@ -695,7 +695,7 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/03/17/hibernate-002/" rel="next" title="Hibernate学习笔记（二）记录生成SQL中的参数">
+              <a href="./2018/03/17/hibernate-002/" rel="next" title="Hibernate学习笔记（二）记录生成SQL中的参数">
                 <i class="fa fa-chevron-left"></i> Hibernate学习笔记（二）记录生成SQL中的参数
               </a>
             
@@ -705,7 +705,7 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/03/30/ns3-001/" rel="prev" title="NS-3学习笔记（一）：NS-3的运行环境搭建">
+              <a href="./2018/03/30/ns3-001/" rel="prev" title="NS-3学习笔记（一）：NS-3的运行环境搭建">
                 NS-3学习笔记（一）：NS-3的运行环境搭建 <i class="fa fa-chevron-right"></i>
               </a>
             
@@ -770,7 +770,7 @@
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
               <img class="site-author-image" itemprop="image"
-                src="/images/avatar.gif"
+                src="./images/avatar.gif"
                 alt="Rain Sia <rainsia@163.com>" />
             
               <p class="site-author-name" itemprop="name">Rain Sia <rainsia@163.com></p>
@@ -782,7 +782,7 @@
               
                 <div class="site-state-item site-state-posts">
                 
-                  <a href="/archives/">
+                  <a href="./archives/">
                 
                     <span class="site-state-item-count">13</span>
                     <span class="site-state-item-name">日志</span>
@@ -794,7 +794,7 @@
                 
                 
                 <div class="site-state-item site-state-categories">
-                  <a href="/categories/index.html">
+                  <a href="./categories/index.html">
                     
                     
                       
@@ -819,7 +819,7 @@
                 
                 
                 <div class="site-state-item site-state-tags">
-                  <a href="/tags/index.html">
+                  <a href="./tags/index.html">
                     
                     
                       
@@ -1051,54 +1051,54 @@
 
   
   
-    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+    <script type="text/javascript" src="./lib/jquery/index.js?v=2.1.3"></script>
   
 
   
   
-    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+    <script type="text/javascript" src="./lib/velocity/velocity.min.js?v=1.2.1"></script>
   
 
   
   
-    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+    <script type="text/javascript" src="./lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
   
 
   
   
-    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+    <script type="text/javascript" src="./lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
   
-
-
-  
-
-
-  <script type="text/javascript" src="/js/src/utils.js?v=6.4.2"></script>
-
-  <script type="text/javascript" src="/js/src/motion.js?v=6.4.2"></script>
-
-
-
-  
-  
-
-
-  <script type="text/javascript" src="/js/src/affix.js?v=6.4.2"></script>
-
-  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.4.2"></script>
-
-
-
-  
-  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.4.2"></script>
-<script type="text/javascript" src="/js/src/post-details.js?v=6.4.2"></script>
-
 
 
   
 
 
-  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.4.2"></script>
+  <script type="text/javascript" src="./js/src/utils.js?v=6.4.2"></script>
+
+  <script type="text/javascript" src="./js/src/motion.js?v=6.4.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="./js/src/affix.js?v=6.4.2"></script>
+
+  <script type="text/javascript" src="./js/src/schemes/pisces.js?v=6.4.2"></script>
+
+
+
+  
+  <script type="text/javascript" src="./js/src/scrollspy.js?v=6.4.2"></script>
+<script type="text/javascript" src="./js/src/post-details.js?v=6.4.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="./js/src/bootstrap.js?v=6.4.2"></script>
 
 
 

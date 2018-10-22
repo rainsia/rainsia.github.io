@@ -120,7 +120,7 @@
 <meta property="og:site_name" content="Rain&#39;s Blog">
 <meta property="og:description" content="本章主要介绍NS-3当中对象的初始化与释放。传统C++对象可以在构造函数中来初始化，然而由于NS-3对象的属性是在构造函数之后才初始化的，因此必须使用特定的初始化方法来得到正确的结果。除此之外，对象在使用完成之后也应该正确释放使用的资源。NS-3也提供了专门的方法来完成资源的释放，并且充分地考虑了聚合的因素，使得对象的释放非常完善。本章将介绍NS-3当中对象的正确初始化和释放的方法。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-10-21T21:41:51.756Z">
+<meta property="og:updated_time" content="2018-10-22T01:16:04.840Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="NS-3学习笔记（八）：NS-3的对象框架 之 对象初始化与释放">
 <meta name="twitter:description" content="本章主要介绍NS-3当中对象的初始化与释放。传统C++对象可以在构造函数中来初始化，然而由于NS-3对象的属性是在构造函数之后才初始化的，因此必须使用特定的初始化方法来得到正确的结果。除此之外，对象在使用完成之后也应该正确释放使用的资源。NS-3也提供了专门的方法来完成资源的释放，并且充分地考虑了聚合的因素，使得对象的释放非常完善。本章将介绍NS-3当中对象的正确初始化和释放的方法。">
@@ -374,7 +374,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2018-10-22 05:41:51" itemprop="dateModified" datetime="2018-10-22T05:41:51+08:00">2018-10-22</time>
+                <time title="修改时间：2018-10-22 09:16:04" itemprop="dateModified" datetime="2018-10-22T09:16:04+08:00">2018-10-22</time>
               
             
           </span>
@@ -547,7 +547,6 @@
 <p>程序在子类的DoDipose()方法当中关闭了客户端的连接，然后调用了父类的DoDispose()方法释放了占用的端口。运行程序得到如下结果：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Waf: Entering directory `/home/rainsia/Applications/ns-allinone-3.29/ns-3.29/build&apos;</span><br><span class="line">[1924/1983] Compiling scratch/try-dispose-chain.cc</span><br><span class="line">[1943/1983] Linking build/scratch/try-dispose-chain</span><br><span class="line">Waf: Leaving directory `/home/rainsia/Applications/ns-allinone-3.29/ns-3.29/build&apos;</span><br><span class="line">Build commands will be stored in build/compile_commands.json</span><br><span class="line">&apos;build&apos; finished successfully (37.702s)</span><br><span class="line">+0.000000000s 0 Port is 8080</span><br><span class="line">+1.000000000s -1 Server started on port 8080.</span><br><span class="line">+1.000000000s -1 closing client connections</span><br><span class="line">+1.000000000s -1 freeing up port 8080</span><br></pre></td></tr></table></figure>
 <p>如果不在子类的DoDispose()方法中调用父类的方法，那么端口号就无法正确释放。因此，要想正确释放资源，在每一个子类当中都应当调用父类的DoDispose()方法。</p>
-<p>（未完待续……）</p>
 
       
     </div>
@@ -574,7 +573,7 @@
   <p><span>本文标题:</span><a href="/2018/08/04/ns3-008/">NS-3学习笔记（八）：NS-3的对象框架 之 对象初始化与释放</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 Rain Sia <rainsia@163.com> 的个人博客">Rain Sia <rainsia@163.com></a></p>
   <p><span>发布时间:</span>2018年08月04日 - 18:08</p>
-  <p><span>最后更新:</span>2018年10月22日 - 05:10</p>
+  <p><span>最后更新:</span>2018年10月22日 - 09:10</p>
   <p><span>原始链接:</span><a href="/2018/08/04/ns3-008/" title="NS-3学习笔记（八）：NS-3的对象框架 之 对象初始化与释放">https://rainsia.github.io/2018/08/04/ns3-008/</a>
     <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="http://yoursite.com/2018/08/04/ns3-008/"  aria-label="复制成功！"></i></span>
   </p>
@@ -635,6 +634,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/10/22/ns3-009/" rel="prev" title="NS-3学习笔记（九）：NS-3的对象框架 之 追踪框架">
+                NS-3学习笔记（九）：NS-3的对象框架 之 追踪框架 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -711,7 +714,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">12</span>
+                    <span class="site-state-item-count">13</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -807,7 +810,13 @@
                     
                       
                     
-                    <span class="site-state-item-count">29</span>
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">32</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>

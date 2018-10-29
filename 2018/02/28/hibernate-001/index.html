@@ -116,23 +116,23 @@
 <meta name="keywords" content="Hibernate,Java,JPA">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Hibernate学习笔记（一）建立Hibernate运行环境">
-<meta property="og:url" content="http://rainsia.gitee.io/2018/02/28/hibernate-001/index.html">
+<meta property="og:url" content="http://rainsia.github.io/2018/02/28/hibernate-001/index.html">
 <meta property="og:site_name" content="Rain&#39;s Blog">
 <meta property="og:description" content="本章主要通过建立一个简单的Hibernate程序“Hello World”，以介绍如何配置Hibernate的运行环境。与传统的Hibernate运行环境不同的是，本文提供了一套通用的配置程序来初始化JPA/Hibernate的运行环境。此外，本文使用了JTA数据源的方法来连接数据库，使得程序具有了分布式事务管理的能力。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://rainsia.gitee.io/2018/02/28/hibernate-001/Snipaste_2018-03-17_08-27-49.png">
+<meta property="og:image" content="http://rainsia.github.io/2018/02/28/hibernate-001/Snipaste_2018-03-17_08-27-49.png">
 <meta property="og:updated_time" content="2018-10-29T02:01:08.098Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Hibernate学习笔记（一）建立Hibernate运行环境">
 <meta name="twitter:description" content="本章主要通过建立一个简单的Hibernate程序“Hello World”，以介绍如何配置Hibernate的运行环境。与传统的Hibernate运行环境不同的是，本文提供了一套通用的配置程序来初始化JPA/Hibernate的运行环境。此外，本文使用了JTA数据源的方法来连接数据库，使得程序具有了分布式事务管理的能力。">
-<meta name="twitter:image" content="http://rainsia.gitee.io/2018/02/28/hibernate-001/Snipaste_2018-03-17_08-27-49.png">
+<meta name="twitter:image" content="http://rainsia.github.io/2018/02/28/hibernate-001/Snipaste_2018-03-17_08-27-49.png">
 
 
 
 
 
 
-  <link rel="canonical" href="http://rainsia.gitee.io/2018/02/28/hibernate-001/"/>
+  <link rel="canonical" href="http://rainsia.github.io/2018/02/28/hibernate-001/"/>
 
 
 
@@ -317,7 +317,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://rainsia.gitee.io/2018/02/28/hibernate-001/">
+    <link itemprop="mainEntityOfPage" href="http://rainsia.github.io/2018/02/28/hibernate-001/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Rain Sia <rainsia@163.com>">
@@ -567,9 +567,9 @@
   <p><span>最后更新:</span>2018年10月29日 - 10:10</p>
   <p><span>原始链接:</span>
 		<a href="/2018/02/28/hibernate-001/" title="Hibernate学习笔记（一）建立Hibernate运行环境">
-			http://rainsia.gitee.io/2018/02/28/hibernate-001/
+			http://rainsia.github.io/2018/02/28/hibernate-001/
 		</a>
-    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="http://rainsia.gitee.io/2018/02/28/hibernate-001/"  aria-label="复制成功！"></i></span>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="http://rainsia.github.io/2018/02/28/hibernate-001/"  aria-label="复制成功！"></i></span>
   </p>
   <p><span>版权信息:</span>本文为作者原创文章，如需进行非商业性转载，请注明出处并保留原文链接及作者。如要进行商业性转载，请获得作者授权！</p>  
   <p><span>联系方式:</span>rainsia@163.com</p>  
@@ -850,7 +850,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-Hibernate与JPA简介"><span class="nav-number">1.</span> <span class="nav-text">1. Hibernate与JPA简介</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1-对象关系模型"><span class="nav-number">1.1.</span> <span class="nav-text">1.1. 对象关系模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-2-Hibernate"><span class="nav-number">1.2.</span> <span class="nav-text">1.2. Hibernate</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-3-JPA"><span class="nav-number">1.3.</span> <span class="nav-text">1.3. JPA</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-创建第一个Hibernae项目"><span class="nav-number">2.</span> <span class="nav-text">2. 创建第一个Hibernae项目</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-工具说明"><span class="nav-number">2.1.</span> <span class="nav-text">2.1. 工具说明</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2-添加Hibernate的依赖"><span class="nav-number">2.2.</span> <span class="nav-text">2.2. 添加Hibernate的依赖</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-3-配置持久化单元"><span class="nav-number">2.3.</span> <span class="nav-text">2.3. 配置持久化单元</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-4-配置数据源"><span class="nav-number">2.4.</span> <span class="nav-text">2.4. 配置数据源</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-5-配置JPA和Hibernate"><span class="nav-number">2.5.</span> <span class="nav-text">2.5. 配置JPA和Hibernate</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-6-创建实体"><span class="nav-number">2.6.</span> <span class="nav-text">2.6. 创建实体</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-7-使用JPA持久化实体"><span class="nav-number">2.7.</span> <span class="nav-text">2.7. 使用JPA持久化实体</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-Hibernate与JPA简介"><span class="nav-text">1. Hibernate与JPA简介</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1-对象关系模型"><span class="nav-text">1.1. 对象关系模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-2-Hibernate"><span class="nav-text">1.2. Hibernate</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-3-JPA"><span class="nav-text">1.3. JPA</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-创建第一个Hibernae项目"><span class="nav-text">2. 创建第一个Hibernae项目</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-工具说明"><span class="nav-text">2.1. 工具说明</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2-添加Hibernate的依赖"><span class="nav-text">2.2. 添加Hibernate的依赖</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-3-配置持久化单元"><span class="nav-text">2.3. 配置持久化单元</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-4-配置数据源"><span class="nav-text">2.4. 配置数据源</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-5-配置JPA和Hibernate"><span class="nav-text">2.5. 配置JPA和Hibernate</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-6-创建实体"><span class="nav-text">2.6. 创建实体</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-7-使用JPA持久化实体"><span class="nav-text">2.7. 使用JPA持久化实体</span></a></li></ol></li></ol></div>
             
 
           </div>

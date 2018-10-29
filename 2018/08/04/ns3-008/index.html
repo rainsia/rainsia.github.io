@@ -116,7 +116,7 @@
 <meta name="keywords" content="NS-3,C++,Simulation,Intialization,Dispose">
 <meta property="og:type" content="article">
 <meta property="og:title" content="NS-3学习笔记（八）：NS-3的对象框架 之 对象初始化与释放">
-<meta property="og:url" content="http://rainsia.gitee.io/2018/08/04/ns3-008/index.html">
+<meta property="og:url" content="http://rainsia.github.io/2018/08/04/ns3-008/index.html">
 <meta property="og:site_name" content="Rain&#39;s Blog">
 <meta property="og:description" content="本章主要介绍NS-3当中对象的初始化与释放。传统C++对象可以在构造函数中来初始化，然而由于NS-3对象的属性是在构造函数之后才初始化的，因此必须使用特定的初始化方法来得到正确的结果。除此之外，对象在使用完成之后也应该正确释放使用的资源。NS-3也提供了专门的方法来完成资源的释放，并且充分地考虑了聚合的因素，使得对象的释放非常完善。本章将介绍NS-3当中对象的正确初始化和释放的方法。">
 <meta property="og:locale" content="zh-CN">
@@ -130,7 +130,7 @@
 
 
 
-  <link rel="canonical" href="http://rainsia.gitee.io/2018/08/04/ns3-008/"/>
+  <link rel="canonical" href="http://rainsia.github.io/2018/08/04/ns3-008/"/>
 
 
 
@@ -315,7 +315,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://rainsia.gitee.io/2018/08/04/ns3-008/">
+    <link itemprop="mainEntityOfPage" href="http://rainsia.github.io/2018/08/04/ns3-008/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Rain Sia <rainsia@163.com>">
@@ -576,9 +576,9 @@
   <p><span>最后更新:</span>2018年10月29日 - 10:10</p>
   <p><span>原始链接:</span>
 		<a href="/2018/08/04/ns3-008/" title="NS-3学习笔记（八）：NS-3的对象框架 之 对象初始化与释放">
-			http://rainsia.gitee.io/2018/08/04/ns3-008/
+			http://rainsia.github.io/2018/08/04/ns3-008/
 		</a>
-    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="http://rainsia.gitee.io/2018/08/04/ns3-008/"  aria-label="复制成功！"></i></span>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="http://rainsia.github.io/2018/08/04/ns3-008/"  aria-label="复制成功！"></i></span>
   </p>
   <p><span>版权信息:</span>本文为作者原创文章，如需进行非商业性转载，请注明出处并保留原文链接及作者。如要进行商业性转载，请获得作者授权！</p>  
   <p><span>联系方式:</span>rainsia@163.com</p>  
@@ -863,7 +863,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-对象的初始化"><span class="nav-number">1.</span> <span class="nav-text">1. 对象的初始化</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-使用属性框架"><span class="nav-number">2.</span> <span class="nav-text">2. 使用属性框架</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-NS3对象的初始化"><span class="nav-number">3.</span> <span class="nav-text">3. NS3对象的初始化</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-Intialize-和DoIntialize-的特性"><span class="nav-number">4.</span> <span class="nav-text">4. Intialize()和DoIntialize()的特性</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#4-1-自动调用Intialize-方法"><span class="nav-number">4.1.</span> <span class="nav-text">4.1. 自动调用Intialize()方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-2-初始化的时候聚合对象"><span class="nav-number">4.2.</span> <span class="nav-text">4.2. 初始化的时候聚合对象</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-3-对象不会重复初始化"><span class="nav-number">4.3.</span> <span class="nav-text">4.3. 对象不会重复初始化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-4-父子类初始化链"><span class="nav-number">4.4.</span> <span class="nav-text">4.4. 父子类初始化链</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-5-新聚合的对象初始化"><span class="nav-number">4.5.</span> <span class="nav-text">4.5. 新聚合的对象初始化</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-对象的释放"><span class="nav-number">5.</span> <span class="nav-text">5. 对象的释放</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6-Dispose-方法和DoDispose-方法"><span class="nav-number">6.</span> <span class="nav-text">6. Dispose()方法和DoDispose()方法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#6-1-自动调用Dispose-方法"><span class="nav-number">6.1.</span> <span class="nav-text">6.1. 自动调用Dispose()方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-2-父子类释放链"><span class="nav-number">6.2.</span> <span class="nav-text">6.2. 父子类释放链</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-对象的初始化"><span class="nav-text">1. 对象的初始化</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-使用属性框架"><span class="nav-text">2. 使用属性框架</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-NS3对象的初始化"><span class="nav-text">3. NS3对象的初始化</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-Intialize-和DoIntialize-的特性"><span class="nav-text">4. Intialize()和DoIntialize()的特性</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#4-1-自动调用Intialize-方法"><span class="nav-text">4.1. 自动调用Intialize()方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-2-初始化的时候聚合对象"><span class="nav-text">4.2. 初始化的时候聚合对象</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-3-对象不会重复初始化"><span class="nav-text">4.3. 对象不会重复初始化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-4-父子类初始化链"><span class="nav-text">4.4. 父子类初始化链</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-5-新聚合的对象初始化"><span class="nav-text">4.5. 新聚合的对象初始化</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-对象的释放"><span class="nav-text">5. 对象的释放</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6-Dispose-方法和DoDispose-方法"><span class="nav-text">6. Dispose()方法和DoDispose()方法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#6-1-自动调用Dispose-方法"><span class="nav-text">6.1. 自动调用Dispose()方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-2-父子类释放链"><span class="nav-text">6.2. 父子类释放链</span></a></li></ol></li></ol></div>
             
 
           </div>

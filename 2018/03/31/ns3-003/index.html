@@ -116,23 +116,23 @@
 <meta name="keywords" content="NS-3,C++,Simulation,Object,SimpleRefCount,Ref,Unref,Ptr,Smart Pointer">
 <meta property="og:type" content="article">
 <meta property="og:title" content="NS-3学习笔记（三）：NS-3的对象框架 之 智能指针">
-<meta property="og:url" content="http://rainsia.gitee.io/2018/03/31/ns3-003/index.html">
+<meta property="og:url" content="http://rainsia.github.io/2018/03/31/ns3-003/index.html">
 <meta property="og:site_name" content="Rain&#39;s Blog">
 <meta property="og:description" content="本章主要介绍NS-3的对象框架当中的智能指针。任何类实现了Ref()和Unref()两个方法，并且能够维护一个内部引用变量都可能成为智能指针，从而无需自己释放内存空间。NS-3对象框架当中，提供了SimpleRefCount来支持智能指针。任何想要使用智能指针的类，只需简单地实现SimpleRefCount即可。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://rainsia.gitee.io/2018/03/31/ns3-003/classns3_1_1_object__coll__graph.png">
+<meta property="og:image" content="http://rainsia.github.io/2018/03/31/ns3-003/classns3_1_1_object__coll__graph.png">
 <meta property="og:updated_time" content="2018-10-29T02:02:58.862Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="NS-3学习笔记（三）：NS-3的对象框架 之 智能指针">
 <meta name="twitter:description" content="本章主要介绍NS-3的对象框架当中的智能指针。任何类实现了Ref()和Unref()两个方法，并且能够维护一个内部引用变量都可能成为智能指针，从而无需自己释放内存空间。NS-3对象框架当中，提供了SimpleRefCount来支持智能指针。任何想要使用智能指针的类，只需简单地实现SimpleRefCount即可。">
-<meta name="twitter:image" content="http://rainsia.gitee.io/2018/03/31/ns3-003/classns3_1_1_object__coll__graph.png">
+<meta name="twitter:image" content="http://rainsia.github.io/2018/03/31/ns3-003/classns3_1_1_object__coll__graph.png">
 
 
 
 
 
 
-  <link rel="canonical" href="http://rainsia.gitee.io/2018/03/31/ns3-003/"/>
+  <link rel="canonical" href="http://rainsia.github.io/2018/03/31/ns3-003/"/>
 
 
 
@@ -317,7 +317,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://rainsia.gitee.io/2018/03/31/ns3-003/">
+    <link itemprop="mainEntityOfPage" href="http://rainsia.github.io/2018/03/31/ns3-003/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Rain Sia <rainsia@163.com>">
@@ -583,9 +583,9 @@
   <p><span>最后更新:</span>2018年10月29日 - 10:10</p>
   <p><span>原始链接:</span>
 		<a href="/2018/03/31/ns3-003/" title="NS-3学习笔记（三）：NS-3的对象框架 之 智能指针">
-			http://rainsia.gitee.io/2018/03/31/ns3-003/
+			http://rainsia.github.io/2018/03/31/ns3-003/
 		</a>
-    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="http://rainsia.gitee.io/2018/03/31/ns3-003/"  aria-label="复制成功！"></i></span>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="http://rainsia.github.io/2018/03/31/ns3-003/"  aria-label="复制成功！"></i></span>
   </p>
   <p><span>版权信息:</span>本文为作者原创文章，如需进行非商业性转载，请注明出处并保留原文链接及作者。如要进行商业性转载，请获得作者授权！</p>  
   <p><span>联系方式:</span>rainsia@163.com</p>  
@@ -878,7 +878,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-NS-3对象框架概述"><span class="nav-number">1.</span> <span class="nav-text">1. NS-3对象框架概述</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1-名称空间"><span class="nav-number">1.1.</span> <span class="nav-text">1.1. 名称空间</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-2-对象体系"><span class="nav-number">1.2.</span> <span class="nav-text">1.2. 对象体系</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-SimpleRefCount和智能指针Ptr"><span class="nav-number">2.</span> <span class="nav-text">2. SimpleRefCount和智能指针Ptr</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-Ptr"><span class="nav-number">2.1.</span> <span class="nav-text">2.1. Ptr</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-1-Ptr的例子"><span class="nav-number">2.1.1.</span> <span class="nav-text">2.1.1. Ptr的例子</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-1-1-创建智能指针"><span class="nav-number">2.1.1.1.</span> <span class="nav-text">2.1.1.1. 创建智能指针</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-1-2-通过外来指针构造智能指针"><span class="nav-number">2.1.1.2.</span> <span class="nav-text">2.1.1.2. 通过外来指针构造智能指针</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-1-3-智能指针的拷贝构造函数"><span class="nav-number">2.1.1.3.</span> <span class="nav-text">2.1.1.3. 智能指针的拷贝构造函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-1-4-智能指针的赋值操作符重载"><span class="nav-number">2.1.1.4.</span> <span class="nav-text">2.1.1.4. 智能指针的赋值操作符重载</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2-SimpleRefCount"><span class="nav-number">2.2.</span> <span class="nav-text">2.2. SimpleRefCount</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-1-SimpleRefCount的实现"><span class="nav-number">2.2.1.</span> <span class="nav-text">2.2.1. SimpleRefCount的实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-2-SimpleRefCount使用的例子"><span class="nav-number">2.2.2.</span> <span class="nav-text">2.2.2. SimpleRefCount使用的例子</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-NS-3对象框架概述"><span class="nav-text">1. NS-3对象框架概述</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1-名称空间"><span class="nav-text">1.1. 名称空间</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-2-对象体系"><span class="nav-text">1.2. 对象体系</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-SimpleRefCount和智能指针Ptr"><span class="nav-text">2. SimpleRefCount和智能指针Ptr</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-Ptr"><span class="nav-text">2.1. Ptr</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-1-Ptr的例子"><span class="nav-text">2.1.1. Ptr的例子</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-1-1-创建智能指针"><span class="nav-text">2.1.1.1. 创建智能指针</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-1-2-通过外来指针构造智能指针"><span class="nav-text">2.1.1.2. 通过外来指针构造智能指针</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-1-3-智能指针的拷贝构造函数"><span class="nav-text">2.1.1.3. 智能指针的拷贝构造函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-1-4-智能指针的赋值操作符重载"><span class="nav-text">2.1.1.4. 智能指针的赋值操作符重载</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2-SimpleRefCount"><span class="nav-text">2.2. SimpleRefCount</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-1-SimpleRefCount的实现"><span class="nav-text">2.2.1. SimpleRefCount的实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-2-SimpleRefCount使用的例子"><span class="nav-text">2.2.2. SimpleRefCount使用的例子</span></a></li></ol></li></ol></li></ol></div>
             
 
           </div>

@@ -116,23 +116,23 @@
 <meta name="keywords" content="NS-3,C++,Simulation,Tracing,Trace Source,Trace Sink">
 <meta property="og:type" content="article">
 <meta property="og:title" content="NS-3学习笔记（九）：NS-3的对象框架 之 追踪框架">
-<meta property="og:url" content="http://rainsia.gitee.io/2018/10/22/ns3-009/index.html">
+<meta property="og:url" content="http://rainsia.github.io/2018/10/22/ns3-009/index.html">
 <meta property="og:site_name" content="Rain&#39;s Blog">
 <meta property="og:description" content="本章主要介绍NS-3当中的追踪框架。追踪框架主要用于追踪一个对象当中某个属性的变更、或者某个事件的发生。例如，当TCP的窗口变化的时候，我们希望获得窗口的变化过程。或者当网络中队列产生丢包的时候，我们希望获取这个事件以便统计丢包率等等。NS3使用回调的机制让我们能够方便地获取这些信息。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://rainsia.gitee.io/2018/10/22/ns3-009/2018-10-24_22-42-02.gif">
-<meta property="og:updated_time" content="2018-10-24T14:46:31.532Z">
+<meta property="og:image" content="http://rainsia.github.io/2018/10/22/ns3-009/2018-10-24_22-42-02.gif">
+<meta property="og:updated_time" content="2018-10-29T02:03:38.927Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="NS-3学习笔记（九）：NS-3的对象框架 之 追踪框架">
 <meta name="twitter:description" content="本章主要介绍NS-3当中的追踪框架。追踪框架主要用于追踪一个对象当中某个属性的变更、或者某个事件的发生。例如，当TCP的窗口变化的时候，我们希望获得窗口的变化过程。或者当网络中队列产生丢包的时候，我们希望获取这个事件以便统计丢包率等等。NS3使用回调的机制让我们能够方便地获取这些信息。">
-<meta name="twitter:image" content="http://rainsia.gitee.io/2018/10/22/ns3-009/2018-10-24_22-42-02.gif">
+<meta name="twitter:image" content="http://rainsia.github.io/2018/10/22/ns3-009/2018-10-24_22-42-02.gif">
 
 
 
 
 
 
-  <link rel="canonical" href="http://rainsia.gitee.io/2018/10/22/ns3-009/"/>
+  <link rel="canonical" href="http://rainsia.github.io/2018/10/22/ns3-009/"/>
 
 
 
@@ -317,7 +317,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://rainsia.gitee.io/2018/10/22/ns3-009/">
+    <link itemprop="mainEntityOfPage" href="http://rainsia.github.io/2018/10/22/ns3-009/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Rain Sia <rainsia@163.com>">
@@ -376,7 +376,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2018-10-24 22:46:31" itemprop="dateModified" datetime="2018-10-24T22:46:31+08:00">2018-10-24</time>
+                <time title="修改时间：2018-10-29 10:03:38" itemprop="dateModified" datetime="2018-10-29T10:03:38+08:00">2018-10-29</time>
               
             
           </span>
@@ -461,7 +461,7 @@
       
         <p>本章主要介绍NS-3当中的追踪框架。追踪框架主要用于追踪一个对象当中某个属性的变更、或者某个事件的发生。例如，当TCP的窗口变化的时候，我们希望获得窗口的变化过程。或者当网络中队列产生丢包的时候，我们希望获取这个事件以便统计丢包率等等。NS3使用回调的机制让我们能够方便地获取这些信息。</p>
 <a id="more"></a>
-<h1 id="NS3追踪框架简介"><a href="#NS3追踪框架简介" class="headerlink" title="NS3追踪框架简介"></a>NS3追踪框架简介</h1><p>在我们编写程序的时候，经常会想要知道一些变量的值，特别是在这个值变化的时候，我们希望知道这种变化。除了我们直接去获取这个值之外，我们更加希望用程序能够主动通知我们关于这个值的变化。除此之外，我们进行程序设计的时候，希望去统计一些变量的值，但是，我们要么在程序里面写死打印语句，让我把变量存到文件当中，并没有一种非常灵活的框架能够让用户编程的时候选择到底如何统计这些变量。</p>
+<h1 id="1-NS3追踪框架简介"><a href="#1-NS3追踪框架简介" class="headerlink" title="1. NS3追踪框架简介"></a>1. NS3追踪框架简介</h1><p>在我们编写程序的时候，经常会想要知道一些变量的值，特别是在这个值变化的时候，我们希望知道这种变化。除了我们直接去获取这个值之外，我们更加希望用程序能够主动通知我们关于这个值的变化。除此之外，我们进行程序设计的时候，希望去统计一些变量的值，但是，我们要么在程序里面写死打印语句，让我把变量存到文件当中，并没有一种非常灵活的框架能够让用户编程的时候选择到底如何统计这些变量。</p>
 <p>另外，我们希望在某些事件发生的时候，有一种监听机制，能够告诉我们什么时候发生了什么事件。在NS3当中，这种机制被称为追踪框架。它可以让我们用一种统一的方式，选择监听一个变量值的变化，也可以让我们监听一个事件的发生。</p>
 <p>追踪框架严重的依赖于回调和属性框架（包括TypeId），如果对这部分内容还不是特别熟悉，请回顾相关章节。</p>
 <p>NS3的追踪框架当中的基本概念分为追踪源和接收者。追踪源表示对象上我们可以监听的变量或事件，并且让我们访问该变量或者事件相关的对象；接收者是我们自己的代码，表示在监听到变量的变化或者事件的发生的时候要做什么事情。NS3提供一种统一的机制把接收器注册到追踪源上。</p>
@@ -469,7 +469,7 @@
 <p>在NS3当中，模块的作者已经写好了大量的追踪源，模块的使用者只要将自己写的接收者注册到这些追踪源上，即可监听事件，而不需要去重新编译这些模块。一个追踪源可以注册多个接收者，当这个追踪源的事件发生的时候，多个接收者都可以收到相同的事件。当然追踪源也可以不注册任何的接受者，那么当事件发生的时候，就不会执行任何的用户代码。</p>
 <p>把追踪源和接收者联系起来的这是NS3当中的回调机制。还记得我们在回调一章当中说的，回掉可以将两个相互关联的模块之解除耦合，而这正是追踪源所要做的事情。追踪源从底层来说其实是一种回调类型。和属性框架一样，追踪源将一种回调类型，以某种特殊的名字（字符串）添加到某个类的TypeId当中。一个追踪员可以向TypeId，当中注册多个回调类型，表明其可以触发多种事件。一个接收者将一个函数创建为回调后，和对象以追踪源的名字进行连接。这个对象的追踪源随即记录了这个函数的回调，若还有其他接收者被注册到同样的追踪源，这些接收者将被维护，在同一个列表当中。当追踪源的事件发生之后，它便会遍历这个回调列表，然后依次调用这些回调，以通知它们事件的发生。追踪源所注册的回调类型可以带有参数，也可以不带有参数，若带有参数的话表示事件发生的详细信息可以被接收者获取。</p>
 <p>在NS3当中有两种不同类型的追踪源，一种用来追踪数值的变化，我将其称为数值类型追踪源；另外一种用来追踪事件的发生，我将其称为事件追踪源。</p>
-<h1 id="数值追踪源"><a href="#数值追踪源" class="headerlink" title="数值追踪源"></a>数值追踪源</h1><p>我们首先来看看数值追踪源。它的所用就是追踪数值的变化，这个数值一般是NS3对象的某个成员变量，除此之外，这个变量的类型需要使用TracedValue&lt;&gt;来进行包装。下面我们通过自己创建一个数值追踪源来了解数值追踪源的原理：</p>
+<h1 id="2-数值追踪源"><a href="#2-数值追踪源" class="headerlink" title="2. 数值追踪源"></a>2. 数值追踪源</h1><p>我们首先来看看数值追踪源。它的所用就是追踪数值的变化，这个数值一般是NS3对象的某个成员变量，除此之外，这个变量的类型需要使用TracedValue&lt;&gt;来进行包装。下面我们通过自己创建一个数值追踪源来了解数值追踪源的原理：</p>
 <figure class="highlight cpp"><figcaption><span>try-traced-value.cc</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;fstream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"ns3/core-module.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"ns3/network-module.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> ns3;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> ns3</span><br><span class="line">&#123;</span><br><span class="line"></span><br><span class="line">	NS_LOG_COMPONENT_DEFINE(<span class="string">"MyObject"</span>);			<span class="comment">//定义一个日志组件</span></span><br><span class="line"></span><br><span class="line">	<span class="class"><span class="keyword">class</span> <span class="title">MyObject</span> :</span> <span class="keyword">public</span> Object</span><br><span class="line">	&#123;</span><br><span class="line">	<span class="keyword">public</span>:</span><br><span class="line">		<span class="function"><span class="keyword">static</span> TypeId <span class="title">GetTypeId</span> <span class="params">()</span></span>;				<span class="comment">//必须实现此方法</span></span><br><span class="line"></span><br><span class="line">		MyObject ();</span><br><span class="line">		<span class="keyword">virtual</span> ~MyObject () &#123;&#125;;</span><br><span class="line"></span><br><span class="line">		<span class="function"><span class="keyword">virtual</span> TypeId <span class="title">GetInstanceTypeId</span> <span class="params">()</span> <span class="keyword">const</span></span>;	<span class="comment">//必须实现此方法</span></span><br><span class="line"></span><br><span class="line">		<span class="function"><span class="keyword">const</span> uint32_t <span class="title">getValue</span> <span class="params">()</span> <span class="keyword">const</span></span></span><br><span class="line"><span class="function">		</span>&#123;</span><br><span class="line">			<span class="keyword">return</span> m_value.Get();</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="function"><span class="keyword">void</span> <span class="title">setValue</span> <span class="params">(<span class="keyword">uint32_t</span> value)</span></span></span><br><span class="line"><span class="function">		</span>&#123;</span><br><span class="line">			m_value = value;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span>:</span><br><span class="line">		TracedValue&lt;<span class="keyword">uint32_t</span>&gt; m_value;</span><br><span class="line">	&#125;;</span><br><span class="line"></span><br><span class="line">	NS_OBJECT_ENSURE_REGISTERED(MyObject);		<span class="comment">//不要忘记调用</span></span><br><span class="line"></span><br><span class="line">	TypeId</span><br><span class="line">	MyObject::GetTypeId ()</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">static</span> TypeId tid = TypeId(<span class="string">"ns3::MyObject"</span>)		<span class="comment">//创建TypeId，</span></span><br><span class="line">			.SetParent(Object::GetTypeId())</span><br><span class="line">			.AddConstructor&lt;MyObject&gt;()</span><br><span class="line">			.AddTraceSource (<span class="string">"MyInteger"</span>,</span><br><span class="line">											 <span class="string">"An integer value to trace."</span>,</span><br><span class="line">											 MakeTraceSourceAccessor (&amp;MyObject::m_value))</span><br><span class="line">			;</span><br><span class="line">		<span class="keyword">return</span> tid;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	MyObject::MyObject ()</span><br><span class="line">	&#123;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	TypeId</span><br><span class="line">	MyObject::GetInstanceTypeId () <span class="keyword">const</span></span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">return</span> MyObject::GetTypeId ();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>代码定义了MyObject类，然后在其TypeId当中添加了一个数值追踪源，并将追踪源绑定到一个成员变量m_value上。如果我们向该追踪源添加一个接收者，那么当成员变量的值变化的时候，追踪源就可以收到这个变化的事件。其中值得注意的是成员变量的类型，需要使用TracedValue&lt;&gt;类型来进行包装。例如，本来成员变量类型应该是uint32_t类型（无符号32位整型），用TracedValue&lt;&gt;包装之后就变为TracedValue&lt;uint32_t&gt;。</p>
 <p>AddTraceSource方法有四个必选参数：</p>
@@ -502,7 +502,7 @@
 <p>当我们再次运行程序，可以得到如下结果:</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Waf: Entering directory `/home/rainsia/Applications/ns-allinone-3.29/ns-3.29/build&apos;</span><br><span class="line">[1932/1985] Compiling scratch/try-traced-value.cc</span><br><span class="line">[1945/1985] Linking build/scratch/try-traced-value</span><br><span class="line">Waf: Leaving directory `/home/rainsia/Applications/ns-allinone-3.29/ns-3.29/build&apos;</span><br><span class="line">Build commands will be stored in build/compile_commands.json</span><br><span class="line">&apos;build&apos; finished successfully (53.926s)</span><br><span class="line">Traced 0 to 123</span><br><span class="line">Traced 0 to 123</span><br><span class="line">Traced 123 to 456</span><br><span class="line">Traced 123 to 456</span><br></pre></td></tr></table></figure>
 <p>可见，此时每对追踪源进行一次修改，将会调用回调函数两次。</p>
-<h1 id="事件追踪"><a href="#事件追踪" class="headerlink" title="事件追踪"></a>事件追踪</h1><p>除了对数值的更改进行追踪之外，NS3的追踪源也可以追踪事件的发生（函数的调用）。下面使用实际的例子来说明。还是启动服务器的例子，我们现在希望服务器开始启动、服务器启动完成、启动失败和关闭的时候获得提示。那么我们可以注册三个追踪源，分别表示启动成功、启动失败和服务器关闭的事件。但是和数值追踪源不一样，追踪时机并不是数值的变化，而是某种事件的发生（实际上就是某个函数被调用）。</p>
+<h1 id="3-事件追踪"><a href="#3-事件追踪" class="headerlink" title="3. 事件追踪"></a>3. 事件追踪</h1><p>除了对数值的更改进行追踪之外，NS3的追踪源也可以追踪事件的发生（函数的调用）。下面使用实际的例子来说明。还是启动服务器的例子，我们现在希望服务器开始启动、服务器启动完成、启动失败和关闭的时候获得提示。那么我们可以注册三个追踪源，分别表示启动成功、启动失败和服务器关闭的事件。但是和数值追踪源不一样，追踪时机并不是数值的变化，而是某种事件的发生（实际上就是某个函数被调用）。</p>
 <p>事件追踪源的类型直接使用TracedCallback（请参见前面数值追踪源部分）表示，因此我们定义四个成员变量：</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">TracedCallback&lt;<span class="keyword">uint32_t</span>&gt; m_startingTrace;</span><br><span class="line">TracedCallback&lt;<span class="keyword">uint32_t</span>&gt; m_startedTrace;</span><br><span class="line">TracedCallback&lt;<span class="built_in">std</span>::<span class="built_in">string</span>&gt; m_startFailedTrace;</span><br><span class="line">TracedCallback&lt;&gt; m_stoppedTrace;</span><br></pre></td></tr></table></figure>
 <p>分别表示四个事件的回调列表，其中第一个回调表示服务器正在启动，具有一个参数是端口号；第二个回调表示服务器已经启动完成，也具有一个参数是端口号；第三个回调表示服务器启动失败，有一个参数是失败原因；第四个回调表示服务器已经停止，没有任何的参数。同时和这四个类型对应的，应该定义四个底层的函数指针：</p>
@@ -518,7 +518,7 @@
 <p>可见在服务器刚刚启动的时候，我们可以得到这个事件；而在服务器启动失败的时候，我们可以获取这个是电源注册的这回调也会被主动的调用。我们再修改端口号，尝试一下服务器启动成功的情况:</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Waf: Entering directory `/home/rainsia/Applications/ns-allinone-3.29/ns-3.29/build&apos;</span><br><span class="line">[1934/1987] Compiling scratch/try-traced-event.cc</span><br><span class="line">[1947/1987] Linking build/scratch/try-traced-event</span><br><span class="line">Waf: Leaving directory `/home/rainsia/Applications/ns-allinone-3.29/ns-3.29/build&apos;</span><br><span class="line">Build commands will be stored in build/compile_commands.json</span><br><span class="line">&apos;build&apos; finished successfully (49.754s)</span><br><span class="line">+0.000000000s 0 Port is 8080</span><br><span class="line">+1.000000000s -1 starting server on port 8080</span><br><span class="line">+1.000000000s -1 Server started on port 8080.</span><br><span class="line">+1.000000000s -1 started server on port 8080</span><br><span class="line">+1.000000000s -1 stopped server</span><br></pre></td></tr></table></figure>
 <p>可见，服务器启动成功的时候，我们注册的回调会被主动调用。而在服务器停止的时候，我们注册的停止回调，也会被主动调用。</p>
-<h1 id="NS3当中的追踪源"><a href="#NS3当中的追踪源" class="headerlink" title="NS3当中的追踪源"></a>NS3当中的追踪源</h1><p>NS3提供的类当中，大量的使用了追踪源的概念，其中有大量的追踪源，我们可以直接使用。为了方便使用NS3的API文档，给我们提供了所有追踪源的备查页面，我们可以在<a href="这里">https://www.nsnam.org/docs/release/3.29/doxygen/_trace_source_list.html</a>获得。</p>
+<h1 id="4-NS3当中的追踪源"><a href="#4-NS3当中的追踪源" class="headerlink" title="4. NS3当中的追踪源"></a>4. NS3当中的追踪源</h1><p>NS3提供的类当中，大量的使用了追踪源的概念，其中有大量的追踪源，我们可以直接使用。为了方便使用NS3的API文档，给我们提供了所有追踪源的备查页面，我们可以在<a href="这里">https://www.nsnam.org/docs/release/3.29/doxygen/_trace_source_list.html</a>获得。</p>
 <p>此外，每一个类的文档当中也描述了这个类当中所有可以注册的追踪源。我们以TCP类（实际上其主要的实现都是在TcpSocketBase当中完成的，）为例子，来看一下其中的追踪源：</p>
 <p><img src="2018-10-24_22-42-02.gif" alt="如何查找NS3的追踪源" title="如何查找NS3的追踪源"></p>
 
@@ -547,12 +547,12 @@
   <p><span>本文标题:</span><a href="/2018/10/22/ns3-009/">NS-3学习笔记（九）：NS-3的对象框架 之 追踪框架</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 Rain Sia <rainsia@163.com> 的个人博客">Rain Sia <rainsia@163.com></a></p>
   <p><span>发布时间:</span>2018年10月22日 - 09:10</p>
-  <p><span>最后更新:</span>2018年10月24日 - 22:10</p>
+  <p><span>最后更新:</span>2018年10月29日 - 10:10</p>
   <p><span>原始链接:</span>
 		<a href="/2018/10/22/ns3-009/" title="NS-3学习笔记（九）：NS-3的对象框架 之 追踪框架">
-			http://rainsia.gitee.io/2018/10/22/ns3-009/
+			http://rainsia.github.io/2018/10/22/ns3-009/
 		</a>
-    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="http://rainsia.gitee.io/2018/10/22/ns3-009/"  aria-label="复制成功！"></i></span>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="http://rainsia.github.io/2018/10/22/ns3-009/"  aria-label="复制成功！"></i></span>
   </p>
   <p><span>版权信息:</span>本文为作者原创文章，如需进行非商业性转载，请注明出处并保留原文链接及作者。如要进行商业性转载，请获得作者授权！</p>  
   <p><span>联系方式:</span>rainsia@163.com</p>  
@@ -839,7 +839,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#NS3追踪框架简介"><span class="nav-number">1.</span> <span class="nav-text">NS3追踪框架简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#数值追踪源"><span class="nav-number">2.</span> <span class="nav-text">数值追踪源</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#事件追踪"><span class="nav-number">3.</span> <span class="nav-text">事件追踪</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#NS3当中的追踪源"><span class="nav-number">4.</span> <span class="nav-text">NS3当中的追踪源</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-NS3追踪框架简介"><span class="nav-number">1.</span> <span class="nav-text">1. NS3追踪框架简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-数值追踪源"><span class="nav-number">2.</span> <span class="nav-text">2. 数值追踪源</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-事件追踪"><span class="nav-number">3.</span> <span class="nav-text">3. 事件追踪</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-NS3当中的追踪源"><span class="nav-number">4.</span> <span class="nav-text">4. NS3当中的追踪源</span></a></li></ol></div>
             
 
           </div>

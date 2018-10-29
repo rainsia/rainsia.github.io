@@ -116,11 +116,11 @@
 <meta name="keywords" content="Hibernate,Java,JPA,p6spy,Sql Parameters,Logging">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Hibernate学习笔记（二）记录生成SQL中的参数">
-<meta property="og:url" content="http://rainsia.gitee.io/2018/03/17/hibernate-002/index.html">
+<meta property="og:url" content="http://rainsia.github.io/2018/03/17/hibernate-002/index.html">
 <meta property="og:site_name" content="Rain&#39;s Blog">
 <meta property="og:description" content="本章主要研究在Hibernate中，如何在生成的SQL当中将参数占位符?替换成实际的值，但同时还支持XA分布式事务管理系统。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-10-20T11:43:26.848Z">
+<meta property="og:updated_time" content="2018-10-29T02:01:14.275Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Hibernate学习笔记（二）记录生成SQL中的参数">
 <meta name="twitter:description" content="本章主要研究在Hibernate中，如何在生成的SQL当中将参数占位符?替换成实际的值，但同时还支持XA分布式事务管理系统。">
@@ -130,7 +130,7 @@
 
 
 
-  <link rel="canonical" href="http://rainsia.gitee.io/2018/03/17/hibernate-002/"/>
+  <link rel="canonical" href="http://rainsia.github.io/2018/03/17/hibernate-002/"/>
 
 
 
@@ -315,7 +315,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://rainsia.gitee.io/2018/03/17/hibernate-002/">
+    <link itemprop="mainEntityOfPage" href="http://rainsia.github.io/2018/03/17/hibernate-002/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Rain Sia <rainsia@163.com>">
@@ -374,7 +374,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2018-10-20 19:43:26" itemprop="dateModified" datetime="2018-10-20T19:43:26+08:00">2018-10-20</time>
+                <time title="修改时间：2018-10-29 10:01:14" itemprop="dateModified" datetime="2018-10-29T10:01:14+08:00">2018-10-29</time>
               
             
           </span>
@@ -459,12 +459,12 @@
       
         <p>本章主要研究在Hibernate中，如何在生成的SQL当中将参数占位符?替换成实际的值，但同时还支持XA分布式事务管理系统。</p>
 <a id="more"></a>
-<h1 id="Hibernate生成的SQL"><a href="#Hibernate生成的SQL" class="headerlink" title="Hibernate生成的SQL"></a>Hibernate生成的SQL</h1><p>在Hibernate配置中，可以配置让Hibernate自动输出其生成的SQL语句，以便开发人员了解程序底层的机制，方便开发人员调试程序。要让Hibernate输出SQL语句，只要在persistence.xml文件中配置：</p>
+<h1 id="1-Hibernate生成的SQL"><a href="#1-Hibernate生成的SQL" class="headerlink" title="1. Hibernate生成的SQL"></a>1. Hibernate生成的SQL</h1><p>在Hibernate配置中，可以配置让Hibernate自动输出其生成的SQL语句，以便开发人员了解程序底层的机制，方便开发人员调试程序。要让Hibernate输出SQL语句，只要在persistence.xml文件中配置：</p>
 <figure class="highlight xml"><figcaption><span>persistence.xml</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">……</span><br></pre></td></tr></table></figure>
 <p>然而，在生成SQL语句的时候，Hibernate并不会将参数占位符?替换成具体的参数：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Hibernate: </span><br><span class="line">    /* insert com.rainsia.hibernate.model.Message</span><br><span class="line">        */ insert </span><br><span class="line">        into</span><br><span class="line">            Message</span><br><span class="line">            (text, id) </span><br><span class="line">        values</span><br><span class="line">            (?, ?)</span><br></pre></td></tr></table></figure>
 <p>虽然可以让Hibernate在SQL语句之后输出参数，但是在参数较多且比较复杂的时候，这种方式还是使得调试非常不便。</p>
-<h1 id="使用P6spy辅助Hibernate生成SQL"><a href="#使用P6spy辅助Hibernate生成SQL" class="headerlink" title="使用P6spy辅助Hibernate生成SQL"></a>使用P6spy辅助Hibernate生成SQL</h1><p>本章中，我们借助p6spy库的功能来让Hibernate生成的SQL语句中附带具体的参数。</p>
+<h1 id="2-使用P6spy辅助Hibernate生成SQL"><a href="#2-使用P6spy辅助Hibernate生成SQL" class="headerlink" title="2. 使用P6spy辅助Hibernate生成SQL"></a>2. 使用P6spy辅助Hibernate生成SQL</h1><p>本章中，我们借助p6spy库的功能来让Hibernate生成的SQL语句中附带具体的参数。</p>
 <p>P6spy的功能非常简单，它其实是一个JDBC驱动代理。其主要功能就是让SQL语句通过p6spy的时候输出同时将要执行的SQL语句转交给真正的JDBC驱动真正执行。因此，需要在原来需要JDBC驱动的地方替换成p6spay驱动，然后再p6spay中配置真正的JDBC驱动到底是谁。</p>
 <p>对于简单的JDBC应用来说，配置非常简单。然而，我们的程序中使用了XA分布式事务管理框架，配置相对复杂。好在新版本的P6spay本身也是支持XA事务管理框架的。</p>
 <p>首先，我们需要在build.gradle中添加p6spy依赖：</p>
@@ -519,12 +519,12 @@
   <p><span>本文标题:</span><a href="/2018/03/17/hibernate-002/">Hibernate学习笔记（二）记录生成SQL中的参数</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 Rain Sia <rainsia@163.com> 的个人博客">Rain Sia <rainsia@163.com></a></p>
   <p><span>发布时间:</span>2018年03月17日 - 12:03</p>
-  <p><span>最后更新:</span>2018年10月20日 - 19:10</p>
+  <p><span>最后更新:</span>2018年10月29日 - 10:10</p>
   <p><span>原始链接:</span>
 		<a href="/2018/03/17/hibernate-002/" title="Hibernate学习笔记（二）记录生成SQL中的参数">
-			http://rainsia.gitee.io/2018/03/17/hibernate-002/
+			http://rainsia.github.io/2018/03/17/hibernate-002/
 		</a>
-    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="http://rainsia.gitee.io/2018/03/17/hibernate-002/"  aria-label="复制成功！"></i></span>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="http://rainsia.github.io/2018/03/17/hibernate-002/"  aria-label="复制成功！"></i></span>
   </p>
   <p><span>版权信息:</span>本文为作者原创文章，如需进行非商业性转载，请注明出处并保留原文链接及作者。如要进行商业性转载，请获得作者授权！</p>  
   <p><span>联系方式:</span>rainsia@163.com</p>  
@@ -811,7 +811,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Hibernate生成的SQL"><span class="nav-number">1.</span> <span class="nav-text">Hibernate生成的SQL</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#使用P6spy辅助Hibernate生成SQL"><span class="nav-number">2.</span> <span class="nav-text">使用P6spy辅助Hibernate生成SQL</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-Hibernate生成的SQL"><span class="nav-number">1.</span> <span class="nav-text">1. Hibernate生成的SQL</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-使用P6spy辅助Hibernate生成SQL"><span class="nav-number">2.</span> <span class="nav-text">2. 使用P6spy辅助Hibernate生成SQL</span></a></li></ol></div>
             
 
           </div>

@@ -116,29 +116,29 @@
 <meta name="keywords" content="NS-3,C++,Simulation,Environment">
 <meta property="og:type" content="article">
 <meta property="og:title" content="NS-3学习笔记（一）：NS-3的运行环境搭建">
-<meta property="og:url" content="http://rainsia.gitee.io/2018/03/30/ns3-001/index.html">
+<meta property="og:url" content="http://rainsia.github.io/2018/03/30/ns3-001/index.html">
 <meta property="og:site_name" content="Rain&#39;s Blog">
 <meta property="og:description" content="本章主要介绍如何在Linux平台（主要使用Ubuntu系统）下，建立NS-3的运行环境。可以进行NS-3程序的仿真工作。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://rainsia.gitee.io/2018/03/30/ns3-001/shot_2018-04-03_22-55-28.png">
-<meta property="og:image" content="http://rainsia.gitee.io/2018/03/30/ns3-001/shot_2018-04-05_00-21-48.png">
-<meta property="og:image" content="http://rainsia.gitee.io/2018/03/30/ns3-001/shot_2018-04-05_00-48-23.png">
-<meta property="og:image" content="http://rainsia.gitee.io/2018/03/30/ns3-001/shot_2018-04-05_00-52-01.png">
-<meta property="og:image" content="http://rainsia.gitee.io/2018/03/30/ns3-001/shot_2018-04-05_01-36-30.png">
-<meta property="og:image" content="http://rainsia.gitee.io/2018/03/30/ns3-001/shot_2018-04-05_01-39-44.png">
-<meta property="og:image" content="http://rainsia.gitee.io/2018/03/30/ns3-001/shot_2018-04-05_01-49-44.png">
-<meta property="og:updated_time" content="2018-10-22T15:33:58.964Z">
+<meta property="og:image" content="http://rainsia.github.io/2018/03/30/ns3-001/shot_2018-04-03_22-55-28.png">
+<meta property="og:image" content="http://rainsia.github.io/2018/03/30/ns3-001/shot_2018-04-05_00-21-48.png">
+<meta property="og:image" content="http://rainsia.github.io/2018/03/30/ns3-001/shot_2018-04-05_00-48-23.png">
+<meta property="og:image" content="http://rainsia.github.io/2018/03/30/ns3-001/shot_2018-04-05_00-52-01.png">
+<meta property="og:image" content="http://rainsia.github.io/2018/03/30/ns3-001/shot_2018-04-05_01-36-30.png">
+<meta property="og:image" content="http://rainsia.github.io/2018/03/30/ns3-001/shot_2018-04-05_01-39-44.png">
+<meta property="og:image" content="http://rainsia.github.io/2018/03/30/ns3-001/shot_2018-04-05_01-49-44.png">
+<meta property="og:updated_time" content="2018-10-29T02:02:38.234Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="NS-3学习笔记（一）：NS-3的运行环境搭建">
 <meta name="twitter:description" content="本章主要介绍如何在Linux平台（主要使用Ubuntu系统）下，建立NS-3的运行环境。可以进行NS-3程序的仿真工作。">
-<meta name="twitter:image" content="http://rainsia.gitee.io/2018/03/30/ns3-001/shot_2018-04-03_22-55-28.png">
+<meta name="twitter:image" content="http://rainsia.github.io/2018/03/30/ns3-001/shot_2018-04-03_22-55-28.png">
 
 
 
 
 
 
-  <link rel="canonical" href="http://rainsia.gitee.io/2018/03/30/ns3-001/"/>
+  <link rel="canonical" href="http://rainsia.github.io/2018/03/30/ns3-001/"/>
 
 
 
@@ -323,7 +323,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://rainsia.gitee.io/2018/03/30/ns3-001/">
+    <link itemprop="mainEntityOfPage" href="http://rainsia.github.io/2018/03/30/ns3-001/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Rain Sia <rainsia@163.com>">
@@ -382,7 +382,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2018-10-22 23:33:58" itemprop="dateModified" datetime="2018-10-22T23:33:58+08:00">2018-10-22</time>
+                <time title="修改时间：2018-10-29 10:02:38" itemprop="dateModified" datetime="2018-10-29T10:02:38+08:00">2018-10-29</time>
               
             
           </span>
@@ -467,16 +467,16 @@
       
         <p>本章主要介绍如何在Linux平台（主要使用Ubuntu系统）下，建立NS-3的运行环境。可以进行NS-3程序的仿真工作。</p>
 <a id="more"></a>
-<h1 id="NS-3简介"><a href="#NS-3简介" class="headerlink" title="NS-3简介"></a>NS-3简介</h1><p>NS-3是一个离散事件驱动网络模拟器。是为了取代知名的NS-2模拟器而开发的另外一个开源项目。官网为：<a href="http://www.nsnam.org/。" target="_blank" rel="noopener">http://www.nsnam.org/。</a></p>
+<h1 id="1-NS-3简介"><a href="#1-NS-3简介" class="headerlink" title="1. NS-3简介"></a>1. NS-3简介</h1><p>NS-3是一个离散事件驱动网络模拟器。是为了取代知名的NS-2模拟器而开发的另外一个开源项目。官网为：<a href="http://www.nsnam.org/。" target="_blank" rel="noopener">http://www.nsnam.org/。</a></p>
 <p>NS-3本身也是多个项目合并而成。使用C++作为后台，并淘汰了NS-2当中的TCL脚本，而使用Python取代（实际也可以完全不是Python的部分，而完全使用C++编写仿真）。</p>
 <p>NS-3实现了大部分的Internet协议和算法，可以进行多种网络的仿真，包括有线网络、WIFI、4G等。</p>
 <p>对于比较复杂的技术NS-3包含一个DCE模块，可以直接运行原生Linux程序作为仿真的一部分。这样可以方便地调用原生的应用程序、路由算法、协议栈等等，以获得更加真实的仿真效果。</p>
-<h2 id="NS-3和NS-2的联系与区别"><a href="#NS-3和NS-2的联系与区别" class="headerlink" title="NS-3和NS-2的联系与区别"></a>NS-3和NS-2的联系与区别</h2><p>NS-3虽然叫做NS的版本3，但事实上跟它广泛流行的前任NS-2并非完全一致。它仅仅继承了NS-2的名称而已。NS-3是一个全新的模拟器，不支持NS-2的API，也不支持任何已经存在的NS-2的模块或者脚本。</p>
+<h2 id="1-1-NS-3和NS-2的联系与区别"><a href="#1-1-NS-3和NS-2的联系与区别" class="headerlink" title="1.1. NS-3和NS-2的联系与区别"></a>1.1. NS-3和NS-2的联系与区别</h2><p>NS-3虽然叫做NS的版本3，但事实上跟它广泛流行的前任NS-2并非完全一致。它仅仅继承了NS-2的名称而已。NS-3是一个全新的模拟器，不支持NS-2的API，也不支持任何已经存在的NS-2的模块或者脚本。</p>
 <p>但是NS-3当中的很多算法和协议确是受到了NS-2的启发。或者说有很多算法和协议都是从NS-2的模块中移植（当然是基本都重写了一遍）过来的。</p>
 <p>NS-3当中支持很多NS-2所不支持的特性。例如：正确的多网卡处理、IP寻址策略的使用、更详细的802.11模块等等。NS-3能生成pcap文件，因此可以使用类似于WireShark的软件对数据进行分析。</p>
-<h2 id="NS-3的开发环境"><a href="#NS-3的开发环境" class="headerlink" title="NS-3的开发环境"></a>NS-3的开发环境</h2><p>NS-3的脚本由C++或者Python编写。从NS-3.2开始，NS3的API提供了python语言接口，但是所有的模块都是由C++编写的，Python仅仅是做了一种映射。NS-3使用<a href="https://waf.io/" target="_blank" rel="noopener">waf</a>作为其自动化编译工具（类似于流行的make），使用<a href="https://www.mercurial-scm.org/" target="_blank" rel="noopener">Mercurial</a>作为其版本管理系统（类似于流行的git）。</p>
+<h2 id="1-2-NS-3的开发环境"><a href="#1-2-NS-3的开发环境" class="headerlink" title="1.2. NS-3的开发环境"></a>1.2. NS-3的开发环境</h2><p>NS-3的脚本由C++或者Python编写。从NS-3.2开始，NS3的API提供了python语言接口，但是所有的模块都是由C++编写的，Python仅仅是做了一种映射。NS-3使用<a href="https://waf.io/" target="_blank" rel="noopener">waf</a>作为其自动化编译工具（类似于流行的make），使用<a href="https://www.mercurial-scm.org/" target="_blank" rel="noopener">Mercurial</a>作为其版本管理系统（类似于流行的git）。</p>
 <p>NS-3基本上只能运行在Linux系统中，或者可以使用Windows系统安装虚拟机，或者安装Gygwin环境。但是Linux原生环境是最好的。本文中，我所使用的是Ubuntu环境，版本为16.04.4 LTS x64。</p>
-<h1 id="NS-3的编译"><a href="#NS-3的编译" class="headerlink" title="NS-3的编译"></a>NS-3的编译</h1><h2 id="环境配置"><a href="#环境配置" class="headerlink" title="环境配置"></a>环境配置</h2><p>使用Ubuntu来开发NS-3还是比较方便的。</p>
+<h1 id="2-NS-3的编译"><a href="#2-NS-3的编译" class="headerlink" title="2. NS-3的编译"></a>2. NS-3的编译</h1><h2 id="2-1-环境配置"><a href="#2-1-环境配置" class="headerlink" title="2.1. 环境配置"></a>2.1. 环境配置</h2><p>使用Ubuntu来开发NS-3还是比较方便的。</p>
 <ol>
 <li>安装编译环境。直接运行</li>
 </ol>
@@ -528,11 +528,11 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ umake ide eclipse-cpp</span><br></pre></td></tr></table></figure>
 <p>运行完成后，Eclipse-CPP即安装完成。可以从程序中找到Eclipse，点击即可启动，如下图所示：</p>
 <p><img src="shot_2018-04-03_22-55-28.png" alt="从菜单启动Eclipse-Cpp"></p>
-<h2 id="下载NS-3"><a href="#下载NS-3" class="headerlink" title="下载NS-3"></a>下载NS-3</h2><p>最简单的下载NS-3的方法就是从官方网站下载最新的稳定版，下载之后会得到一个.tar.bz2的压缩包，将其解压到用户目录当中合适的路径下。我一般喜欢放在~/Applications/目录中。</p>
+<h2 id="2-2-下载NS-3"><a href="#2-2-下载NS-3" class="headerlink" title="2.2. 下载NS-3"></a>2.2. 下载NS-3</h2><p>最简单的下载NS-3的方法就是从官方网站下载最新的稳定版，下载之后会得到一个.tar.bz2的压缩包，将其解压到用户目录当中合适的路径下。我一般喜欢放在~/Applications/目录中。</p>
 <p>例如我下载的是ns-3.27版本，解压后得到如下的目录结构：</p>
 <p>ns-allinone-3.27<br>├── bake<br>├── build.py<br>├── constants.py<br>├── constants.pyc<br>├── netanim-3.108<br>├── ns-3.27<br>├── pybindgen-0.17.0.post58+ngcf00cc0<br>├── README<br>├── RemoteSystemsTempFiles<br>├── util.py<br>└── util.pyc</p>
 <p>其中build.py是整体编译的脚本，第一次可以是使用这个脚本进行编译。netanim-3.x是用来回放网络运行动画的工具。ns-3.x是正真的NS-3的核心部分，所有功能都有这个包提供。其中也包含了waf的编译脚本，未来更改了NS-3的代码之后，就要通过waf脚本进行编译。</p>
-<h2 id="NS-3的编译-1"><a href="#NS-3的编译-1" class="headerlink" title="NS-3的编译"></a>NS-3的编译</h2><p>第一次可以通过上面的build.py脚本进行编译。build实际上也是调用了waf系统进行编译的。执行build.py脚本之后，可以看到执行过程。</p>
+<h2 id="2-3-NS-3的编译"><a href="#2-3-NS-3的编译" class="headerlink" title="2.3. NS-3的编译"></a>2.3. NS-3的编译</h2><p>第一次可以通过上面的build.py脚本进行编译。build实际上也是调用了waf系统进行编译的。执行build.py脚本之后，可以看到执行过程。</p>
 <p>如果不出意外，可以最终看到如下输出：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">……</span><br><span class="line"></span><br><span class="line">Waf: Leaving directory `/home/rainsia/Applications/ns-allinone-3.27/ns-3.27/build&apos;</span><br><span class="line">Build commands will be stored in build/compile_commands.json</span><br><span class="line">&apos;build&apos; finished successfully (6.830s)</span><br><span class="line"></span><br><span class="line">Modules built:</span><br><span class="line">antenna                   aodv                      applications              </span><br><span class="line">bridge                    buildings                 config-store              </span><br><span class="line">core                      csma                      csma-layout               </span><br><span class="line">dsdv                      dsr                       energy                    </span><br><span class="line">fd-net-device             flow-monitor              internet                  </span><br><span class="line">internet-apps             lr-wpan                   lte                       </span><br><span class="line">mesh                      mobility                  mpi                       </span><br><span class="line">netanim (no Python)       network                   nix-vector-routing        </span><br><span class="line">olsr                      point-to-point            point-to-point-layout     </span><br><span class="line">propagation               sixlowpan                 spectrum                  </span><br><span class="line">stats                     tap-bridge                test (no Python)          </span><br><span class="line">topology-read             traffic-control           uan                       </span><br><span class="line">virtual-net-device        wave                      wifi                      </span><br><span class="line">wimax                     </span><br><span class="line"></span><br><span class="line">Modules not built (see ns-3 tutorial for explanation):</span><br><span class="line">brite                     click                     openflow                  </span><br><span class="line">visualizer                </span><br><span class="line"></span><br><span class="line">Leaving directory `./ns-3.27&apos;</span><br></pre></td></tr></table></figure>
 <p>当看到上述输出的时候表示编译成功。并且会列出已经编译的NS-3模块和未编译的NS-3模块。</p>
@@ -557,7 +557,7 @@
 <p>由于之前使用build.py编译成过，因此这次编译会特别快。原因在与waf系统只会编译最近更新过的文件，已经编译，但是未更新的程序文件并不会进行编译（除非它所以来的模块也被修改）。</p>
 <p>waf也可以启用和禁用示例代码和测试代码：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$./waf configure --enable-examples --enable-tests</span><br></pre></td></tr></table></figure>
-<h2 id="不同的编译配置"><a href="#不同的编译配置" class="headerlink" title="不同的编译配置"></a>不同的编译配置</h2><p>在NS-3当中，存在三种不同的编译配置：debug模式编译、release编译模式和optimized模式编译。</p>
+<h2 id="2-4-不同的编译配置"><a href="#2-4-不同的编译配置" class="headerlink" title="2.4. 不同的编译配置"></a>2.4. 不同的编译配置</h2><p>在NS-3当中，存在三种不同的编译配置：debug模式编译、release编译模式和optimized模式编译。</p>
 <p>在debug编译模式下，所有编译生成的结果都会携带调试符号，方便我们进行断点调试等等。但是，代价是运行效率会受一定的影响。release模式下，会去除最终文件中的调试信息。而optimized模式下，编译过程会尽量优化运行效率，从而使得调试没有那么方便。此外，需要特别注意的是，只有debug模式下，程序才会输出日志信息（NS-3日志将在下一章进行介绍）。</p>
 <p>正常来说，在编写仿真的时候多半使用debug模式。当仿真调试完成，准备进行大规模仿真的时候，再切换成optimized模式，因为一般大规模的网络仿真都会运行很久，例如一周甚至更久。</p>
 <p>要配置使用debug模式编译，需要使用</p>
@@ -585,11 +585,11 @@
 <p>使用静态模式的方法是在./waf configure命令时传入启动静态编译的参数：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ./waf configure --enalbe-static</span><br></pre></td></tr></table></figure>
 <p>静态模式的另外一个缺点是，不能使用python脚本来编写仿真。具体使用静态还是动态链接模式，要看具体情况而定。如果仿真都可以开发完成，仅仅是为了让运行效率更高，又不用频繁地修改仿真脚本，那么可以考虑静态链接模式。</p>
-<h1 id="开发NS-3程序"><a href="#开发NS-3程序" class="headerlink" title="开发NS-3程序"></a>开发NS-3程序</h1><p>一般自己写的NS-3的仿真程序都放置在scratch目录当中，只有自己需要修改或者自己创建模块才需要去修改src目录当中的程序。自己的写的仿真程序都必须放置在scratch目录运行。</p>
-<h1 id="运行方式"><a href="#运行方式" class="headerlink" title="运行方式"></a>运行方式</h1><p>在NS-3根目录当中（例如ns-3.27）目录当中执行命令：</p>
+<h1 id="3-开发NS-3程序"><a href="#3-开发NS-3程序" class="headerlink" title="3. 开发NS-3程序"></a>3. 开发NS-3程序</h1><p>一般自己写的NS-3的仿真程序都放置在scratch目录当中，只有自己需要修改或者自己创建模块才需要去修改src目录当中的程序。自己的写的仿真程序都必须放置在scratch目录运行。</p>
+<h1 id="4-运行方式"><a href="#4-运行方式" class="headerlink" title="4. 运行方式"></a>4. 运行方式</h1><p>在NS-3根目录当中（例如ns-3.27）目录当中执行命令：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./waf --run &quot;script-name&quot; </span><br></pre></td></tr></table></figure>
 <p>来运行脚本。其中script-name是放在scratch目录当中的脚本的名字（不带.cc后缀）。</p>
-<h2 id="调试"><a href="#调试" class="headerlink" title="调试"></a>调试</h2><p>如果程序当中有错，那么直接运行程序，会有错误提示，但这个错误提示没有任何帮助。需要进入调试模式进行程序调试。例如下面的程序：</p>
+<h2 id="4-1-调试"><a href="#4-1-调试" class="headerlink" title="4.1. 调试"></a>4.1. 调试</h2><p>如果程序当中有错，那么直接运行程序，会有错误提示，但这个错误提示没有任何帮助。需要进入调试模式进行程序调试。例如下面的程序：</p>
 <figure class="highlight cpp"><figcaption><span>try-debug.cc</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"ns3/core-module.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;vector&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> ns3;</span><br><span class="line"></span><br><span class="line">NS_LOG_COMPONENT_DEFINE (<span class="string">"DebugTest"</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> </span><br><span class="line">main (<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span><br><span class="line">&#123;</span><br><span class="line">	LogComponentEnable(<span class="string">"DebugTest"</span>, LOG_INFO);</span><br><span class="line"></span><br><span class="line">  NS_LOG_UNCOND (<span class="string">"Before Error"</span>);</span><br><span class="line"></span><br><span class="line">  <span class="built_in">std</span>::<span class="built_in">vector</span>&lt;<span class="keyword">uint32_t</span>&gt; v;</span><br><span class="line"></span><br><span class="line">  <span class="comment">//error point</span></span><br><span class="line">  NS_LOG_UNCOND(<span class="string">"the first element: "</span> &lt;&lt; v[<span class="number">0</span>]);</span><br><span class="line"></span><br><span class="line">  NS_LOG_UNCOND (<span class="string">"After Error"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>程序当中故意写了一个错误。我们使用</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./waf --run &quot;try-debug&quot;</span><br></pre></td></tr></table></figure>
@@ -607,14 +607,14 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">(gdb) list</span><br><span class="line">15        NS_LOG_UNCOND (&quot;Before Error&quot;);</span><br><span class="line">16</span><br><span class="line">17        std::vector&lt;int&gt; v;</span><br><span class="line">18</span><br><span class="line">19        //error point</span><br><span class="line">20        NS_LOG_UNCOND(&quot;the first element: &quot; &lt;&lt; v[0]);</span><br><span class="line">21</span><br><span class="line">22        NS_LOG_UNCOND (&quot;After Error&quot;);</span><br><span class="line">23</span><br><span class="line">24      &#125;</span><br></pre></td></tr></table></figure>
 <p>这样就方便我们查看究竟是为什么会引起这个错误。调试完成之后，使用quit命令退出（程序未结束的情况下退出，一般会进行询问是否退出，选择yes即可）。</p>
 <p>gdb也可以在使用run命令之前就为程序设置断点，然后进行单步调试，中间可以打印任何变量和表达式的值。具体内容请参考man gdb或者<a href="http://man.linuxde.net/gdb" target="_blank" rel="noopener">这个链接</a>。</p>
-<h1 id="使用Eclipse开发NS-3程序"><a href="#使用Eclipse开发NS-3程序" class="headerlink" title="使用Eclipse开发NS-3程序"></a>使用Eclipse开发NS-3程序</h1><h2 id="配置项目"><a href="#配置项目" class="headerlink" title="配置项目"></a>配置项目</h2><p>安装完Eclipse-CPP之后，就可以利用Eclipse来查看和编写NS-3代码了。Eclipse启动的时候，会要求选择一个Workspace。我习惯将Workspace建立在NS-3的主目录中，如下图所示：</p>
+<h1 id="5-使用Eclipse开发NS-3程序"><a href="#5-使用Eclipse开发NS-3程序" class="headerlink" title="5. 使用Eclipse开发NS-3程序"></a>5. 使用Eclipse开发NS-3程序</h1><h2 id="5-1-配置项目"><a href="#5-1-配置项目" class="headerlink" title="5.1. 配置项目"></a>5.1. 配置项目</h2><p>安装完Eclipse-CPP之后，就可以利用Eclipse来查看和编写NS-3代码了。Eclipse启动的时候，会要求选择一个Workspace。我习惯将Workspace建立在NS-3的主目录中，如下图所示：</p>
 <p><img src="shot_2018-04-05_00-21-48.png" alt="设置Eclipse的Workspace"></p>
 <p>然后启动Eclipse，并创建一个新的Eclipse工程。选择File -&gt; New -&gt; Project..，然后在弹出的新建工程对话框当中展开C/C++选项，随后选择Makefile Project with Existing Code，并点击Next。</p>
 <p><img src="shot_2018-04-05_00-48-23.png" alt="使用已经存在的代码新建工程"></p>
 <p>然后输入工程名称ns-3.27，并选择工程的目录到ns-3.27目录下。同时不要忘记在Toolchain中选择Linux GCC，这将向工程中添加标准的C++头文件。</p>
 <p><img src="shot_2018-04-05_00-52-01.png" alt="创建新的NS-3工程"></p>
 <p>随后点击Finish按钮完成工程的创建。工程第一次创建时，将进行源代码文件的解析工作，可能会消耗一些时间，耐心等待解析过程结束。当代码解析完成后，Eclipse会建立项目的符号库，方便以后编程的时候进行代码提示。</p>
-<h2 id="运行程序"><a href="#运行程序" class="headerlink" title="运行程序"></a>运行程序</h2><p>NS-3中所有的仿真脚本都在scratch目录中。每一个scratch脚本都会被编译成为一个可执行程序。要运行程序，直接运行这些程序即可。但是，如果使用动态链接库编译模式编译出的可执行文件需要配合动态链接文件才能运行。如果试图直接在Eclipse里面运行，会提示找不到相应的.so文件。因此需要添加动态链接库依赖。</p>
+<h2 id="5-2-运行程序"><a href="#5-2-运行程序" class="headerlink" title="5.2. 运行程序"></a>5.2. 运行程序</h2><p>NS-3中所有的仿真脚本都在scratch目录中。每一个scratch脚本都会被编译成为一个可执行程序。要运行程序，直接运行这些程序即可。但是，如果使用动态链接库编译模式编译出的可执行文件需要配合动态链接文件才能运行。如果试图直接在Eclipse里面运行，会提示找不到相应的.so文件。因此需要添加动态链接库依赖。</p>
 <p>点击菜单：Run -&gt; Run Configurations，然后选择新建一个运行配置，选中新建的运行配置。在右边对话框中点击Search Project…，然后在弹出的列表中选择需要运行的程序，例如scratch-simulator，点击OK按钮确定。</p>
 <p><img src="shot_2018-04-05_01-36-30.png" alt="创建运行选项"></p>
 <p>然后添加动态链接库依赖。切换到Environment标签页，然后点击New按钮新建环境变量。变量名(name)为：LD_LIBRARY_PATH，变量值(value)为${project_loc}/build。</p>
@@ -623,7 +623,7 @@
 <p>点击OK完成环境变量设置。在对话框中点击Run按钮即可运行程序。此时程序应该可以正常执行，不会提示找不到so文件。</p>
 <p>如果要运行其他仿真脚本，则需要再次进入运行配置，然后再次点击Search Project…按钮，选择相应的程序。最后点击Run按钮运行程序。</p>
 <p><img src="shot_2018-04-05_01-49-44.png" alt="重新选择执行的程序"></p>
-<h2 id="跟踪调试程序"><a href="#跟踪调试程序" class="headerlink" title="跟踪调试程序"></a>跟踪调试程序</h2><p>如果要调试程序，可以选择在程序中设置好相应的断点（在要设置断点的那一句代码行号前面双击鼠标左键可以设置/取消断点）。随后选择菜单Run -&gt; Debug Configurations，然后在对话框中选择刚刚配置好的选项。然后点击Search Project…按钮选好要执行的程序。最后点击Debug按钮进行调试。</p>
+<h2 id="5-3-跟踪调试程序"><a href="#5-3-跟踪调试程序" class="headerlink" title="5.3. 跟踪调试程序"></a>5.3. 跟踪调试程序</h2><p>如果要调试程序，可以选择在程序中设置好相应的断点（在要设置断点的那一句代码行号前面双击鼠标左键可以设置/取消断点）。随后选择菜单Run -&gt; Debug Configurations，然后在对话框中选择刚刚配置好的选项。然后点击Search Project…按钮选好要执行的程序。最后点击Debug按钮进行调试。</p>
 <p>程序进入调试模式之后，Eclipse会询问是否进入调试视图，选择是进入调试视图，然后进行程序的单步调试，并观察变量和表达式的值。</p>
 
       
@@ -651,12 +651,12 @@
   <p><span>本文标题:</span><a href="/2018/03/30/ns3-001/">NS-3学习笔记（一）：NS-3的运行环境搭建</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 Rain Sia <rainsia@163.com> 的个人博客">Rain Sia <rainsia@163.com></a></p>
   <p><span>发布时间:</span>2018年03月30日 - 18:03</p>
-  <p><span>最后更新:</span>2018年10月22日 - 23:10</p>
+  <p><span>最后更新:</span>2018年10月29日 - 10:10</p>
   <p><span>原始链接:</span>
 		<a href="/2018/03/30/ns3-001/" title="NS-3学习笔记（一）：NS-3的运行环境搭建">
-			http://rainsia.gitee.io/2018/03/30/ns3-001/
+			http://rainsia.github.io/2018/03/30/ns3-001/
 		</a>
-    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="http://rainsia.gitee.io/2018/03/30/ns3-001/"  aria-label="复制成功！"></i></span>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="http://rainsia.github.io/2018/03/30/ns3-001/"  aria-label="复制成功！"></i></span>
   </p>
   <p><span>版权信息:</span>本文为作者原创文章，如需进行非商业性转载，请注明出处并保留原文链接及作者。如要进行商业性转载，请获得作者授权！</p>  
   <p><span>联系方式:</span>rainsia@163.com</p>  
@@ -939,7 +939,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#NS-3简介"><span class="nav-number">1.</span> <span class="nav-text">NS-3简介</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#NS-3和NS-2的联系与区别"><span class="nav-number">1.1.</span> <span class="nav-text">NS-3和NS-2的联系与区别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#NS-3的开发环境"><span class="nav-number">1.2.</span> <span class="nav-text">NS-3的开发环境</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#NS-3的编译"><span class="nav-number">2.</span> <span class="nav-text">NS-3的编译</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#环境配置"><span class="nav-number">2.1.</span> <span class="nav-text">环境配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#下载NS-3"><span class="nav-number">2.2.</span> <span class="nav-text">下载NS-3</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#NS-3的编译-1"><span class="nav-number">2.3.</span> <span class="nav-text">NS-3的编译</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#不同的编译配置"><span class="nav-number">2.4.</span> <span class="nav-text">不同的编译配置</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#开发NS-3程序"><span class="nav-number">3.</span> <span class="nav-text">开发NS-3程序</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#运行方式"><span class="nav-number">4.</span> <span class="nav-text">运行方式</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#调试"><span class="nav-number">4.1.</span> <span class="nav-text">调试</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#使用Eclipse开发NS-3程序"><span class="nav-number">5.</span> <span class="nav-text">使用Eclipse开发NS-3程序</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#配置项目"><span class="nav-number">5.1.</span> <span class="nav-text">配置项目</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#运行程序"><span class="nav-number">5.2.</span> <span class="nav-text">运行程序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#跟踪调试程序"><span class="nav-number">5.3.</span> <span class="nav-text">跟踪调试程序</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-NS-3简介"><span class="nav-number">1.</span> <span class="nav-text">1. NS-3简介</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1-NS-3和NS-2的联系与区别"><span class="nav-number">1.1.</span> <span class="nav-text">1.1. NS-3和NS-2的联系与区别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-2-NS-3的开发环境"><span class="nav-number">1.2.</span> <span class="nav-text">1.2. NS-3的开发环境</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-NS-3的编译"><span class="nav-number">2.</span> <span class="nav-text">2. NS-3的编译</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-环境配置"><span class="nav-number">2.1.</span> <span class="nav-text">2.1. 环境配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2-下载NS-3"><span class="nav-number">2.2.</span> <span class="nav-text">2.2. 下载NS-3</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-3-NS-3的编译"><span class="nav-number">2.3.</span> <span class="nav-text">2.3. NS-3的编译</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-4-不同的编译配置"><span class="nav-number">2.4.</span> <span class="nav-text">2.4. 不同的编译配置</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-开发NS-3程序"><span class="nav-number">3.</span> <span class="nav-text">3. 开发NS-3程序</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-运行方式"><span class="nav-number">4.</span> <span class="nav-text">4. 运行方式</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#4-1-调试"><span class="nav-number">4.1.</span> <span class="nav-text">4.1. 调试</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-使用Eclipse开发NS-3程序"><span class="nav-number">5.</span> <span class="nav-text">5. 使用Eclipse开发NS-3程序</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#5-1-配置项目"><span class="nav-number">5.1.</span> <span class="nav-text">5.1. 配置项目</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-2-运行程序"><span class="nav-number">5.2.</span> <span class="nav-text">5.2. 运行程序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-3-跟踪调试程序"><span class="nav-number">5.3.</span> <span class="nav-text">5.3. 跟踪调试程序</span></a></li></ol></li></ol></div>
             
 
           </div>

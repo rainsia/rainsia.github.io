@@ -116,11 +116,11 @@
 <meta name="keywords" content="NS-3,C++,Simulation,Logging">
 <meta property="og:type" content="article">
 <meta property="og:title" content="NS-3学习笔记（二）：NS-3的日志系统">
-<meta property="og:url" content="http://rainsia.gitee.io/2018/03/30/ns3-002/index.html">
+<meta property="og:url" content="http://rainsia.github.io/2018/03/30/ns3-002/index.html">
 <meta property="og:site_name" content="Rain&#39;s Blog">
 <meta property="og:description" content="在程序设计的时候，我们一般都会在程序中输出一些信息。无论是记录程序的运行过程也好，还是输出程序的结果，都需要输出一些信息。这些输出的信息我们称为日志。本章主要介绍NS-3的日志系统：日志的级别，如何记录日志，如何启用和禁用日志等。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-10-20T11:43:26.963Z">
+<meta property="og:updated_time" content="2018-10-29T02:02:53.084Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="NS-3学习笔记（二）：NS-3的日志系统">
 <meta name="twitter:description" content="在程序设计的时候，我们一般都会在程序中输出一些信息。无论是记录程序的运行过程也好，还是输出程序的结果，都需要输出一些信息。这些输出的信息我们称为日志。本章主要介绍NS-3的日志系统：日志的级别，如何记录日志，如何启用和禁用日志等。">
@@ -130,7 +130,7 @@
 
 
 
-  <link rel="canonical" href="http://rainsia.gitee.io/2018/03/30/ns3-002/"/>
+  <link rel="canonical" href="http://rainsia.github.io/2018/03/30/ns3-002/"/>
 
 
 
@@ -315,7 +315,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://rainsia.gitee.io/2018/03/30/ns3-002/">
+    <link itemprop="mainEntityOfPage" href="http://rainsia.github.io/2018/03/30/ns3-002/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Rain Sia <rainsia@163.com>">
@@ -374,7 +374,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2018-10-20 19:43:26" itemprop="dateModified" datetime="2018-10-20T19:43:26+08:00">2018-10-20</time>
+                <time title="修改时间：2018-10-29 10:02:53" itemprop="dateModified" datetime="2018-10-29T10:02:53+08:00">2018-10-29</time>
               
             
           </span>
@@ -459,9 +459,9 @@
       
         <p>在程序设计的时候，我们一般都会在程序中输出一些信息。无论是记录程序的运行过程也好，还是输出程序的结果，都需要输出一些信息。这些输出的信息我们称为日志。本章主要介绍NS-3的日志系统：日志的级别，如何记录日志，如何启用和禁用日志等。</p>
 <a id="more"></a>
-<h1 id="NS-3日志概述"><a href="#NS-3日志概述" class="headerlink" title="NS-3日志概述"></a>NS-3日志概述</h1><p>在程序中，经常都需要输出一些信息。例如为了程序调试的时候方便，我们需要输出程序的运行过程的记录，或者需要输出一些中间结果。或者程序运行出现逻辑错误的时候，我们需要输出一些错误信息等等。有些程序直接将结果输出到标准输出（stdout）或者是标准错误（stderr）。除此之外，一些大型的软件系统提供一种更灵活的方式来记录这些程序输出的信息，这种机制称为日志系统。日志系统可以灵活地控制输出的信息的详细程度、输出方式等。</p>
+<h1 id="1-NS-3日志概述"><a href="#1-NS-3日志概述" class="headerlink" title="1. NS-3日志概述"></a>1. NS-3日志概述</h1><p>在程序中，经常都需要输出一些信息。例如为了程序调试的时候方便，我们需要输出程序的运行过程的记录，或者需要输出一些中间结果。或者程序运行出现逻辑错误的时候，我们需要输出一些错误信息等等。有些程序直接将结果输出到标准输出（stdout）或者是标准错误（stderr）。除此之外，一些大型的软件系统提供一种更灵活的方式来记录这些程序输出的信息，这种机制称为日志系统。日志系统可以灵活地控制输出的信息的详细程度、输出方式等。</p>
 <p>在NS-3当中，日志系统主要是用来提供程序的调试信息的，例如输出警告、错误、程序逻辑等信息或者输出一些程序的中间结果以提供验证。对于仿真的结果数据，NS-3提供了跟踪机制(tracing)来收集这些结果，而不应该直接使用日志来进行输出。跟踪机制将在后面的章节进行介绍。</p>
-<h1 id="日志的级别"><a href="#日志的级别" class="headerlink" title="日志的级别"></a>日志的级别</h1><p>在NS-3当中，日志是继续组件（Component）定义的，能够方便地控制开启和关闭一个组件的日志。同时，NS-3提供了七个级别的日志水平，可以在输出日志是选择相应的级别，那么在显示日志是可以控制日志的显示详细程度。这些级别由粗到细依次为：</p>
+<h1 id="2-日志的级别"><a href="#2-日志的级别" class="headerlink" title="2. 日志的级别"></a>2. 日志的级别</h1><p>在NS-3当中，日志是继续组件（Component）定义的，能够方便地控制开启和关闭一个组件的日志。同时，NS-3提供了七个级别的日志水平，可以在输出日志是选择相应的级别，那么在显示日志是可以控制日志的显示详细程度。这些级别由粗到细依次为：</p>
 <ol>
 <li>LOG_ERROR：记录错误信息，程序中使用NS_LOG_ERROR来输出信息</li>
 <li>LOG_WARN：记录警告信息，程序中使用NS_LOG_WARN来输出信息</li>
@@ -475,13 +475,13 @@
 <ul>
 <li>NS_LOG_UNCOND：这种输出方式不会绑定到上述任何一个级别当中，只要所属组件的日志开启，不论当前显示哪个级别，都将输出日志信息。</li>
 </ul>
-<h1 id="定义和使用日志组件"><a href="#定义和使用日志组件" class="headerlink" title="定义和使用日志组件"></a>定义和使用日志组件</h1><h2 id="定义日志组件"><a href="#定义日志组件" class="headerlink" title="定义日志组件"></a>定义日志组件</h2><p>要输出日志，首先需要定义一个日志组件。其语法如下：</p>
+<h1 id="3-定义和使用日志组件"><a href="#3-定义和使用日志组件" class="headerlink" title="3. 定义和使用日志组件"></a>3. 定义和使用日志组件</h1><h2 id="3-1-定义日志组件"><a href="#3-1-定义日志组件" class="headerlink" title="3.1. 定义日志组件"></a>3.1. 定义日志组件</h2><p>要输出日志，首先需要定义一个日志组件。其语法如下：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">NS_LOG_COMPONENT_DEFINE(&quot;MyTestComponent&quot;);</span><br></pre></td></tr></table></figure>
 <p>其中NS_LOG_COMPONENT_DEFINE是NS-3定义的一个宏，用于定义一个日志组件，在该组件中输出的日志，可以一次性启用或者禁用。组件的名字使用字符串表示。此外，要注意组件的名字不可重复。因此前面最好加上前缀，以免和NS-3官方的组件或者第三方的组件名称冲突。</p>
-<h2 id="启用日志组件"><a href="#启用日志组件" class="headerlink" title="启用日志组件"></a>启用日志组件</h2><p>在NS-3当中，有多种方法可以启用日志组件。这里介绍一种最简单的方法，即在程序中通过编程方式，直接启用某个组件的日志输出。其语法如下：</p>
+<h2 id="3-2-启用日志组件"><a href="#3-2-启用日志组件" class="headerlink" title="3.2. 启用日志组件"></a>3.2. 启用日志组件</h2><p>在NS-3当中，有多种方法可以启用日志组件。这里介绍一种最简单的方法，即在程序中通过编程方式，直接启用某个组件的日志输出。其语法如下：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">LogComponentEnable(&quot;MyTestComponent&quot;, LOG_INFO);</span><br></pre></td></tr></table></figure>
 <p>这个语句启用了MyTestComponent组件当中的INFO级别的日志。</p>
-<h2 id="示例程序"><a href="#示例程序" class="headerlink" title="示例程序"></a>示例程序</h2><p>下面的程序，定义了一个日志组件，然后输出了一些日志信息：</p>
+<h2 id="3-3-示例程序"><a href="#3-3-示例程序" class="headerlink" title="3.3. 示例程序"></a>3.3. 示例程序</h2><p>下面的程序，定义了一个日志组件，然后输出了一些日志信息：</p>
 <figure class="highlight cpp"><figcaption><span>test-log-component.cc</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * test-log-component.cc</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> *  Created on: Apr 1, 2018</span></span><br><span class="line"><span class="comment"> *      Author: Yu Xia &lt;rainsia@163.com&gt;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"ns3/core-module.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> ns3;</span><br><span class="line"></span><br><span class="line"><marked style="border-bottom: 2px solid red;">NS_LOG_COMPONENT_DEFINE (<span class="string">"MyTestComponent"</span>);</marked></span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> </span><br><span class="line">main (<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span><br><span class="line">&#123;</span><br><span class="line">    <marked style="border-bottom: 2px solid red;">LogComponentEnable(<span class="string">"MyTestComponent"</span>, LOG_INFO);</marked></span><br><span class="line"></span><br><span class="line">    NS_LOG_ERROR(<span class="string">"test error"</span>);</span><br><span class="line">    NS_LOG_WARN(<span class="string">"test warn"</span>);</span><br><span class="line">    NS_LOG_DEBUG(<span class="string">"test debug"</span>);</span><br><span class="line">    NS_LOG_INFO(<span class="string">"test info"</span>);</span><br><span class="line">    NS_LOG_FUNCTION(<span class="string">"test function"</span>);</span><br><span class="line">    NS_LOG_LOGIC(<span class="string">"test logic"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>输入./waf –run “test-log-component”运行该程序，得到输出结果：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Waf: Entering directory `/home/rainsia/Applications/ns-allinone-3.24.1/ns-3.24.1/build&apos;</span><br><span class="line">Waf: Leaving directory `/home/rainsia/Applications/ns-allinone-3.24.1/ns-3.24.1/build&apos;</span><br><span class="line">Build commands will be stored in build/compile_commands.json</span><br><span class="line">&apos;build&apos; finished successfully (1.084s)</span><br><span class="line">test info</span><br></pre></td></tr></table></figure>
@@ -494,14 +494,14 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Waf: Entering directory `/home/rainsia/Applications/ns-allinone-3.24.1/ns-3.24.1/build&apos;</span><br><span class="line">[1732/1881] Compiling scratch/test-log-component.cc</span><br><span class="line">[1840/1881] Linking build/scratch/test-log-component</span><br><span class="line">Waf: Leaving directory `/home/rainsia/Applications/ns-allinone-3.24.1/ns-3.24.1/build&apos;</span><br><span class="line">Build commands will be stored in build/compile_commands.json</span><br><span class="line">&apos;build&apos; finished successfully (2.143s)</span><br><span class="line">test uncond</span><br></pre></td></tr></table></figure>
 <p>由此可见，使用NS_LOG_UNCOND输出的日志，无论日志组件启用与否，或者使用了任何的日志级别，其内容一定会输出。</p>
 <p>最后，如果想禁用所有级别的日志，可以使用LOG_NONE。</p>
-<h1 id="累计日志级别"><a href="#累计日志级别" class="headerlink" title="累计日志级别"></a>累计日志级别</h1><p>在启用日志组件时，除了使用类似LOG_INFO或者LOG_WARN这样的单一级别之外，还可以使用LOG_LEVEL_INFO或者LOG_LEVEL_WARN这样的累计日志级别。其累计原则是，排在，编号越小的级别输出的级别越高。例如，如果启用LOG_LEVEL_WARN级别，那么其上的ERROR级别的日志也会同时输出，但是其下的任何一个级别都将不输出。</p>
+<h1 id="4-累计日志级别"><a href="#4-累计日志级别" class="headerlink" title="4. 累计日志级别"></a>4. 累计日志级别</h1><p>在启用日志组件时，除了使用类似LOG_INFO或者LOG_WARN这样的单一级别之外，还可以使用LOG_LEVEL_INFO或者LOG_LEVEL_WARN这样的累计日志级别。其累计原则是，排在，编号越小的级别输出的级别越高。例如，如果启用LOG_LEVEL_WARN级别，那么其上的ERROR级别的日志也会同时输出，但是其下的任何一个级别都将不输出。</p>
 <p>其中LOG_LEVEL_ERROR和LOG_ERROR是一样的，因为他们都只显示自己级别的日志，此外LOG_LEVEL_ALL和LOG_ALL是一致的，因为他们都显示所有级别的日志。</p>
 <p>来看以下程序：</p>
 <figure class="highlight cpp"><figcaption><span>test-log-level.cc</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * test-log-level.cc</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> *  Created on: Apr 1, 2018</span></span><br><span class="line"><span class="comment"> *      Author: Yu Xia &lt;rainsia@163.com&gt;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"ns3/core-module.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> ns3;</span><br><span class="line"></span><br><span class="line">NS_LOG_COMPONENT_DEFINE (<span class="string">"MyTestLevel"</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> </span><br><span class="line">main (<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span><br><span class="line">&#123;</span><br><span class="line">    <marked style="border-bottom: 2px solid red;">LogComponentEnable(<span class="string">"MyTestLevel"</span>, LOG_LEVEL_INFO);</marked></span><br><span class="line"></span><br><span class="line">    NS_LOG_ERROR(<span class="string">"test error"</span>);</span><br><span class="line">    NS_LOG_WARN(<span class="string">"test warn"</span>);</span><br><span class="line">    NS_LOG_DEBUG(<span class="string">"test debug"</span>);</span><br><span class="line">    NS_LOG_INFO(<span class="string">"test info"</span>);</span><br><span class="line">    NS_LOG_FUNCTION(<span class="string">"test function"</span>);</span><br><span class="line">    NS_LOG_LOGIC(<span class="string">"test logic"</span>);</span><br><span class="line">    NS_LOG_UNCOND(<span class="string">"test uncond"</span>);</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>运行后将得到以下输出：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Waf: Entering directory `/home/rainsia/Applications/ns-allinone-3.24.1/ns-3.24.1/build&apos;</span><br><span class="line">[ 885/1883] Compiling scratch/test-log-level.cc</span><br><span class="line">[1851/1883] Linking build/scratch/test-log-level</span><br><span class="line">Waf: Leaving directory `/home/rainsia/Applications/ns-allinone-3.24.1/ns-3.24.1/build&apos;</span><br><span class="line">Build commands will be stored in build/compile_commands.json</span><br><span class="line">&apos;build&apos; finished successfully (1.788s)</span><br><span class="line">test error</span><br><span class="line">test warn</span><br><span class="line">test debug</span><br><span class="line">test info</span><br><span class="line">test uncond</span><br></pre></td></tr></table></figure>
 <p>由此可见，所有INFO以上的级别的日志都将输出，而INFO以下的级别的日志都将不输出。此外，UNCOND级别不受任何影响。</p>
-<h1 id="函数日志"><a href="#函数日志" class="headerlink" title="函数日志"></a>函数日志</h1><p>NS-3提供了函数日志来跟踪函数的调用情况。NS-3中一共有两个宏命令来协助跟踪函数日志：</p>
+<h1 id="5-函数日志"><a href="#5-函数日志" class="headerlink" title="5. 函数日志"></a>5. 函数日志</h1><p>NS-3提供了函数日志来跟踪函数的调用情况。NS-3中一共有两个宏命令来协助跟踪函数日志：</p>
 <ul>
 <li>NS_LOG_FUNCTION：必须带一个参数，适用于类的方法，或带参数的静态方法。</li>
 <li>NS_LOG_FUNCTION_NOARGS：可以不带参数，适用于不带参数的静态方法。</li>
@@ -518,7 +518,7 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">Waf: Entering directory `/home/rainsia/Applications/ns-allinone-3.24.1/ns-3.24.1/build&apos;</span><br><span class="line">[1736/1885] Compiling scratch/test-log-function.cc</span><br><span class="line">[1839/1885] Linking build/scratch/test-log-function</span><br><span class="line">Waf: Leaving directory `/home/rainsia/Applications/ns-allinone-3.24.1/ns-3.24.1/build&apos;</span><br><span class="line">Build commands will be stored in build/compile_commands.json</span><br><span class="line">&apos;build&apos; finished successfully (2.323s)</span><br><span class="line">MyTestFunction:Check(0x7ffe415382ef, 5, test item)</span><br><span class="line">value less than or equal to 10</span><br><span class="line">MyTestFunction:CheckIt(5, test item)</span><br><span class="line">less than 10 indeed, the item is test item</span><br><span class="line">MyTestFunction:CheckItTwice()</span><br><span class="line">let me check it again</span><br></pre></td></tr></table></figure>
 <p>可以看出，无论是NS_LOG_FUNCTION还是NS_LOG_FUNCTION_NOARGS都可能正常记录函数的调用过程，包括函数的名称和参数。然而，值得注意的是，函数名前面的前缀，并不是类的名字，而是模块的名字，而NS-3使用的前缀分隔符是冒号（:），而不是C++当中的两个冒号（::），也从侧面提示了这并不是类名，而是模块名。</p>
 <p>最佳实践：在编写程序时应该始终提供函数日志，这样调试程序会比较方便。</p>
-<h1 id="日志前缀"><a href="#日志前缀" class="headerlink" title="日志前缀"></a>日志前缀</h1><p>除了可以控制显示什么级别的日志之外，NS-3还提供了日志前缀，来控制显示日志的来源，从而更加方便我们进行调试。NS-3中可用的前缀有如下几种：</p>
+<h1 id="6-日志前缀"><a href="#6-日志前缀" class="headerlink" title="6. 日志前缀"></a>6. 日志前缀</h1><p>除了可以控制显示什么级别的日志之外，NS-3还提供了日志前缀，来控制显示日志的来源，从而更加方便我们进行调试。NS-3中可用的前缀有如下几种：</p>
 <ul>
 <li>LOG_PREFIX_FUNC：输出日志所在的函数</li>
 <li>LOG_PREFIX_TIME：输出日志产生的时间（注意此时间是仿真时间）</li>
@@ -545,10 +545,10 @@
 <li>NS-3中节点的编号从0开始</li>
 </ul>
 <p>由这个例子可以看出，NS-3提供的日志前缀机制可以方便地获取任何日志输出的时间、节点号、从哪个函数中打印的。充分、合理地利用这个机制，我们可以更快地查找问题，并修正问题。</p>
-<h1 id="命令行控制日志"><a href="#命令行控制日志" class="headerlink" title="命令行控制日志"></a>命令行控制日志</h1><p>除了在程序中使用编程的方式控制日志的开启与否、输出级别、前缀等选项之外，还可以使用命令行进行控制。相对于在程序中控制日志，使用命令行控制最大的好处在于更新配置后不需要重新编译程序。</p>
-<h2 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h2><p>命令行控制的方式主要是通过设置环境变量NS_LOG来实现的。一般是在启动具体的仿真之前设置，具体方法如下：</p>
+<h1 id="7-命令行控制日志"><a href="#7-命令行控制日志" class="headerlink" title="7. 命令行控制日志"></a>7. 命令行控制日志</h1><p>除了在程序中使用编程的方式控制日志的开启与否、输出级别、前缀等选项之外，还可以使用命令行进行控制。相对于在程序中控制日志，使用命令行控制最大的好处在于更新配置后不需要重新编译程序。</p>
+<h2 id="7-1-语法"><a href="#7-1-语法" class="headerlink" title="7.1. 语法"></a>7.1. 语法</h2><p>命令行控制的方式主要是通过设置环境变量NS_LOG来实现的。一般是在启动具体的仿真之前设置，具体方法如下：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ NS_LOG=&quot;日志模块1=level|prefix:日志模块2=level|prefix:...&quot; ./waf --run &quot;test&quot;</span><br></pre></td></tr></table></figure>
-<h2 id="日志级别"><a href="#日志级别" class="headerlink" title="日志级别"></a>日志级别</h2><p>在命令行中，可以使用的级别和程序控制中一致，但是有更简洁的写法：</p>
+<h2 id="7-2-日志级别"><a href="#7-2-日志级别" class="headerlink" title="7.2. 日志级别"></a>7.2. 日志级别</h2><p>在命令行中，可以使用的级别和程序控制中一致，但是有更简洁的写法：</p>
 <ul>
 <li>error （level_error）</li>
 <li>warn （level_warn）</li>
@@ -560,7 +560,7 @@
 <li>*</li>
 </ul>
 <p>前面的部分是单个的级别，括号中的部分是累计级别。</p>
-<h2 id="日志前缀-1"><a href="#日志前缀-1" class="headerlink" title="日志前缀"></a>日志前缀</h2><p>和程序中一样，也可以使用前缀定义日志输出，写法更加简洁：</p>
+<h2 id="7-3-日志前缀"><a href="#7-3-日志前缀" class="headerlink" title="7.3. 日志前缀"></a>7.3. 日志前缀</h2><p>和程序中一样，也可以使用前缀定义日志输出，写法更加简洁：</p>
 <ul>
 <li>func</li>
 <li>time</li>
@@ -570,7 +570,7 @@
 <li>*</li>
 </ul>
 <p>日志级别可以和日志前缀组合使用，之间使用竖线（|）分隔。</p>
-<h2 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h2><p>在上一个程序中，我们使用程序的方式定义了日志模块MyTestPrefix的日志为LOGIC级别以上，并且同时输出所有前缀。这次，我们使用命令行的方法定义输出级别和前缀，首先注释程序中的LogComponentEnable语句，然后在命令行中输入：</p>
+<h2 id="7-4-使用方法"><a href="#7-4-使用方法" class="headerlink" title="7.4. 使用方法"></a>7.4. 使用方法</h2><p>在上一个程序中，我们使用程序的方式定义了日志模块MyTestPrefix的日志为LOGIC级别以上，并且同时输出所有前缀。这次，我们使用命令行的方法定义输出级别和前缀，首先注释程序中的LogComponentEnable语句，然后在命令行中输入：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ NS_LOG=&quot;MyTestPrefix=level_warn|level&quot; ./waf --run &quot;my-test-prefix&quot;</span><br></pre></td></tr></table></figure>
 <p>需要注意的是，由于竖线（|）在linux命令当中表示管道，因此NS_LOG变量的值一定要用引号包裹起来。运行上面的命令，可以得到输出结果：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Waf: Entering directory `/home/rainsia/Applications/ns-allinone-3.24.1/ns-3.24.1/build&apos;</span><br><span class="line">[ 886/1887] Compiling scratch/test-log-prefix.cc</span><br><span class="line">[1855/1887] Linking build/scratch/test-log-prefix</span><br><span class="line">Waf: Leaving directory `/home/rainsia/Applications/ns-allinone-3.24.1/ns-3.24.1/build&apos;</span><br><span class="line">Build commands will be stored in build/compile_commands.json</span><br><span class="line">&apos;build&apos; finished successfully (2.178s)</span><br><span class="line">[ERROR] this is an error from main</span><br><span class="line">[WARN ] this is a warn from func1</span><br><span class="line">0</span><br></pre></td></tr></table></figure>
@@ -601,12 +601,12 @@
   <p><span>本文标题:</span><a href="/2018/03/30/ns3-002/">NS-3学习笔记（二）：NS-3的日志系统</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 Rain Sia <rainsia@163.com> 的个人博客">Rain Sia <rainsia@163.com></a></p>
   <p><span>发布时间:</span>2018年03月30日 - 18:03</p>
-  <p><span>最后更新:</span>2018年10月20日 - 19:10</p>
+  <p><span>最后更新:</span>2018年10月29日 - 10:10</p>
   <p><span>原始链接:</span>
 		<a href="/2018/03/30/ns3-002/" title="NS-3学习笔记（二）：NS-3的日志系统">
-			http://rainsia.gitee.io/2018/03/30/ns3-002/
+			http://rainsia.github.io/2018/03/30/ns3-002/
 		</a>
-    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="http://rainsia.gitee.io/2018/03/30/ns3-002/"  aria-label="复制成功！"></i></span>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="http://rainsia.github.io/2018/03/30/ns3-002/"  aria-label="复制成功！"></i></span>
   </p>
   <p><span>版权信息:</span>本文为作者原创文章，如需进行非商业性转载，请注明出处并保留原文链接及作者。如要进行商业性转载，请获得作者授权！</p>  
   <p><span>联系方式:</span>rainsia@163.com</p>  
@@ -889,7 +889,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#NS-3日志概述"><span class="nav-number">1.</span> <span class="nav-text">NS-3日志概述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#日志的级别"><span class="nav-number">2.</span> <span class="nav-text">日志的级别</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#定义和使用日志组件"><span class="nav-number">3.</span> <span class="nav-text">定义和使用日志组件</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#定义日志组件"><span class="nav-number">3.1.</span> <span class="nav-text">定义日志组件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#启用日志组件"><span class="nav-number">3.2.</span> <span class="nav-text">启用日志组件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#示例程序"><span class="nav-number">3.3.</span> <span class="nav-text">示例程序</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#累计日志级别"><span class="nav-number">4.</span> <span class="nav-text">累计日志级别</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#函数日志"><span class="nav-number">5.</span> <span class="nav-text">函数日志</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#日志前缀"><span class="nav-number">6.</span> <span class="nav-text">日志前缀</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#命令行控制日志"><span class="nav-number">7.</span> <span class="nav-text">命令行控制日志</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#语法"><span class="nav-number">7.1.</span> <span class="nav-text">语法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#日志级别"><span class="nav-number">7.2.</span> <span class="nav-text">日志级别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#日志前缀-1"><span class="nav-number">7.3.</span> <span class="nav-text">日志前缀</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用方法"><span class="nav-number">7.4.</span> <span class="nav-text">使用方法</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-NS-3日志概述"><span class="nav-number">1.</span> <span class="nav-text">1. NS-3日志概述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-日志的级别"><span class="nav-number">2.</span> <span class="nav-text">2. 日志的级别</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-定义和使用日志组件"><span class="nav-number">3.</span> <span class="nav-text">3. 定义和使用日志组件</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1-定义日志组件"><span class="nav-number">3.1.</span> <span class="nav-text">3.1. 定义日志组件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-2-启用日志组件"><span class="nav-number">3.2.</span> <span class="nav-text">3.2. 启用日志组件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-3-示例程序"><span class="nav-number">3.3.</span> <span class="nav-text">3.3. 示例程序</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-累计日志级别"><span class="nav-number">4.</span> <span class="nav-text">4. 累计日志级别</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-函数日志"><span class="nav-number">5.</span> <span class="nav-text">5. 函数日志</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6-日志前缀"><span class="nav-number">6.</span> <span class="nav-text">6. 日志前缀</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#7-命令行控制日志"><span class="nav-number">7.</span> <span class="nav-text">7. 命令行控制日志</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#7-1-语法"><span class="nav-number">7.1.</span> <span class="nav-text">7.1. 语法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-2-日志级别"><span class="nav-number">7.2.</span> <span class="nav-text">7.2. 日志级别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-3-日志前缀"><span class="nav-number">7.3.</span> <span class="nav-text">7.3. 日志前缀</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-4-使用方法"><span class="nav-number">7.4.</span> <span class="nav-text">7.4. 使用方法</span></a></li></ol></li></ol></div>
             
 
           </div>

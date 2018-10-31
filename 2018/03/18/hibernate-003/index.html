@@ -116,33 +116,33 @@
 <meta name="keywords" content="Hibernate,Java,JPA,Primary Key,GeneratedValue,Id">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Hibernate学习笔记（三）Hibernate中的主键 之 Sequence">
-<meta property="og:url" content="http://rainsia.gitee.io/2018/03/18/hibernate-003/index.html">
+<meta property="og:url" content="http://rainsia.github.io/2018/03/18/hibernate-003/index.html">
 <meta property="og:site_name" content="Rain&#39;s Blog">
 <meta property="og:description" content="本章主要介绍如何在Hibernate中为实体定义主键，以及JPA中主键的常用生成策略。此外对这些主键生成策略进行了一些分析，以方便在现实实现中选择一种合适的策略。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://rainsia.gitee.io/2018/03/18/hibernate-003/Snipaste_2018-03-16_09-50-39.png">
-<meta property="og:image" content="http://rainsia.gitee.io/2018/03/18/hibernate-003/Snipaste_2018-03-16_10-38-48.png">
-<meta property="og:image" content="http://rainsia.gitee.io/2018/03/18/hibernate-003/Snipaste_2018-03-16_10-57-22.png">
-<meta property="og:image" content="http://rainsia.gitee.io/2018/03/18/hibernate-003/Snipaste_2018-03-19_18-23-26.png">
-<meta property="og:image" content="http://rainsia.gitee.io/2018/03/18/hibernate-003/Snipaste_2018-03-19_17-05-31.png">
-<meta property="og:image" content="http://rainsia.gitee.io/2018/03/18/hibernate-003/Snipaste_2018-03-19_18-25-11.png">
-<meta property="og:image" content="http://rainsia.gitee.io/2018/03/18/hibernate-003/Snipaste_2018-03-19_21-31-49.png">
-<meta property="og:image" content="http://rainsia.gitee.io/2018/03/18/hibernate-003/Snipaste_2018-03-19_21-32-56.png">
-<meta property="og:image" content="http://rainsia.gitee.io/2018/03/18/hibernate-003/Snipaste_2018-03-19_21-35-34.png">
-<meta property="og:image" content="http://rainsia.gitee.io/2018/03/18/hibernate-003/Snipaste_2018-03-20_22-34-50.png">
-<meta property="og:image" content="http://rainsia.gitee.io/2018/03/18/hibernate-003/Snipaste_2018-03-20_22-58-34.png">
+<meta property="og:image" content="http://rainsia.github.io/2018/03/18/hibernate-003/Snipaste_2018-03-16_09-50-39.png">
+<meta property="og:image" content="http://rainsia.github.io/2018/03/18/hibernate-003/Snipaste_2018-03-16_10-38-48.png">
+<meta property="og:image" content="http://rainsia.github.io/2018/03/18/hibernate-003/Snipaste_2018-03-16_10-57-22.png">
+<meta property="og:image" content="http://rainsia.github.io/2018/03/18/hibernate-003/Snipaste_2018-03-19_18-23-26.png">
+<meta property="og:image" content="http://rainsia.github.io/2018/03/18/hibernate-003/Snipaste_2018-03-19_17-05-31.png">
+<meta property="og:image" content="http://rainsia.github.io/2018/03/18/hibernate-003/Snipaste_2018-03-19_18-25-11.png">
+<meta property="og:image" content="http://rainsia.github.io/2018/03/18/hibernate-003/Snipaste_2018-03-19_21-31-49.png">
+<meta property="og:image" content="http://rainsia.github.io/2018/03/18/hibernate-003/Snipaste_2018-03-19_21-32-56.png">
+<meta property="og:image" content="http://rainsia.github.io/2018/03/18/hibernate-003/Snipaste_2018-03-19_21-35-34.png">
+<meta property="og:image" content="http://rainsia.github.io/2018/03/18/hibernate-003/Snipaste_2018-03-20_22-34-50.png">
+<meta property="og:image" content="http://rainsia.github.io/2018/03/18/hibernate-003/Snipaste_2018-03-20_22-58-34.png">
 <meta property="og:updated_time" content="2018-10-29T02:01:18.830Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Hibernate学习笔记（三）Hibernate中的主键 之 Sequence">
 <meta name="twitter:description" content="本章主要介绍如何在Hibernate中为实体定义主键，以及JPA中主键的常用生成策略。此外对这些主键生成策略进行了一些分析，以方便在现实实现中选择一种合适的策略。">
-<meta name="twitter:image" content="http://rainsia.gitee.io/2018/03/18/hibernate-003/Snipaste_2018-03-16_09-50-39.png">
+<meta name="twitter:image" content="http://rainsia.github.io/2018/03/18/hibernate-003/Snipaste_2018-03-16_09-50-39.png">
 
 
 
 
 
 
-  <link rel="canonical" href="http://rainsia.gitee.io/2018/03/18/hibernate-003/"/>
+  <link rel="canonical" href="http://rainsia.github.io/2018/03/18/hibernate-003/"/>
 
 
 
@@ -327,7 +327,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://rainsia.gitee.io/2018/03/18/hibernate-003/">
+    <link itemprop="mainEntityOfPage" href="http://rainsia.github.io/2018/03/18/hibernate-003/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Rain Sia <rainsia@163.com>">
@@ -644,9 +644,9 @@
   <p><span>最后更新:</span>2018年10月29日 - 10:10</p>
   <p><span>原始链接:</span>
 		<a href="/2018/03/18/hibernate-003/" title="Hibernate学习笔记（三）Hibernate中的主键 之 Sequence">
-			http://rainsia.gitee.io/2018/03/18/hibernate-003/
+			http://rainsia.github.io/2018/03/18/hibernate-003/
 		</a>
-    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="http://rainsia.gitee.io/2018/03/18/hibernate-003/"  aria-label="复制成功！"></i></span>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="http://rainsia.github.io/2018/03/18/hibernate-003/"  aria-label="复制成功！"></i></span>
   </p>
   <p><span>版权信息:</span>本文为作者原创文章，如需进行非商业性转载，请注明出处并保留原文链接及作者。如要进行商业性转载，请获得作者授权！</p>  
   <p><span>联系方式:</span>rainsia@163.com</p>  
@@ -961,7 +961,7 @@
   <span class="with-love" id="animate">
     <i class="fa fa-user"></i>
   </span>
-  <span class="author" itemprop="copyrightHolder">Rain Sia, All rights reversed.<br/>本站所有原创文章，如进行非商业目的转载，请注明出处。若要进行商业目的转载，必须取得授权。<br/>--作者</span>
+  <span class="author" itemprop="copyrightHolder">Rain Sia, All rights reserved.<br/>本站所有原创文章，如进行非商业目的转载，请注明出处。若要进行商业目的转载，必须取得授权。<br/>--作者</span>
 
   
 

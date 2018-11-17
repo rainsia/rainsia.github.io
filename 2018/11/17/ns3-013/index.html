@@ -112,20 +112,25 @@
 
 
 
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Rain&#39;s Blog">
-<meta property="og:url" content="http://rainsia.github.io/tags/Function-Pointer/index.html">
+  <meta name="description" content="本章主要介绍NS-3当中的（伪）随机数生成器。NS-3提供了简单方便的随机数类型，可以生成各种分布的随机数。随机数生成器也属于NS-3对象框架的类，适用一切对象框架中的特性。此外，随机数可以作为属性值，并且方便地从字符串创建。为了生成互补相交的随机数序列，NS-3使用了随机数流的概念，保证不同的随机数生成器的示例当中，生成的随机数尽量不存在相互交叉的情况。">
+<meta name="keywords" content="NS-3,C++,Simulation,Random Number,Random Variable,RandomStream">
+<meta property="og:type" content="article">
+<meta property="og:title" content="NS-3学习笔记（十三）：随机数生成器">
+<meta property="og:url" content="http://rainsia.github.io/2018/11/17/ns3-013/index.html">
 <meta property="og:site_name" content="Rain&#39;s Blog">
+<meta property="og:description" content="本章主要介绍NS-3当中的（伪）随机数生成器。NS-3提供了简单方便的随机数类型，可以生成各种分布的随机数。随机数生成器也属于NS-3对象框架的类，适用一切对象框架中的特性。此外，随机数可以作为属性值，并且方便地从字符串创建。为了生成互补相交的随机数序列，NS-3使用了随机数流的概念，保证不同的随机数生成器的示例当中，生成的随机数尽量不存在相互交叉的情况。">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-11-17T15:47:18.429Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Rain&#39;s Blog">
+<meta name="twitter:title" content="NS-3学习笔记（十三）：随机数生成器">
+<meta name="twitter:description" content="本章主要介绍NS-3当中的（伪）随机数生成器。NS-3提供了简单方便的随机数类型，可以生成各种分布的随机数。随机数生成器也属于NS-3对象框架的类，适用一切对象框架中的特性。此外，随机数可以作为属性值，并且方便地从字符串创建。为了生成互补相交的随机数序列，NS-3使用了随机数流的概念，保证不同的随机数生成器的示例当中，生成的随机数尽量不存在相互交叉的情况。">
 
 
 
 
 
 
-  <link rel="canonical" href="http://rainsia.github.io/tags/Function-Pointer/"/>
+  <link rel="canonical" href="http://rainsia.github.io/2018/11/17/ns3-013/"/>
 
 
 
@@ -135,7 +140,7 @@
   };
 </script>
 
-  <title>标签: Function Pointer | Rain's Blog</title>
+  <title>NS-3学习笔记（十三）：随机数生成器 | Rain's Blog</title>
   
 
 
@@ -192,7 +197,7 @@
     
   
 
-  <div class="container sidebar-position-left ">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -241,7 +246,7 @@
         
         
           
-          <li class="menu-item menu-item-tags menu-item-active">
+          <li class="menu-item menu-item-tags">
     <a href="/tags/" rel="section">
       <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
   </li>
@@ -290,81 +295,278 @@
           
             
 
-    
-    
-      
-      
-    
-      
-      
-    
-      
-      
-    
-      
-      
-    
-    
-
-  
-
-
           
           <div id="content" class="content">
             
 
-  
-  
-  
-  <div class="post-block tag">
+  <div id="posts" class="posts-expand">
+    
 
-    <div id="posts" class="posts-collapse">
-      <div class="collection-title">
-        <h1>Function Pointer<small>标签</small>
-        </h1>
-      </div>
+  
 
-      
-        
+  
+  
+  
+
+  
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://rainsia.github.io/2018/11/17/ns3-013/">
 
-      <h2 class="post-title">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Rain Sia <rainsia@163.com>">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Rain's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
         
-            <a class="post-title-link" href="/2018/05/01/ns3-006/" itemprop="url">
-              
-                <span itemprop="name">NS-3学习笔记（六）：回调</span>
-              
-            </a>
         
-      </h2>
+          <h1 class="post-title" itemprop="name headline">NS-3学习笔记（十三）：随机数生成器
+              
+            
+          </h1>
+        
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-05-01T17:03:30+08:00"
-              content="2018-05-01" >
-          05-01
-        </time>
-      </div>
+        <div class="post-meta">
+          <span class="post-time">
 
-    </header>
-  </article>
+            
+            
+            
 
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-11-17 23:38:50 / 修改时间：23:47:18" itemprop="dateCreated datePublished" datetime="2018-11-17T23:38:50+08:00">2018-11-17</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/network/" itemprop="url" rel="index"><span itemprop="name">网络</span></a></span>
+
+                
+                
+                  ，
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/network/simulation/" itemprop="url" rel="index"><span itemprop="name">仿真</span></a></span>
+
+                
+                
+                  ，
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/network/simulation/NS-3/" itemprop="url" rel="index"><span itemprop="name">NS-3</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/11/17/ns3-013/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2018/11/17/ns3-013/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon"
+            >
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>本章主要介绍NS-3当中的（伪）随机数生成器。NS-3提供了简单方便的随机数类型，可以生成各种分布的随机数。随机数生成器也属于NS-3对象框架的类，适用一切对象框架中的特性。此外，随机数可以作为属性值，并且方便地从字符串创建。为了生成互补相交的随机数序列，NS-3使用了随机数流的概念，保证不同的随机数生成器的示例当中，生成的随机数尽量不存在相互交叉的情况。</p>
+<a id="more"></a>
+<h1 id="1-伪随机数生成器概述"><a href="#1-伪随机数生成器概述" class="headerlink" title="1. 伪随机数生成器概述"></a>1. 伪随机数生成器概述</h1><p>（未完待续……）</p>
 
       
     </div>
 
+    
+
+    
+    
+    
+
+    
+
+    
+
+		<div>
+					
+						
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+  
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script src="https://cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <p><span>本文标题:</span><a href="/2018/11/17/ns3-013/">NS-3学习笔记（十三）：随机数生成器</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 Rain Sia <rainsia@163.com> 的个人博客">Rain Sia <rainsia@163.com></a></p>
+  <p><span>发布时间:</span>2018年11月17日 - 23:11</p>
+  <p><span>最后更新:</span>2018年11月17日 - 23:11</p>
+  <p><span>原始链接:</span>
+		<a href="/2018/11/17/ns3-013/" title="NS-3学习笔记（十三）：随机数生成器">
+			http://rainsia.github.io/2018/11/17/ns3-013/
+		</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="http://rainsia.github.io/2018/11/17/ns3-013/"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>版权信息:</span>本文为作者原创文章，如需进行非商业性转载，请注明出处并保留原文链接及作者。如要进行商业性转载，请获得作者授权！</p>  
+  <p><span>联系方式:</span>rainsia@163.com</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+      $(".fa-clipboard").click(function(){
+      clipboard.on('success', function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success", 
+          showConfirmButton: true
+          });
+        });
+    });  
+</script>
+
+
+					
+		</div>
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/NS-3/" rel="tag"># NS-3</a>
+          
+            <a href="/tags/C/" rel="tag"># C++</a>
+          
+            <a href="/tags/Simulation/" rel="tag"># Simulation</a>
+          
+            <a href="/tags/Random-Number/" rel="tag"># Random Number</a>
+          
+            <a href="/tags/Random-Variable/" rel="tag"># Random Variable</a>
+          
+            <a href="/tags/RandomStream/" rel="tag"># RandomStream</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/11/01/ns3-012/" rel="next" title="NS-3学习笔记（十二）：事件与调度器">
+                <i class="fa fa-chevron-left"></i> NS-3学习笔记（十二）：事件与调度器
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
+
+  </div>
 
 
           </div>
           
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
 
         </div>
         
@@ -385,8 +587,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -560,6 +771,22 @@
       </section>
 
       
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-伪随机数生成器概述"><span class="nav-text">1. 伪随机数生成器概述</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
 
       
 
@@ -721,6 +948,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.4.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.4.2"></script>
+
+
 
   
 

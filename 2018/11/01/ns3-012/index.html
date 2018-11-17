@@ -1,0 +1,1118 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.4.2" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.4.2">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.4.2">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.4.2">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.4.2" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '6.4.2',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="本章主要介绍NS-3当中的事件与调度器。NS-3本质上是一个离散事件的调度器。其执行过程是按事件的发生时间来推进的。NS-3的事件与调度API提供了添加取消调度事件的功能。同时，NS-3提供了多种不同的调度器实现。">
+<meta name="keywords" content="NS-3,C++,Simulation,Simulator,Scheduler,Event,EventId">
+<meta property="og:type" content="article">
+<meta property="og:title" content="NS-3学习笔记（十二）：事件与调度器">
+<meta property="og:url" content="http://rainsia.github.io/2018/11/01/ns3-012/index.html">
+<meta property="og:site_name" content="Rain&#39;s Blog">
+<meta property="og:description" content="本章主要介绍NS-3当中的事件与调度器。NS-3本质上是一个离散事件的调度器。其执行过程是按事件的发生时间来推进的。NS-3的事件与调度API提供了添加取消调度事件的功能。同时，NS-3提供了多种不同的调度器实现。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-11-17T15:15:03.979Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="NS-3学习笔记（十二）：事件与调度器">
+<meta name="twitter:description" content="本章主要介绍NS-3当中的事件与调度器。NS-3本质上是一个离散事件的调度器。其执行过程是按事件的发生时间来推进的。NS-3的事件与调度API提供了添加取消调度事件的功能。同时，NS-3提供了多种不同的调度器实现。">
+
+
+
+
+
+
+  <link rel="canonical" href="http://rainsia.github.io/2018/11/01/ns3-012/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>NS-3学习笔记（十二）：事件与调度器 | Rain's Blog</title>
+  
+
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?9d1df7de5bd3ea1d75446764f5075fe7";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Rain's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">记录、分享、技术</p>
+      
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://rainsia.github.io/2018/11/01/ns3-012/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Rain Sia <rainsia@163.com>">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Rain's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">NS-3学习笔记（十二）：事件与调度器
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-11-01 16:56:10" itemprop="dateCreated datePublished" datetime="2018-11-01T16:56:10+08:00">2018-11-01</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-11-17 23:15:03" itemprop="dateModified" datetime="2018-11-17T23:15:03+08:00">2018-11-17</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/network/" itemprop="url" rel="index"><span itemprop="name">网络</span></a></span>
+
+                
+                
+                  ，
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/network/simulation/" itemprop="url" rel="index"><span itemprop="name">仿真</span></a></span>
+
+                
+                
+                  ，
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/network/simulation/NS-3/" itemprop="url" rel="index"><span itemprop="name">NS-3</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/11/01/ns3-012/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2018/11/01/ns3-012/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon"
+            >
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>本章主要介绍NS-3当中的事件与调度器。NS-3本质上是一个离散事件的调度器。其执行过程是按事件的发生时间来推进的。NS-3的事件与调度API提供了添加取消调度事件的功能。同时，NS-3提供了多种不同的调度器实现。</p>
+<a id="more"></a>
+<h1 id="1-NS3离散事件调度简介"><a href="#1-NS3离散事件调度简介" class="headerlink" title="1. NS3离散事件调度简介"></a>1. NS3离散事件调度简介</h1><p>NS-3是一个离散事件网络仿真器。其本质是按预定的时间执行一些列的事件（函数）。编程的时候必须调度各种用以推进时间的各种事件，仿真才能得以继续。当所有的事件调度完成之后（即事件列表已经为空），则仿真结束。其中，离散的意思是，事件调度的时间可以是不连续的。而时间推进也不会以连续的方式进行。例如：刚刚执行的一个事件是调度在100秒发生，如果下一个最近的事件是调度在120秒，那么仿真器会直接跳转到120秒开始执行下一个事件，而不会按101、102、……、120这样的调度顺序进行。</p>
+<p>NS-3需要使用一些特殊的类来完成离散事件的调度，这些类主要有：Simulator、Scheduler、Time与EventId。</p>
+<h1 id="2-事件（Event）"><a href="#2-事件（Event）" class="headerlink" title="2. 事件（Event）"></a>2. 事件（Event）</h1><p>在NS-3当中，事件用一个Event结构体来表示。这个结构体定义在Scheduler类当中，其中主要有两个成员：EventKey和EventImpl *：</p>
+<figure class="highlight cpp"><figcaption><span>scheduler.h</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Event</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">  EventImpl *impl;    <span class="comment">//事件的实例</span></span><br><span class="line">  EventKey key;   <span class="comment">//事件的时间等信息</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>其中EventKey主要存储了事件的该发生的时间信息等：</p>
+<figure class="highlight cpp"><figcaption><span>scheduler.h</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">EventKey</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">  <span class="keyword">uint64_t</span> m_ts;         <span class="comment">//事件该发生的时间</span></span><br><span class="line">  <span class="keyword">uint32_t</span> m_uid;        <span class="comment">//事件的唯一标识</span></span><br><span class="line">  <span class="keyword">uint32_t</span> m_context;    <span class="comment">//事件的上下文</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>而EventImpl *则指向了一个EventImpl对象。EventImpl对象是实际要执行的代码的调用接口，其中主要包含一些实用的方法：</p>
+<figure class="highlight cpp"><figcaption><span>event-impl.h</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">EventImpl</span> :</span> <span class="keyword">public</span> SimpleRefCount&lt;EventImpl&gt;</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  EventImpl ();</span><br><span class="line">  <span class="keyword">virtual</span> ~EventImpl () = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">Invoke</span> <span class="params">(<span class="keyword">void</span>)</span></span>;   <span class="comment">//执行事件</span></span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">Cancel</span> <span class="params">(<span class="keyword">void</span>)</span></span>;   <span class="comment">//取消事件</span></span><br><span class="line">  <span class="function"><span class="keyword">bool</span> <span class="title">IsCancelled</span> <span class="params">(<span class="keyword">void</span>)</span></span>;  <span class="comment">//该事件是否已经被取消</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>从类的申明当中我们可以注意到，EventImpl实际上是一个抽象类，不能直接实例化，因此，系统中实际调度的其实都是EventImpl的子类。而实际上这些子类都是对函数指针的一个简单封装，类似于回掉。</p>
+<p>从根本上说，事件实际上就是安排在某个特定时候调用的一些函数而已。只是这些函数上绑定了特定的调用时间，并且有一个特定的Id来表示一次调用。同一个函数可以被（在不同或者相同的事件）预调用多次，每一次调用都对应一个唯一的Id（事件）。</p>
+<p>当用户调度一个事件（一次函数调用）成功的时候，系统不会将Scheduler::Event内部类直接返回给调用者。而是返回一个包装对象EventId：</p>
+<figure class="highlight cpp"><figcaption><span>event-id.cc</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">EventId</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  EventId ();</span><br><span class="line">  EventId (<span class="keyword">const</span> Ptr&lt;EventImpl&gt; &amp;impl, <span class="keyword">uint64_t</span> ts, <span class="keyword">uint32_t</span> context, <span class="keyword">uint32_t</span> uid);</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">Cancel</span> <span class="params">(<span class="keyword">void</span>)</span></span>;</span><br><span class="line">  <span class="function"><span class="keyword">bool</span> <span class="title">IsExpired</span> <span class="params">(<span class="keyword">void</span>)</span> <span class="keyword">const</span></span>;</span><br><span class="line">  <span class="function"><span class="keyword">bool</span> <span class="title">IsRunning</span> <span class="params">(<span class="keyword">void</span>)</span> <span class="keyword">const</span></span>;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="function">EventImpl *<span class="title">PeekEventImpl</span> <span class="params">(<span class="keyword">void</span>)</span> <span class="keyword">const</span></span>;</span><br><span class="line">  <span class="keyword">uint64_t</span> GetTs (<span class="keyword">void</span>) <span class="keyword">const</span>;</span><br><span class="line">  <span class="keyword">uint32_t</span> GetContext (<span class="keyword">void</span>) <span class="keyword">const</span>;</span><br><span class="line">  <span class="keyword">uint32_t</span> GetUid (<span class="keyword">void</span>) <span class="keyword">const</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">friend</span> <span class="keyword">bool</span> <span class="keyword">operator</span> == (<span class="keyword">const</span> EventId &amp;a, <span class="keyword">const</span> EventId &amp;b);</span><br><span class="line">  <span class="keyword">friend</span> <span class="keyword">bool</span> <span class="keyword">operator</span> != (<span class="keyword">const</span> EventId &amp;a, <span class="keyword">const</span> EventId &amp;b);</span><br><span class="line">  <span class="keyword">friend</span> <span class="keyword">bool</span> <span class="keyword">operator</span> &lt;  (<span class="keyword">const</span> EventId &amp;a, <span class="keyword">const</span> EventId &amp;b);</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">  Ptr&lt;EventImpl&gt; m_eventImpl;  </span><br><span class="line">  <span class="keyword">uint64_t</span> m_ts;</span><br><span class="line">  <span class="keyword">uint32_t</span> m_context;</span><br><span class="line">  <span class="keyword">uint32_t</span> m_uid;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>从代码中可以看出，EventId类实际上就是将EventKey和EventImpl进行了融合，并且提供了一些实用的方法（操作符重载）。用户可以方便地取消一个事件，获取事件的详细信息，或者直接比较两个事件发生的先后顺序。</p>
+<h1 id="3-仿真器（Simulator）调度事件"><a href="#3-仿真器（Simulator）调度事件" class="headerlink" title="3. 仿真器（Simulator）调度事件"></a>3. 仿真器（Simulator）调度事件</h1><p>通过上一节的介绍，我们已经掌握了NS-3当中事件调度的基本原理。虽然我们可以自己创建Event并将其加入事件队列，但是更好的方式还是使用NS-3提供给我们的Simulator的API来添加事件。因为EventImpl类并不能直接创建对象，我们需要去自己继承其子类是相对来说比较麻烦的。NS-3采用了内部类的方式来实现，在不同的调度方法当中实现不同的内部子类，因为NS-3当中存在多种不同的仿真器和调度器实现，他们事件的内部实现是完全不同的，在类的内部隐藏实现细节也可以降低用户使用的复杂度。这些细节对用户来说没有意义，因此，我们只介绍Simulator调度事件的API接口。</p>
+<p>抛开底层复杂的实现系列不管，要通过Simulator调度（预安排）一个事件还是非常简单的，只需要调用Simulator类的Schedule()方法，提供一个时间延迟何一个要调用的函数即可。</p>
+<p>在所有事件都调度好之后，只要调用Simulator::Run()方法，仿真器即可从最早的事件开始依次执行。我们通过一个简单的例子来演示如何调度事件：</p>
+<figure class="highlight cpp"><figcaption><span>try-schedule.cc</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"ns3/core-module.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> ns3;</span><br><span class="line"></span><br><span class="line">NS_LOG_COMPONENT_DEFINE (<span class="string">"TrySchedule"</span>);</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">doSomething</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  NS_LOG_INFO(<span class="string">"Let's do something."</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> </span><br><span class="line">main (<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span><br><span class="line">&#123;</span><br><span class="line">  LogComponentEnable(<span class="string">"TrySchedule"</span>, LOG_LEVEL_ALL);</span><br><span class="line">  LogComponentEnable(<span class="string">"TrySchedule"</span>, LOG_PREFIX_TIME);</span><br><span class="line"></span><br><span class="line">  Simulator::Schedule(Seconds(<span class="number">1.5</span>), &amp;doSomething);</span><br><span class="line"></span><br><span class="line">  Simulator::Run ();</span><br><span class="line">  Simulator::Destroy ();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>程序当中，我们创建了一个函数，其中输出了一段信息。在主函数当中，调度这个函数在第1.5秒被调用。需要强调的是，Schedule方法所指定的时间是时延，而不是绝对时间。这里之所以是1.5秒的时间，是因为在方针还未开始时，当前时间为0。为了展示执行时间，我们打开了日志的时间前缀。在调用Run方法之后，程序将从第1.5秒开始调用事件。执行程序之后，得到如下输出：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Waf: Entering directory `/home/rainsia/Applications/ns-allinone-3.29/ns-3.29/build&apos;</span><br><span class="line">[1924/2031] Compiling scratch/try-schedule.cc</span><br><span class="line">[2019/2031] Linking build/scratch/try-schedule</span><br><span class="line">Waf: Leaving directory `/home/rainsia/Applications/ns-allinone-3.29/ns-3.29/build&apos;</span><br><span class="line">Build commands will be stored in build/compile_commands.json</span><br><span class="line">&apos;build&apos; finished successfully (39.137s)</span><br><span class="line">+1.500000000s Let&apos;s do something.</span><br></pre></td></tr></table></figure>
+<p>可见，这个信息是在第1.5秒输出的。这里需要注意的是，这个1.5秒指的是仿真时间，是一个虚拟的时间概念。这和我们说的真实的物理时间是不同的。我们通过下面的例子来进行说明。例如，我们需要对一些数进行从小到大的排序。网络上曾流传睡觉排序法：写一个线程，传入一个需要排序的数，然后线程开始睡眠，睡眠时间刚好等于需要排序的这个数，然后线程醒来后输出这个数。主程序只需要创建多个线程，将需要排序的数依次传入即可。这里提供一个Java版的实现：</p>
+<figure class="highlight java"><figcaption><span>SleepSort.java</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SleepSort</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span>[] ints = &#123;<span class="number">1</span>,<span class="number">4</span>,<span class="number">7</span>,<span class="number">3</span>,<span class="number">8</span>,<span class="number">9</span>,<span class="number">2</span>,<span class="number">6</span>,<span class="number">5</span>&#125;;</span><br><span class="line">        SortThread[] sortThreads = <span class="keyword">new</span> SortThread[ints.length];</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; sortThreads.length; i++) &#123;</span><br><span class="line">            sortThreads[i] = <span class="keyword">new</span> SortThread(ints[i]);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; sortThreads.length; i++) &#123;</span><br><span class="line">            sortThreads[i].start();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SortThread</span> <span class="keyword">extends</span> <span class="title">Thread</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> ms = <span class="number">0</span>;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">SortThread</span><span class="params">(<span class="keyword">int</span> ms)</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.ms = ms;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            sleep(ms*<span class="number">10</span>+<span class="number">10</span>);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(ms);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>当然，这种排序算是恶搞的成分多一些，因为如果需要排序的数当中存在一个非常大的数，那么排序完成的时间将会非常的久。例如需要排序的数不是1,2,3,4,5,6,7,8,9这么简单，而是100, 400, 700, 300, 800, 900, 200, 600, 500。我们可以使用NS-3的事件调度来实现它。首先有一个问题，如何在调度的时候传入需要排序的数？我们查看一下Simulator的API当中关于事件调度的函数：</p>
+<figure class="highlight"><figcaption><span>simulator.h</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line">  <span class="comment">//=======调度对象的成员函数</span></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> MEM, <span class="keyword">typename</span> OBJ&gt;</span><br><span class="line"><span class="function"><span class="keyword">static</span> EventId <span class="title">Schedule</span> <span class="params">(Time <span class="keyword">const</span> &amp;delay, MEM mem_ptr, OBJ obj)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> MEM, <span class="keyword">typename</span> OBJ, <span class="keyword">typename</span> T1&gt;</span><br><span class="line"><span class="function"><span class="keyword">static</span> EventId <span class="title">Schedule</span> <span class="params">(Time <span class="keyword">const</span> &amp;delay, MEM mem_ptr, OBJ obj, T1 a1)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> MEM, <span class="keyword">typename</span> OBJ, <span class="keyword">typename</span> T1, <span class="keyword">typename</span> T2&gt;</span><br><span class="line"><span class="function"><span class="keyword">static</span> EventId <span class="title">Schedule</span> <span class="params">(Time <span class="keyword">const</span> &amp;delay, MEM mem_ptr, OBJ obj, T1 a1, T2 a2)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> MEM, <span class="keyword">typename</span> OBJ, </span><br><span class="line">          <span class="keyword">typename</span> T1, <span class="keyword">typename</span> T2, <span class="keyword">typename</span> T3&gt;</span><br><span class="line"><span class="function"><span class="keyword">static</span> EventId <span class="title">Schedule</span> <span class="params">(Time <span class="keyword">const</span> &amp;delay, MEM mem_ptr, OBJ obj, T1 a1, T2 a2, T3 a3)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> MEM, <span class="keyword">typename</span> OBJ, </span><br><span class="line">          <span class="keyword">typename</span> T1, <span class="keyword">typename</span> T2, <span class="keyword">typename</span> T3, <span class="keyword">typename</span> T4&gt;</span><br><span class="line"><span class="function"><span class="keyword">static</span> EventId <span class="title">Schedule</span> <span class="params">(Time <span class="keyword">const</span> &amp;delay, MEM mem_ptr, OBJ obj, T1 a1, T2 a2, T3 a3, T4 a4)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> MEM, <span class="keyword">typename</span> OBJ, </span><br><span class="line">          <span class="keyword">typename</span> T1, <span class="keyword">typename</span> T2, <span class="keyword">typename</span> T3, <span class="keyword">typename</span> T4, <span class="keyword">typename</span> T5&gt;</span><br><span class="line"><span class="function"><span class="keyword">static</span> EventId <span class="title">Schedule</span> <span class="params">(Time <span class="keyword">const</span> &amp;delay, MEM mem_ptr, OBJ obj, </span></span></span><br><span class="line"><span class="function"><span class="params">                         T1 a1, T2 a2, T3 a3, T4 a4, T5 a5)</span></span>;</span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> MEM, <span class="keyword">typename</span> OBJ, </span><br><span class="line">          <span class="keyword">typename</span> T1, <span class="keyword">typename</span> T2, <span class="keyword">typename</span> T3, <span class="keyword">typename</span> T4, <span class="keyword">typename</span> T5, <span class="keyword">typename</span> T6&gt;</span><br><span class="line"><span class="function"><span class="keyword">static</span> EventId <span class="title">Schedule</span> <span class="params">(Time <span class="keyword">const</span> &amp;time, MEM mem_ptr, OBJ obj, </span></span></span><br><span class="line"><span class="function"><span class="params">                         T1 a1, T2 a2, T3 a3, T4 a4, T5 a5, T6 a6)</span></span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">//=======调度普通函数</span></span><br><span class="line">static EventId Schedule (Time const &amp;delay, void (*f)(void));</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> U1, <span class="keyword">typename</span> T1&gt;</span><br><span class="line">static EventId Schedule (Time const &amp;delay, void (*f)(U1), T1 a1);</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> U1, <span class="keyword">typename</span> U2,</span><br><span class="line">          <span class="keyword">typename</span> T1, <span class="keyword">typename</span> T2&gt;</span><br><span class="line">static EventId Schedule (Time const &amp;delay, void (*f)(U1,U2), T1 a1, T2 a2);</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> U1, <span class="keyword">typename</span> U2, <span class="keyword">typename</span> U3,</span><br><span class="line">          <span class="keyword">typename</span> T1, <span class="keyword">typename</span> T2, <span class="keyword">typename</span> T3&gt;</span><br><span class="line">static EventId Schedule (Time const &amp;delay, void (*f)(U1,U2,U3), T1 a1, T2 a2, T3 a3);</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> U1, <span class="keyword">typename</span> U2, <span class="keyword">typename</span> U3, <span class="keyword">typename</span> U4, </span><br><span class="line">          <span class="keyword">typename</span> T1, <span class="keyword">typename</span> T2, <span class="keyword">typename</span> T3, <span class="keyword">typename</span> T4&gt;</span><br><span class="line">static EventId Schedule (Time const &amp;delay, void (*f)(U1,U2,U3,U4), T1 a1, T2 a2, T3 a3, T4 a4);</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> U1, <span class="keyword">typename</span> U2, <span class="keyword">typename</span> U3, <span class="keyword">typename</span> U4, <span class="keyword">typename</span> U5,</span><br><span class="line">          <span class="keyword">typename</span> T1, <span class="keyword">typename</span> T2, <span class="keyword">typename</span> T3, <span class="keyword">typename</span> T4, <span class="keyword">typename</span> T5&gt;</span><br><span class="line">static EventId Schedule (Time const &amp;delay, void (*f)(U1,U2,U3,U4,U5), T1 a1, T2 a2, T3 a3, T4 a4, T5 a5);</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> U1, <span class="keyword">typename</span> U2, <span class="keyword">typename</span> U3, <span class="keyword">typename</span> U4, <span class="keyword">typename</span> U5, <span class="keyword">typename</span> U6,</span><br><span class="line">          <span class="keyword">typename</span> T1, <span class="keyword">typename</span> T2, <span class="keyword">typename</span> T3, <span class="keyword">typename</span> T4, <span class="keyword">typename</span> T5, <span class="keyword">typename</span> T6&gt;</span><br><span class="line">static EventId Schedule (Time const &amp;time, void (*f)(U1,U2,U3,U4,U5,U6), T1 a1, T2 a2, T3 a3, T4 a4, T5 a5, T6 a6);</span><br></pre></td></tr></table></figure>
+<p>可以看出，基本的调度可以分为两组：对对象成员变量的调度和对普通函数的调度，我们上面的例子就是最简单的对普通函数的调度。但是这个调度方法不能所调用的函数不能有参数。同时NS-3对普通函数的调度方法提供了7种重载，分别可以对应0到6个额外的参数。</p>
+<figure class="highlight cpp"><figcaption><span>try-sleep-sort.cc</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/time.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"ns3/core-module.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> ns3;</span><br><span class="line"></span><br><span class="line">NS_LOG_COMPONENT_DEFINE (<span class="string">"TrySleepSort"</span>);</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">printNumber</span><span class="params">(<span class="keyword">int</span> num)</span> </span>&#123;</span><br><span class="line">  NS_LOG_INFO(num);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="class"><span class="keyword">class</span> <span class="title">T</span>&gt;</span></span><br><span class="line"><span class="class"><span class="title">int</span> <span class="title">getArrayLen</span>(<span class="title">T</span>&amp; <span class="title">array</span>)</span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">  <span class="keyword">return</span> (<span class="keyword">sizeof</span>(<span class="built_in">array</span>) / <span class="keyword">sizeof</span>(<span class="built_in">array</span>[<span class="number">0</span>]));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> </span><br><span class="line">main (<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span><br><span class="line">&#123;</span><br><span class="line">  LogComponentEnable(<span class="string">"TrySleepSort"</span>, LOG_LEVEL_ALL);</span><br><span class="line">  LogComponentEnable(<span class="string">"TrySleepSort"</span>, LOG_PREFIX_TIME);</span><br><span class="line"></span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">timeval</span> <span class="title">start</span>, <span class="title">end</span>;</span></span><br><span class="line">  <span class="keyword">long</span> dif_sec, dif_usec;</span><br><span class="line">  gettimeofday(&amp;start, <span class="literal">NULL</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">int</span> ints[] = &#123;<span class="number">100</span>, <span class="number">400</span>, <span class="number">700</span>, <span class="number">300</span>, <span class="number">800</span>, <span class="number">900</span>, <span class="number">200</span>, <span class="number">600</span>, <span class="number">500</span>&#125;;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">int</span> len = getArrayLen(ints);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; len; i++) &#123;</span><br><span class="line">      Simulator::Schedule(Seconds(ints[i]), &amp;printNumber, ints[i]);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  Simulator::Run ();</span><br><span class="line">  Simulator::Destroy ();</span><br><span class="line"></span><br><span class="line">  gettimeofday(&amp;end, <span class="literal">NULL</span>);</span><br><span class="line"></span><br><span class="line">  dif_sec = end.tv_sec - start.tv_sec;</span><br><span class="line">  dif_usec = end.tv_usec - start.tv_usec;</span><br><span class="line">  <span class="keyword">long</span> timePassed = dif_sec*<span class="number">1000000</span> + dif_usec;</span><br><span class="line"></span><br><span class="line">  NS_LOG_UNCOND(<span class="string">"time used:"</span> &lt;&lt; timePassed &lt;&lt; <span class="string">"us"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>程序当中，我们将每个数都调度到和这个数相同的时间才输出，最后统计了整个程序运行所花的真实时间。运行程序后得到如下输出结果：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">Waf: Entering directory `/home/rainsia/Applications/ns-allinone-3.29/ns-3.29/build&apos;</span><br><span class="line">[1980/2033] Compiling scratch/try-sleep-sort.cc</span><br><span class="line">[1994/2033] Linking build/scratch/try-sleep-sort</span><br><span class="line">Waf: Leaving directory `/home/rainsia/Applications/ns-allinone-3.29/ns-3.29/build&apos;</span><br><span class="line">Build commands will be stored in build/compile_commands.json</span><br><span class="line">&apos;build&apos; finished successfully (41.507s)</span><br><span class="line">+100.000000000s 100</span><br><span class="line">+200.000000000s 200</span><br><span class="line">+300.000000000s 300</span><br><span class="line">+400.000000000s 400</span><br><span class="line">+500.000000000s 500</span><br><span class="line">+600.000000000s 600</span><br><span class="line">+700.000000000s 700</span><br><span class="line">+800.000000000s 800</span><br><span class="line">+900.000000000s 900</span><br><span class="line">time used:6309us</span><br></pre></td></tr></table></figure>
+<p>可以看出，数字的确是安从小到大的顺序排列了，但是所消耗的时间并不是所有最大的调度时间900秒，而只用了6309微秒。这说明仿真时间和真实时间之间是没有绝对的联系的。除此之外，从这个程序还可以看出事件调度可以从某种角度看成在单线程框架下的多线程支持，当然，这种多线程并不存在物理时间上的并行性，而仅存在仿真时间上的并行性。</p>
+<p>Simulator还提供了另外一个方法Simulator::ScheduleNow()，这和上面的其他调度方法没有本质上的区别，但是可以不用指定时间延迟。而是直接使用当前时间。其实这等同于Schedule(Seconds(0), &amp;func)，只是写起来比较方便而已。这个方法存在的意义就是在同一个（仿真）时间，再“并行”执行另外一个事件。如果ScheduleNow()方法在Run()方法被调用之前就调用，那么这个事件将会在第0秒执行。否则就是按当前时间执行。下面通过一个例子来进行说明：</p>
+<figure class="highlight cpp"><figcaption><span>try-schedule-now.cc</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"ns3/core-module.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> ns3;</span><br><span class="line"></span><br><span class="line">NS_LOG_COMPONENT_DEFINE (<span class="string">"TryScheduleNow"</span>);</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">doAThing</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  NS_LOG_INFO(<span class="string">"Let's do a thing."</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">doAnotherThing</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  NS_LOG_INFO(<span class="string">"Let's do another thing."</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">doSomething</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  NS_LOG_INFO(<span class="string">"Let's do something."</span>);</span><br><span class="line">  Simulator::ScheduleNow(&amp;doAnotherThing);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> </span><br><span class="line">main (<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span><br><span class="line">&#123;</span><br><span class="line">  LogComponentEnable(<span class="string">"TryScheduleNow"</span>, LOG_LEVEL_ALL);</span><br><span class="line">  LogComponentEnable(<span class="string">"TryScheduleNow"</span>, LOG_PREFIX_TIME);</span><br><span class="line"></span><br><span class="line">  Simulator::Schedule(Seconds(<span class="number">1.5</span>), &amp;doSomething);</span><br><span class="line">  Simulator::ScheduleNow(&amp;doAThing);</span><br><span class="line"></span><br><span class="line">  Simulator::Run ();</span><br><span class="line">  Simulator::Destroy ();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>程序当中，我们在仿真开始之前，使用ScheduleNow调度了一个事件doAThing，又使用Schedule在1.5秒调度了一个事件doSomething。在1.5秒的事件当中，又使用ScheduleNow调度了另外一个事件doAnotherThing。运行程序之后，得到如下输出：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Waf: Entering directory `/home/rainsia/Applications/ns-allinone-3.29/ns-3.29/build&apos;</span><br><span class="line">[1938/2035] Compiling scratch/try-schedule-now.cc</span><br><span class="line">[1996/2035] Linking build/scratch/try-schedule-now</span><br><span class="line">Waf: Leaving directory `/home/rainsia/Applications/ns-allinone-3.29/ns-3.29/build&apos;</span><br><span class="line">Build commands will be stored in build/compile_commands.json</span><br><span class="line">&apos;build&apos; finished successfully (41.402s)</span><br><span class="line">+0.000000000s Let&apos;s do a thing.</span><br><span class="line">+1.500000000s Let&apos;s do something.</span><br><span class="line">+1.500000000s Let&apos;s do another thing.</span><br></pre></td></tr></table></figure>
+<p>可见，在仿真开始之前通过ScheduleNow调度的事件将在第0秒执行。再仿真开始之后通过ScheduleNow调度的事件将在和调度时相同的时间执行。</p>
+<p>除此之外，Simulator还提供了另外一个系列的事件调度接口：Simulator::ScheduleWithContext()。这个方法和前面介绍的Simulator::Schedule()方法类似，唯一的区别是多了第一个参数uint32_t context。表示调度事件时的上下文。这个上下文调度的时候，用户可以任意指定一个意义。但是在NS-3当中，这个参数的意义一般被认为是Node的id。因此，我们才能够在程序中分辨哪个事件是在哪个节点中调用的。而我们在做日志的时候，也可以开启节点前缀（参见日志一章）。当一个事件没有与任何一个节点相关联的时候，其上下文参数为0xffffffff（最大值）。</p>
+<h1 id="4-NS-3当中的时间"><a href="#4-NS-3当中的时间" class="headerlink" title="4. NS-3当中的时间"></a>4. NS-3当中的时间</h1><p>我们在上面进行调度的时候Schedule()方法，需要传入一个延迟时间，其类型是Time，而我们在调用的使用使用的是Seconds()函数来创建时间。当然，如果英文具有初中水品的话，也能知道Seconds()函数创建的时间单位为秒。我们也可以传入浮点数，例如Seconds(0.2)，那么将创建一个时间为0.2秒，也就是200毫秒。我们不禁想问：Time类究竟是如何存储时间数据的？Time类能表示的时间精度究竟是多少？能支持高速网络当中的时间精度吗？</p>
+<h2 id="Time的时间精度"><a href="#Time的时间精度" class="headerlink" title="Time的时间精度"></a>Time的时间精度</h2><p>首先，我们来分析，Time类储存的时候究竟使用的什么精度。直接看代码：</p>
+<figure class="highlight cpp"><figcaption><span>nstime.h</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Time</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="keyword">enum</span> Unit</span><br><span class="line">  &#123;</span><br><span class="line">    Y   = <span class="number">0</span>,   <span class="comment">//!&lt; year, 365 days</span></span><br><span class="line">    D   = <span class="number">1</span>,   <span class="comment">//!&lt; day, 24 hours</span></span><br><span class="line">    H   = <span class="number">2</span>,   <span class="comment">//!&lt; hour, 60 minutes</span></span><br><span class="line">    MIN = <span class="number">3</span>,   <span class="comment">//!&lt; minute, 60 seconds</span></span><br><span class="line">    S   = <span class="number">4</span>,   <span class="comment">//!&lt; second</span></span><br><span class="line">    MS  = <span class="number">5</span>,   <span class="comment">//!&lt; millisecond</span></span><br><span class="line">    US  = <span class="number">6</span>,   <span class="comment">//!&lt; microsecond</span></span><br><span class="line">    NS  = <span class="number">7</span>,   <span class="comment">//!&lt; nanosecond</span></span><br><span class="line">    PS  = <span class="number">8</span>,   <span class="comment">//!&lt; picosecond</span></span><br><span class="line">    FS  = <span class="number">9</span>,   <span class="comment">//!&lt; femtosecond</span></span><br><span class="line">    LAST = <span class="number">10</span></span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  ……</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">  <span class="keyword">int64_t</span> m_data;  <span class="comment">//!&lt; Virtual time value, in the current unit.</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>首先从这段代码可以看出，NS-3支持的最小的时间精度是飞秒(femtosecond)。$1fs = 10^{-15}s$。这个时间精度对于任何方针都足够（多余）了，这几乎已经接近物理极限了。任何网络上的事件几乎都不可能在这个精度下发生。其次，实际存储时间数据的变量是m_data，它的类型是一个64位的整数。因此，一旦确定了时间精度，那么NS-3的Time类所能表示时间绝对值的最小值和最大值也就确定了。例如，如果时间单位选定是飞秒，那么最小时间精度就是1飞秒，最大时间跨度就是$2^64-1$飞秒，也就是18446秒，约307分钟。当然，这种时间跨度，一个规模稍稍大些的仿真都能超过这个时间。如果选定的时间单位为纳秒（ns）。$1ns = 10^{-9}s$。那么最小时间精度为1纳秒，最大时间跨度为$2^64-1$纳秒，也就是约7116个月。一般的方针几乎都不会超过这个时间，除非进行整个Internet的长时间仿真，但这是不可能通过仿真来完成的工作。</p>
+<p>我们继续看Time类的代码：</p>
+<figure class="highlight cpp"><figcaption><span>nstime.h</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">/** Current time unit, and conversion info. */</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Resolution</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">Information</span> <span class="title">info</span>[<span class="title">LAST</span>];</span>  <span class="comment">//!&lt;  Conversion info from current unit</span></span><br><span class="line">  <span class="keyword">enum</span> Time::Unit unit;           <span class="comment">//!&lt;  Current time unit</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> *  Get the current Resolution</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * \return A pointer to the current Resolution</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">inline</span> struct Resolution *<span class="title">PeekResolution</span> <span class="params">(<span class="keyword">void</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">static</span> <span class="class"><span class="keyword">struct</span> <span class="title">Time</span>:</span>:Resolution resolution = SetDefaultNsResolution ();</span><br><span class="line">  <span class="keyword">return</span> &amp; resolution;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Time</span>:</span>:Resolution</span><br><span class="line">Time::SetDefaultNsResolution (<span class="keyword">void</span>)</span><br><span class="line">&#123;</span><br><span class="line">  NS_LOG_FUNCTION_NOARGS ();</span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">Resolution</span> <span class="title">resolution</span>;</span></span><br><span class="line">  SetResolution (Time::NS, &amp;resolution, <span class="literal">false</span>);</span><br><span class="line">  <span class="keyword">return</span> resolution;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>从代码当中可以看出，Time类使用Resolution结构体来表示时间的精度（分辨率）。使用PeekResolution()方法来查看当前使用的分辨率。而该方法当中定义了一个静态变量（这个变量在类的生命周期当中只会创建一次，并由所有实例共享）resolution，并将变量通过SetDefaultNsResolution()方法来初始化。而SetDefaultNsResolution()方法返回的默认精度为纳秒。至此，我们已经清楚了Time类使用的默认时间精度为ns，最大时间跨度为：7116个月，约593年。从各个方面来看，这都是一个比较合理的默认精度选择。</p>
+<p>如果觉得时间精度不合理，Time类提供了一个静态方法SetResolution()来设置时间精度：</p>
+<figure class="highlight cpp"><figcaption><span>nstime.h</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">SetResolution</span> <span class="params">(<span class="keyword">enum</span> Unit unit, struct Resolution *resolution,</span></span></span><br><span class="line"><span class="function"><span class="params">                           <span class="keyword">const</span> <span class="keyword">bool</span> convert = <span class="literal">true</span>)</span></span>;</span><br></pre></td></tr></table></figure>
+<p>这个方法最好在任何仿真开始之前调用。当然，如果在仿真开始之后调用也没有太大问题，在调整精度之前创建的所有Time对象都会被更新为新的时间精度。然而，这种更新在整个仿真期间只能发生一次。<strong>第二次更新时间精度，在更新之前创建的时间对象都不会再被更新。</strong></p>
+<h2 id="时间类的使用"><a href="#时间类的使用" class="headerlink" title="时间类的使用"></a>时间类的使用</h2><p>时间类实现了如下操作符和函数的重载： </p>
+<ul>
+<li>算术运算符：+, -, +=, -=; </li>
+<li>关系运算符：==, !=, &lt;, &gt;, &lt;=, &gt;=</li>
+<li>算术函数：Abs(Time), Max(Time,Time), Min(Time,Time)</li>
+</ul>
+<p>除此之外，NS-3提供了大量的方法用于快速创建时间到当前精度表示下，并完成了单位之间的自动转换：</p>
+<figure class="highlight cpp"><figcaption><span>nstime.h</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">inline</span> Time <span class="title">Years</span> <span class="params">(<span class="keyword">double</span> value)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">inline</span> Time <span class="title">Years</span> <span class="params">(<span class="keyword">int64x64_t</span> value)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">inline</span> Time <span class="title">Days</span> <span class="params">(<span class="keyword">double</span> value)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">inline</span> Time <span class="title">Days</span> <span class="params">(<span class="keyword">int64x64_t</span> value)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">inline</span> Time <span class="title">Hours</span> <span class="params">(<span class="keyword">double</span> value)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">inline</span> Time <span class="title">Hours</span> <span class="params">(<span class="keyword">int64x64_t</span> value)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">inline</span> Time <span class="title">Minutes</span> <span class="params">(<span class="keyword">double</span> value)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">inline</span> Time <span class="title">Minutes</span> <span class="params">(<span class="keyword">int64x64_t</span> value)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">inline</span> Time <span class="title">Seconds</span> <span class="params">(<span class="keyword">double</span> value)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">inline</span> Time <span class="title">Seconds</span> <span class="params">(<span class="keyword">int64x64_t</span> value)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">inline</span> Time <span class="title">MilliSeconds</span> <span class="params">(<span class="keyword">uint64_t</span> value)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">inline</span> Time <span class="title">MilliSeconds</span> <span class="params">(<span class="keyword">int64x64_t</span> value)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">inline</span> Time <span class="title">MicroSeconds</span> <span class="params">(<span class="keyword">uint64_t</span> value)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">inline</span> Time <span class="title">MicroSeconds</span> <span class="params">(<span class="keyword">int64x64_t</span> value)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">inline</span> Time <span class="title">NanoSeconds</span> <span class="params">(<span class="keyword">uint64_t</span> value)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">inline</span> Time <span class="title">NanoSeconds</span> <span class="params">(<span class="keyword">int64x64_t</span> value)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">inline</span> Time <span class="title">PicoSeconds</span> <span class="params">(<span class="keyword">uint64_t</span> value)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">inline</span> Time <span class="title">PicoSeconds</span> <span class="params">(<span class="keyword">int64x64_t</span> value)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">inline</span> Time <span class="title">FemtoSeconds</span> <span class="params">(<span class="keyword">uint64_t</span> value)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">inline</span> Time <span class="title">FemtoSeconds</span> <span class="params">(<span class="keyword">int64x64_t</span> value)</span></span>;</span><br></pre></td></tr></table></figure>
+<p>其中就包含了，我们曾用过的Seconds()函数。这些函数的意义应该都是一目了然的，这里就不再对其用法再做赘述。</p>
+<p>除此之外，Time类也提供了相应的方法，将时间转换成任意单位：</p>
+<figure class="highlight cpp"><figcaption><span>nstime.h</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">inline</span> <span class="keyword">double</span> <span class="title">GetYears</span> <span class="params">(<span class="keyword">void</span>)</span> <span class="keyword">const</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">inline</span> <span class="keyword">double</span> <span class="title">GetDays</span> <span class="params">(<span class="keyword">void</span>)</span> <span class="keyword">const</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">inline</span> <span class="keyword">double</span> <span class="title">GetHours</span> <span class="params">(<span class="keyword">void</span>)</span> <span class="keyword">const</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">inline</span> <span class="keyword">double</span> <span class="title">GetMinutes</span> <span class="params">(<span class="keyword">void</span>)</span> <span class="keyword">const</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">inline</span> <span class="keyword">double</span> <span class="title">GetSeconds</span> <span class="params">(<span class="keyword">void</span>)</span> <span class="keyword">const</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">inline</span> int64_t <span class="title">GetMilliSeconds</span> <span class="params">(<span class="keyword">void</span>)</span> <span class="keyword">const</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">inline</span> int64_t <span class="title">GetMicroSeconds</span> <span class="params">(<span class="keyword">void</span>)</span> <span class="keyword">const</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">inline</span> int64_t <span class="title">GetNanoSeconds</span> <span class="params">(<span class="keyword">void</span>)</span> <span class="keyword">const</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">inline</span> int64_t <span class="title">GetPicoSeconds</span> <span class="params">(<span class="keyword">void</span>)</span> <span class="keyword">const</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">inline</span> int64_t <span class="title">GetFemtoSeconds</span> <span class="params">(<span class="keyword">void</span>)</span> <span class="keyword">const</span></span>;</span><br></pre></td></tr></table></figure>
+<p>同样，这些方法的名字也足以说明其功能，无需更多解释。</p>
+<p>NS-3同样也给时间类定义了相应的属性值类型：TimeValue，属性访问器：MakeTimeAccessor()，属性检查器：MakeTimeChecker()。因此，Time同样也可以当作类的属性，被加入属性框架当中。时间被创建为属性值类型，比较实用的一点可能就是可以直接使用字符串值类型来创建时间，例如：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">StringValue(<span class="string">"100ns"</span>);</span><br><span class="line">StringValue(<span class="string">"50s"</span>);</span><br><span class="line">StringValue(<span class="string">"0.5s"</span>);</span><br></pre></td></tr></table></figure>
+<p>这都得益于Time类的一个构造函数：</p>
+<figure class="highlight cpp"><figcaption><span>nstime.cc</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * \brief Construct Time object from common time expressions like "1ms"</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * Supported units include:</span></span><br><span class="line"><span class="comment"> * - `s`  (seconds)</span></span><br><span class="line"><span class="comment"> * - `ms` (milliseconds)</span></span><br><span class="line"><span class="comment"> * - `us` (microseconds)</span></span><br><span class="line"><span class="comment"> * - `ns` (nanoseconds)</span></span><br><span class="line"><span class="comment"> * - `ps` (picoseconds)</span></span><br><span class="line"><span class="comment"> * - `fs` (femtoseconds)</span></span><br><span class="line"><span class="comment"> * - `min`  (minutes)</span></span><br><span class="line"><span class="comment"> * - `h`  (hours)</span></span><br><span class="line"><span class="comment"> * - `d`  (days)</span></span><br><span class="line"><span class="comment"> * - `y`  (years)</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * There can be no white space between the numerical portion</span></span><br><span class="line"><span class="comment"> * and the units.  Any otherwise malformed string causes a fatal error to</span></span><br><span class="line"><span class="comment"> * occur.</span></span><br><span class="line"><span class="comment"> * \param [in] s The string to parse into a Time</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">explicit</span> <span class="title">Time</span> <span class="params">(<span class="keyword">const</span> <span class="built_in">std</span>::<span class="built_in">string</span> &amp; s)</span></span>;</span><br></pre></td></tr></table></figure>
+<p>它可以将一个合法的时间字符串转换为一个时间类型。使用的时候需要注意，时间的值和单位之间不能有空格。任何不合法的字符串都将引起程序错误。</p>
+<p>因此我们可以将第一个程序使用这种方式进行重写：</p>
+<figure class="highlight cpp"><figcaption><span>try-schedule.cc</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"ns3/core-module.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> ns3;</span><br><span class="line"></span><br><span class="line">NS_LOG_COMPONENT_DEFINE (<span class="string">"TrySchedule"</span>);</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">doSomething</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  NS_LOG_INFO(<span class="string">"Let's do something."</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> </span><br><span class="line">main (<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span><br><span class="line">&#123;</span><br><span class="line">  LogComponentEnable(<span class="string">"TrySchedule"</span>, LOG_LEVEL_ALL);</span><br><span class="line">  LogComponentEnable(<span class="string">"TrySchedule"</span>, LOG_PREFIX_TIME);</span><br><span class="line"></span><br><span class="line">  Simulator::Schedule(Time(<span class="string">"1.5s"</span>), &amp;doSomething);</span><br><span class="line"></span><br><span class="line">  Simulator::Run ();</span><br><span class="line">  Simulator::Destroy ();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>运行之后，也能得到同样的效果。</p>
+<h1 id="调度器（Scheduler）"><a href="#调度器（Scheduler）" class="headerlink" title="调度器（Scheduler）"></a>调度器（Scheduler）</h1><p>Simulator所调度的事件实际是通过调度器Scheduler来进行调度的，调度器的主要功能就是对添加的事件进行排序，并维护事件列表，然后依次调用这些事件。在NS-3当中存在着多种不同的调度器，这些调度器通过乐不同的调度性能。</p>
+<p>NS-3提供的调度器类主要有：</p>
+<ul>
+<li>CalendarScheduler</li>
+<li>HeapScheduler</li>
+<li>ListScheduler</li>
+<li>MapScheduler</li>
+</ul>
+<p>如果读者记性比较好应该还记得在配置路径一章，提到过NS-3有几个全局属性，其中一个就是用来配置NS-3使用的调度器的。这个属性就是SchedulerType，其默认值为ns3::MapScheduler。如果需要使用其他的调度器，可以在仿真开始之前直接修改这个属性的值为其他几个类。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+		<div>
+					
+						
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+  
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script src="https://cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <p><span>本文标题:</span><a href="/2018/11/01/ns3-012/">NS-3学习笔记（十二）：事件与调度器</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 Rain Sia <rainsia@163.com> 的个人博客">Rain Sia <rainsia@163.com></a></p>
+  <p><span>发布时间:</span>2018年11月01日 - 16:11</p>
+  <p><span>最后更新:</span>2018年11月17日 - 23:11</p>
+  <p><span>原始链接:</span>
+		<a href="/2018/11/01/ns3-012/" title="NS-3学习笔记（十二）：事件与调度器">
+			http://rainsia.github.io/2018/11/01/ns3-012/
+		</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="http://rainsia.github.io/2018/11/01/ns3-012/"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>版权信息:</span>本文为作者原创文章，如需进行非商业性转载，请注明出处并保留原文链接及作者。如要进行商业性转载，请获得作者授权！</p>  
+  <p><span>联系方式:</span>rainsia@163.com</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+      $(".fa-clipboard").click(function(){
+      clipboard.on('success', function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success", 
+          showConfirmButton: true
+          });
+        });
+    });  
+</script>
+
+
+					
+		</div>
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/NS-3/" rel="tag"># NS-3</a>
+          
+            <a href="/tags/C/" rel="tag"># C++</a>
+          
+            <a href="/tags/Simulation/" rel="tag"># Simulation</a>
+          
+            <a href="/tags/Simulator/" rel="tag"># Simulator</a>
+          
+            <a href="/tags/Scheduler/" rel="tag"># Scheduler</a>
+          
+            <a href="/tags/Event/" rel="tag"># Event</a>
+          
+            <a href="/tags/EventId/" rel="tag"># EventId</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/10/31/ns3-011/" rel="next" title="NS-3学习笔记（十一）：命令行">
+                <i class="fa fa-chevron-left"></i> NS-3学习笔记（十一）：命令行
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.gif"
+                alt="Rain Sia <rainsia@163.com>" />
+            
+              <p class="site-author-name" itemprop="name">Rain Sia <rainsia@163.com></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">16</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">6</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">41</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-NS3离散事件调度简介"><span class="nav-text">1. NS3离散事件调度简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-事件（Event）"><span class="nav-text">2. 事件（Event）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-仿真器（Simulator）调度事件"><span class="nav-text">3. 仿真器（Simulator）调度事件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-NS-3当中的时间"><span class="nav-text">4. NS-3当中的时间</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Time的时间精度"><span class="nav-text">Time的时间精度</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#时间类的使用"><span class="nav-text">时间类的使用</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#调度器（Scheduler）"><span class="nav-text">调度器（Scheduler）</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Rain Sia, All rights reserved.<br/>本站所有原创文章，如进行非商业目的转载，请注明出处。若要进行商业目的转载，必须取得授权。<br/>--作者</span>
+
+  
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动 v3.5.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Gemini</a> v6.4.2</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv" title="总访客量">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="site-pv" title="总访问量">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.4.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.4.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.4.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.4.2"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.4.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.4.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.4.2"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  
+  
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(function (item) {
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'KSHKjGm3HfpWAPzaHoA4NV0H-gzGzoHsz',
+        appKey: '55JA7fexBRQej1dHDpuxfTA0',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        meta:guest,
+        pageSize:'10' || 10,
+        visitor: false
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

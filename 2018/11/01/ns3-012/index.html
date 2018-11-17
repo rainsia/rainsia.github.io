@@ -116,11 +116,11 @@
 <meta name="keywords" content="NS-3,C++,Simulation,Simulator,Scheduler,Event,EventId">
 <meta property="og:type" content="article">
 <meta property="og:title" content="NS-3学习笔记（十二）：事件与调度器">
-<meta property="og:url" content="http://rainsia.gitee.io/2018/11/01/ns3-012/index.html">
+<meta property="og:url" content="http://rainsia.github.io/2018/11/01/ns3-012/index.html">
 <meta property="og:site_name" content="Rain&#39;s Blog">
 <meta property="og:description" content="本章主要介绍NS-3当中的事件与调度器。NS-3本质上是一个离散事件的调度器。其执行过程是按事件的发生时间来推进的。NS-3的事件与调度API提供了添加取消调度事件的功能。同时，NS-3提供了多种不同的调度器实现。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-11-17T15:28:07.837Z">
+<meta property="og:updated_time" content="2018-11-17T15:30:19.357Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="NS-3学习笔记（十二）：事件与调度器">
 <meta name="twitter:description" content="本章主要介绍NS-3当中的事件与调度器。NS-3本质上是一个离散事件的调度器。其执行过程是按事件的发生时间来推进的。NS-3的事件与调度API提供了添加取消调度事件的功能。同时，NS-3提供了多种不同的调度器实现。">
@@ -130,7 +130,7 @@
 
 
 
-  <link rel="canonical" href="http://rainsia.gitee.io/2018/11/01/ns3-012/"/>
+  <link rel="canonical" href="http://rainsia.github.io/2018/11/01/ns3-012/"/>
 
 
 
@@ -315,7 +315,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://rainsia.gitee.io/2018/11/01/ns3-012/">
+    <link itemprop="mainEntityOfPage" href="http://rainsia.github.io/2018/11/01/ns3-012/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Rain Sia <rainsia@163.com>">
@@ -374,7 +374,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2018-11-17 23:28:07" itemprop="dateModified" datetime="2018-11-17T23:28:07+08:00">2018-11-17</time>
+                <time title="修改时间：2018-11-17 23:30:19" itemprop="dateModified" datetime="2018-11-17T23:30:19+08:00">2018-11-17</time>
               
             
           </span>
@@ -494,16 +494,16 @@
 <p>可见，在仿真开始之前通过ScheduleNow调度的事件将在第0秒执行。再仿真开始之后通过ScheduleNow调度的事件将在和调度时相同的时间执行。</p>
 <p>除此之外，Simulator还提供了另外一个系列的事件调度接口：Simulator::ScheduleWithContext()。这个方法和前面介绍的Simulator::Schedule()方法类似，唯一的区别是多了第一个参数uint32_t context。表示调度事件时的上下文。这个上下文调度的时候，用户可以任意指定一个意义。但是在NS-3当中，这个参数的意义一般被认为是Node的id。因此，我们才能够在程序中分辨哪个事件是在哪个节点中调用的。而我们在做日志的时候，也可以开启节点前缀（参见日志一章）。当一个事件没有与任何一个节点相关联的时候，其上下文参数为0xffffffff（最大值）。</p>
 <h1 id="4-NS-3当中的时间"><a href="#4-NS-3当中的时间" class="headerlink" title="4. NS-3当中的时间"></a>4. NS-3当中的时间</h1><p>我们在上面进行调度的时候Schedule()方法，需要传入一个延迟时间，其类型是Time，而我们在调用的使用使用的是Seconds()函数来创建时间。当然，如果英文具有初中水品的话，也能知道Seconds()函数创建的时间单位为秒。我们也可以传入浮点数，例如Seconds(0.2)，那么将创建一个时间为0.2秒，也就是200毫秒。我们不禁想问：Time类究竟是如何存储时间数据的？Time类能表示的时间精度究竟是多少？能支持高速网络当中的时间精度吗？</p>
-<h2 id="Time的时间精度"><a href="#Time的时间精度" class="headerlink" title="Time的时间精度"></a>Time的时间精度</h2><p>首先，我们来分析，Time类储存的时候究竟使用的什么精度。直接看代码：</p>
+<h2 id="4-1-Time的时间精度"><a href="#4-1-Time的时间精度" class="headerlink" title="4.1. Time的时间精度"></a>4.1. Time的时间精度</h2><p>首先，我们来分析，Time类储存的时候究竟使用的什么精度。直接看代码：</p>
 <figure class="highlight cpp"><figcaption><span>nstime.h</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Time</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="keyword">enum</span> Unit</span><br><span class="line">  &#123;</span><br><span class="line">    Y   = <span class="number">0</span>,   <span class="comment">//!&lt; year, 365 days</span></span><br><span class="line">    D   = <span class="number">1</span>,   <span class="comment">//!&lt; day, 24 hours</span></span><br><span class="line">    H   = <span class="number">2</span>,   <span class="comment">//!&lt; hour, 60 minutes</span></span><br><span class="line">    MIN = <span class="number">3</span>,   <span class="comment">//!&lt; minute, 60 seconds</span></span><br><span class="line">    S   = <span class="number">4</span>,   <span class="comment">//!&lt; second</span></span><br><span class="line">    MS  = <span class="number">5</span>,   <span class="comment">//!&lt; millisecond</span></span><br><span class="line">    US  = <span class="number">6</span>,   <span class="comment">//!&lt; microsecond</span></span><br><span class="line">    NS  = <span class="number">7</span>,   <span class="comment">//!&lt; nanosecond</span></span><br><span class="line">    PS  = <span class="number">8</span>,   <span class="comment">//!&lt; picosecond</span></span><br><span class="line">    FS  = <span class="number">9</span>,   <span class="comment">//!&lt; femtosecond</span></span><br><span class="line">    LAST = <span class="number">10</span></span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  ……</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">  <span class="keyword">int64_t</span> m_data;  <span class="comment">//!&lt; Virtual time value, in the current unit.</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>首先从这段代码可以看出，NS-3支持的最小的时间精度是飞秒(femtosecond)。$1\text{fs} = 10^{-15}\text{s}$。这个时间精度对于任何方针都足够（多余）了，这几乎已经接近物理极限了。任何网络上的事件几乎都不可能在这个精度下发生。其次，实际存储时间数据的变量是m_data，它的类型是一个64位的整数。因此，一旦确定了时间精度，那么NS-3的Time类所能表示时间绝对值的最小值和最大值也就确定了。例如，如果时间单位选定是飞秒，那么最小时间精度就是1飞秒，最大时间跨度就是$2^{64}-1$飞秒，也就是18446秒，约307分钟。当然，这种时间跨度，一个规模稍稍大些的仿真都能超过这个时间。如果选定的时间单位为纳秒（ns）。$1\text{ns} = 10^{-9}\text{s}$。那么最小时间精度为1纳秒，最大时间跨度为$2^{64}-1$纳秒，也就是约7116个月。一般的方针几乎都不会超过这个时间，除非进行整个Internet的长时间仿真，但这是不可能通过仿真来完成的工作。</p>
+<p>首先从这段代码可以看出，NS-3支持的最小的时间精度是飞秒(femtosecond)。$1\text{fs} = 10^{-15}\text{s}$。这个时间精度对于任何方针都足够（多余）了，这几乎已经接近物理极限了。任何网络上的事件几乎都不可能在这个精度下发生。其次，实际存储时间数据的变量是m_data，它的类型是一个64位的整数。因此，一旦确定了时间精度，那么NS-3的Time类所能表示时间绝对值的最小值和最大值也就确定了。例如，如果时间单位选定是飞秒，那么最小时间精度就是1飞秒，最大时间跨度就是$2^{64}-1$飞秒，也就是18446秒，约307分钟。当然，这种时间跨度，一个规模稍稍大些的仿真都能超过这个时间。如果选定的时间单位为纳秒（ns）。$1\text{ns} = 10^{-9}\text{s}$。那么最小时间精度为1纳秒，最大时间跨度为$2^{64}-1$纳秒，也就是约7116个月。一般的仿真几乎都不会超过这个时间，除非进行整个Internet的长时间仿真，但这是不可能通过仿真来完成的工作。</p>
 <p>我们继续看Time类的代码：</p>
 <figure class="highlight cpp"><figcaption><span>nstime.h</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">/** Current time unit, and conversion info. */</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Resolution</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">Information</span> <span class="title">info</span>[<span class="title">LAST</span>];</span>  <span class="comment">//!&lt;  Conversion info from current unit</span></span><br><span class="line">  <span class="keyword">enum</span> Time::Unit unit;           <span class="comment">//!&lt;  Current time unit</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> *  Get the current Resolution</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * \return A pointer to the current Resolution</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">inline</span> struct Resolution *<span class="title">PeekResolution</span> <span class="params">(<span class="keyword">void</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">static</span> <span class="class"><span class="keyword">struct</span> <span class="title">Time</span>:</span>:Resolution resolution = SetDefaultNsResolution ();</span><br><span class="line">  <span class="keyword">return</span> &amp; resolution;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Time</span>:</span>:Resolution</span><br><span class="line">Time::SetDefaultNsResolution (<span class="keyword">void</span>)</span><br><span class="line">&#123;</span><br><span class="line">  NS_LOG_FUNCTION_NOARGS ();</span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">Resolution</span> <span class="title">resolution</span>;</span></span><br><span class="line">  SetResolution (Time::NS, &amp;resolution, <span class="literal">false</span>);</span><br><span class="line">  <span class="keyword">return</span> resolution;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>从代码当中可以看出，Time类使用Resolution结构体来表示时间的精度（分辨率）。使用PeekResolution()方法来查看当前使用的分辨率。而该方法当中定义了一个静态变量（这个变量在类的生命周期当中只会创建一次，并由所有实例共享）resolution，并将变量通过SetDefaultNsResolution()方法来初始化。而SetDefaultNsResolution()方法返回的默认精度为纳秒。至此，我们已经清楚了Time类使用的默认时间精度为ns，最大时间跨度为：7116个月，约593年。从各个方面来看，这都是一个比较合理的默认精度选择。</p>
 <p>如果觉得时间精度不合理，Time类提供了一个静态方法SetResolution()来设置时间精度：</p>
 <figure class="highlight cpp"><figcaption><span>nstime.h</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">SetResolution</span> <span class="params">(<span class="keyword">enum</span> Unit unit, struct Resolution *resolution,</span></span></span><br><span class="line"><span class="function"><span class="params">                           <span class="keyword">const</span> <span class="keyword">bool</span> convert = <span class="literal">true</span>)</span></span>;</span><br></pre></td></tr></table></figure>
 <p>这个方法最好在任何仿真开始之前调用。当然，如果在仿真开始之后调用也没有太大问题，在调整精度之前创建的所有Time对象都会被更新为新的时间精度。然而，这种更新在整个仿真期间只能发生一次。<strong>第二次更新时间精度，在更新之前创建的时间对象都不会再被更新。</strong></p>
-<h2 id="时间类的使用"><a href="#时间类的使用" class="headerlink" title="时间类的使用"></a>时间类的使用</h2><p>时间类实现了如下操作符和函数的重载： </p>
+<h2 id="4-2-时间类的使用"><a href="#4-2-时间类的使用" class="headerlink" title="4.2. 时间类的使用"></a>4.2. 时间类的使用</h2><p>时间类实现了如下操作符和函数的重载： </p>
 <ul>
 <li>算术运算符：+, -, +=, -=; </li>
 <li>关系运算符：==, !=, &lt;, &gt;, &lt;=, &gt;=</li>
@@ -523,7 +523,7 @@
 <p>因此我们可以将第一个程序使用这种方式进行重写：</p>
 <figure class="highlight cpp"><figcaption><span>try-schedule.cc</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"ns3/core-module.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> ns3;</span><br><span class="line"></span><br><span class="line">NS_LOG_COMPONENT_DEFINE (<span class="string">"TrySchedule"</span>);</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">doSomething</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  NS_LOG_INFO(<span class="string">"Let's do something."</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> </span><br><span class="line">main (<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span><br><span class="line">&#123;</span><br><span class="line">  LogComponentEnable(<span class="string">"TrySchedule"</span>, LOG_LEVEL_ALL);</span><br><span class="line">  LogComponentEnable(<span class="string">"TrySchedule"</span>, LOG_PREFIX_TIME);</span><br><span class="line"></span><br><span class="line">  Simulator::Schedule(Time(<span class="string">"1.5s"</span>), &amp;doSomething);</span><br><span class="line"></span><br><span class="line">  Simulator::Run ();</span><br><span class="line">  Simulator::Destroy ();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>运行之后，也能得到同样的效果。</p>
-<h1 id="调度器（Scheduler）"><a href="#调度器（Scheduler）" class="headerlink" title="调度器（Scheduler）"></a>调度器（Scheduler）</h1><p>Simulator所调度的事件实际是通过调度器Scheduler来进行调度的，调度器的主要功能就是对添加的事件进行排序，并维护事件列表，然后依次调用这些事件。在NS-3当中存在着多种不同的调度器，这些调度器通过乐不同的调度性能。</p>
+<h1 id="5-调度器（Scheduler）"><a href="#5-调度器（Scheduler）" class="headerlink" title="5. 调度器（Scheduler）"></a>5. 调度器（Scheduler）</h1><p>Simulator所调度的事件实际是通过调度器Scheduler来进行调度的，调度器的主要功能就是对添加的事件进行排序，并维护事件列表，然后依次调用这些事件。在NS-3当中存在着多种不同的调度器，这些调度器通过乐不同的调度性能。</p>
 <p>NS-3提供的调度器类主要有：</p>
 <ul>
 <li>CalendarScheduler</li>
@@ -561,9 +561,9 @@
   <p><span>最后更新:</span>2018年11月17日 - 23:11</p>
   <p><span>原始链接:</span>
 		<a href="/2018/11/01/ns3-012/" title="NS-3学习笔记（十二）：事件与调度器">
-			http://rainsia.gitee.io/2018/11/01/ns3-012/
+			http://rainsia.github.io/2018/11/01/ns3-012/
 		</a>
-    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="http://rainsia.gitee.io/2018/11/01/ns3-012/"  aria-label="复制成功！"></i></span>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="http://rainsia.github.io/2018/11/01/ns3-012/"  aria-label="复制成功！"></i></span>
   </p>
   <p><span>版权信息:</span>本文为作者原创文章，如需进行非商业性转载，请注明出处并保留原文链接及作者。如要进行商业性转载，请获得作者授权！</p>  
   <p><span>联系方式:</span>rainsia@163.com</p>  
@@ -860,7 +860,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-NS3离散事件调度简介"><span class="nav-text">1. NS3离散事件调度简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-事件（Event）"><span class="nav-text">2. 事件（Event）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-仿真器（Simulator）调度事件"><span class="nav-text">3. 仿真器（Simulator）调度事件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-NS-3当中的时间"><span class="nav-text">4. NS-3当中的时间</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Time的时间精度"><span class="nav-text">Time的时间精度</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#时间类的使用"><span class="nav-text">时间类的使用</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#调度器（Scheduler）"><span class="nav-text">调度器（Scheduler）</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-NS3离散事件调度简介"><span class="nav-text">1. NS3离散事件调度简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-事件（Event）"><span class="nav-text">2. 事件（Event）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-仿真器（Simulator）调度事件"><span class="nav-text">3. 仿真器（Simulator）调度事件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-NS-3当中的时间"><span class="nav-text">4. NS-3当中的时间</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#4-1-Time的时间精度"><span class="nav-text">4.1. Time的时间精度</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-2-时间类的使用"><span class="nav-text">4.2. 时间类的使用</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-调度器（Scheduler）"><span class="nav-text">5. 调度器（Scheduler）</span></a></li></ol></div>
             
 
           </div>

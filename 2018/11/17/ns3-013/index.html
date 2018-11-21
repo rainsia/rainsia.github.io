@@ -116,29 +116,29 @@
 <meta name="keywords" content="NS-3,C++,Simulation,Random Number,Random Variable,RandomStream">
 <meta property="og:type" content="article">
 <meta property="og:title" content="NS-3学习笔记（十三）：随机数生成器">
-<meta property="og:url" content="http://rainsia.gitee.io/2018/11/17/ns3-013/index.html">
+<meta property="og:url" content="http://rainsia.github.io/2018/11/17/ns3-013/index.html">
 <meta property="og:site_name" content="Rain&#39;s Blog">
 <meta property="og:description" content="本章主要介绍NS-3当中的（伪）随机数生成器。NS-3提供了简单方便的随机数类型，可以生成各种分布的随机数。随机数生成器也属于NS-3对象框架的类，适用一切对象框架中的特性。此外，随机数可以作为属性值，并且方便地从字符串创建。为了生成互不相交的随机数序列，NS-3使用了随机数流的概念，保证不同的随机数生成器的实例当中，生成的随机数尽量不存在相互交叉的情况。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://rainsia.gitee.io/2018/11/17/ns3-013/uniform.png">
-<meta property="og:image" content="http://rainsia.gitee.io/2018/11/17/ns3-013/constant.png">
-<meta property="og:image" content="http://rainsia.gitee.io/2018/11/17/ns3-013/sequential.png">
-<meta property="og:image" content="http://rainsia.gitee.io/2018/11/17/ns3-013/normal.png">
-<meta property="og:image" content="http://rainsia.gitee.io/2018/11/17/ns3-013/exponential.png">
-<meta property="og:image" content="http://rainsia.gitee.io/2018/11/17/ns3-013/pareto.png">
-<meta property="og:image" content="http://rainsia.gitee.io/2018/11/17/ns3-013/geometric.png">
-<meta property="og:updated_time" content="2018-11-21T13:41:22.492Z">
+<meta property="og:image" content="http://rainsia.github.io/2018/11/17/ns3-013/uniform.png">
+<meta property="og:image" content="http://rainsia.github.io/2018/11/17/ns3-013/constant.png">
+<meta property="og:image" content="http://rainsia.github.io/2018/11/17/ns3-013/sequential.png">
+<meta property="og:image" content="http://rainsia.github.io/2018/11/17/ns3-013/normal.png">
+<meta property="og:image" content="http://rainsia.github.io/2018/11/17/ns3-013/exponential.png">
+<meta property="og:image" content="http://rainsia.github.io/2018/11/17/ns3-013/pareto.png">
+<meta property="og:image" content="http://rainsia.github.io/2018/11/17/ns3-013/geometric.png">
+<meta property="og:updated_time" content="2018-11-21T13:43:10.524Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="NS-3学习笔记（十三）：随机数生成器">
 <meta name="twitter:description" content="本章主要介绍NS-3当中的（伪）随机数生成器。NS-3提供了简单方便的随机数类型，可以生成各种分布的随机数。随机数生成器也属于NS-3对象框架的类，适用一切对象框架中的特性。此外，随机数可以作为属性值，并且方便地从字符串创建。为了生成互不相交的随机数序列，NS-3使用了随机数流的概念，保证不同的随机数生成器的实例当中，生成的随机数尽量不存在相互交叉的情况。">
-<meta name="twitter:image" content="http://rainsia.gitee.io/2018/11/17/ns3-013/uniform.png">
+<meta name="twitter:image" content="http://rainsia.github.io/2018/11/17/ns3-013/uniform.png">
 
 
 
 
 
 
-  <link rel="canonical" href="http://rainsia.gitee.io/2018/11/17/ns3-013/"/>
+  <link rel="canonical" href="http://rainsia.github.io/2018/11/17/ns3-013/"/>
 
 
 
@@ -323,7 +323,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://rainsia.gitee.io/2018/11/17/ns3-013/">
+    <link itemprop="mainEntityOfPage" href="http://rainsia.github.io/2018/11/17/ns3-013/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Rain Sia <rainsia@163.com>">
@@ -382,7 +382,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2018-11-21 21:41:22" itemprop="dateModified" datetime="2018-11-21T21:41:22+08:00">2018-11-21</time>
+                <time title="修改时间：2018-11-21 21:43:10" itemprop="dateModified" datetime="2018-11-21T21:43:10+08:00">2018-11-21</time>
               
             
           </span>
@@ -596,7 +596,7 @@
 <p><img src="exponential.png" alt="指数分布随机数的直方图" title="指数分布随机数的直方图"></p>
 <h2 id="2-7-ParetoRandomVariable"><a href="#2-7-ParetoRandomVariable" class="headerlink" title="2.7. ParetoRandomVariable"></a>2.7. ParetoRandomVariable</h2><p>ParetoRandomVariable被称为帕累托分布，是一种重尾分布（heavy-tailed distribution）。所谓重尾分布（Heavy-tailed distribution）是一种概率分布模型，它的尾部比指数分布还要厚。在许多情况下，右边尾部的部分比较受到重视，但左边尾部比较厚，或是两边尾部都比较厚的状况，也被认为是一种重尾分布。</p>
 <p>重尾分布意味着可以更大的概率获得很大的值. 因此与弱随机性相反，重尾分布一般表示病态，增加的各种结果被确定为具有重尾分布，包括收入分布、财务报告、保险支出、网页的参考链接等。重尾分布的一个特殊的子集是幂律，其意味着概率密度函数是一个幂。 一个技术难题是，不是所有的矩存在于这些分布，这一般意味着它们使用分位数和其它顺序统计学。这也就是说，中心极限定理不再成立。但是对于诸如均值，即稳定分布的线性组合，我们获得一个新的标准极限分布。</p>
-<p>设$X$是一个随机变量，$F(X)=Pr\{X&lt;x\}$为它的分布函数，如果当$x\to \infty$时$1-F(X)~1/x^{a}$其中$x&gt;a$，称X的分布为重尾分布，又称幂律分布。</p>
+<p>设$X$是一个随机变量，$F(X)=Pr\{X&lt;x\}$为它的分布函数，如果当$x\to \infty$时$1-F(X)\~1/x^{a}$其中$x&gt;a$，称X的分布为重尾分布，又称幂律分布。</p>
 <p>一般来说，服从重尾分布的随机变量X具有较大甚至是无穷大的方差，而且当$a\le 1$时，X的均值也是无穷的。随机变量X会以不可忽略的概率取到非常大的数值，即：大量的小抽样取值和少量的大抽样取值并存。</p>
 <p>在1994年，随着网络研究人员Leland的一篇文章“On the self-similar nature of Ethernet traffic”的发表，网络研究界平地一声雷，引起了轩然大波。传统的基于泊松分布的网络分析模型不能准确描述真实网络流量的特性。“网络流量自相似”、“网络流量长相关”等说法逐渐普及。由于流量模型是网络性能分析的基础，而在自相似流量下，网络的特性和传统短相关流量下，有非常大的不同。一时间，各种自相似流量模型兴起。其中一种就是基于重尾分布建立的。重尾分布有很多种。Pareto是比较容易生成的其中一种。</p>
 <p>帕累托分布一共有4个属性：</p>
@@ -606,7 +606,7 @@
 <li>Shape，帕累托分布的形状参数，一般记为$\alpha$，浮点数，默认值为2。</li>
 <li>Bound，上限，用于控制帕累托随机变量生成得值的上限，浮点数，默认值为0，表示不限制。</li>
 </ul>
-<p>当Shape属性值$\alpha \le 1$时，帕累托分布的随机变量具有无穷的均值。当$\alpha\le 2$时，帕累托分布的随机变量具有无穷的方差。当$\alpha \in (1,2) $时，具有均值，但是方差为无穷。当$\alpha &gt; 2$时，均值和方差均存在，且有限，计算公式为：$E(X) = \frac{Scale \teims Shape}{Shape - 1}$。当然，如果Bound属性设置为非零值，那么产生的随机数的均值会比计算值小一些。</p>
+<p>当Shape属性值$\alpha \le 1$时，帕累托分布的随机变量具有无穷的均值。当$\alpha\le 2$时，帕累托分布的随机变量具有无穷的方差。当$\alpha \in (1,2) $时，具有均值，但是方差为无穷。当$\alpha &gt; 2$时，均值和方差均存在，且有限，计算公式为：$E(X) = \frac{Scale \times Shape}{Shape - 1}$。当然，如果Bound属性设置为非零值，那么产生的随机数的均值会比计算值小一些。</p>
 <p>我们用下面的程序来演示帕累托分布的使用：</p>
 <figure class="highlight cpp"><figcaption><span>try-pareto-random.cc</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"ns3/core-module.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> ns3;</span><br><span class="line"></span><br><span class="line">NS_LOG_COMPONENT_DEFINE (<span class="string">"TryParetoRandom"</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> </span><br><span class="line">main (<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span><br><span class="line">&#123;</span><br><span class="line"></span><br><span class="line">  LogComponentEnable(<span class="string">"TryParetoRandom"</span>, LOG_LEVEL_INFO);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> <span class="keyword">double</span> SCALE = <span class="number">5.0</span>;</span><br><span class="line">  <span class="keyword">const</span> <span class="keyword">double</span> SHAPE = <span class="number">2.0</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> <span class="keyword">uint32_t</span> MAX_NUMBERS = <span class="number">10</span>;</span><br><span class="line"></span><br><span class="line">  Ptr&lt;ParetoRandomVariable&gt; x = CreateObject&lt;ParetoRandomVariable&gt; ();</span><br><span class="line">  x-&gt;SetAttribute (<span class="string">"Scale"</span>, DoubleValue (SCALE));</span><br><span class="line">  x-&gt;SetAttribute (<span class="string">"Shape"</span>, DoubleValue (SHAPE));</span><br><span class="line"></span><br><span class="line">  <span class="keyword">for</span>(<span class="keyword">uint32_t</span> i = <span class="number">0</span>; i &lt; MAX_NUMBERS; i++) &#123;</span><br><span class="line">    <span class="keyword">double</span> value = x-&gt;GetValue ();</span><br><span class="line">    NS_LOG_INFO(value);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  Simulator::Run ();</span><br><span class="line">  Simulator::Destroy ();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>运行程序，得到如下结果：</p>
@@ -713,9 +713,9 @@
   <p><span>最后更新:</span>2018年11月21日 - 21:11</p>
   <p><span>原始链接:</span>
 		<a href="/2018/11/17/ns3-013/" title="NS-3学习笔记（十三）：随机数生成器">
-			http://rainsia.gitee.io/2018/11/17/ns3-013/
+			http://rainsia.github.io/2018/11/17/ns3-013/
 		</a>
-    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="http://rainsia.gitee.io/2018/11/17/ns3-013/"  aria-label="复制成功！"></i></span>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="http://rainsia.github.io/2018/11/17/ns3-013/"  aria-label="复制成功！"></i></span>
   </p>
   <p><span>版权信息:</span>本文为作者原创文章，如需进行非商业性转载，请注明出处并保留原文链接及作者。如要进行商业性转载，请获得作者授权！</p>  
   <p><span>联系方式:</span>rainsia@163.com</p>  

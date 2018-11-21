@@ -116,11 +116,11 @@
 <meta name="keywords" content="NS-3,C++,Simulation,Random Number,Random Variable,RandomStream">
 <meta property="og:type" content="article">
 <meta property="og:title" content="NS-3学习笔记（十三）：随机数生成器">
-<meta property="og:url" content="http://rainsia.gitee.io/2018/11/17/ns3-013/index.html">
+<meta property="og:url" content="http://rainsia.github.io/2018/11/17/ns3-013/index.html">
 <meta property="og:site_name" content="Rain&#39;s Blog">
 <meta property="og:description" content="本章主要介绍NS-3当中的（伪）随机数生成器。NS-3提供了简单方便的随机数类型，可以生成各种分布的随机数。随机数生成器也属于NS-3对象框架的类，适用一切对象框架中的特性。此外，随机数可以作为属性值，并且方便地从字符串创建。为了生成互不相交的随机数序列，NS-3使用了随机数流的概念，保证不同的随机数生成器的实例当中，生成的随机数尽量不存在相互交叉的情况。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-11-19T17:24:28.953Z">
+<meta property="og:updated_time" content="2018-11-21T13:19:37.156Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="NS-3学习笔记（十三）：随机数生成器">
 <meta name="twitter:description" content="本章主要介绍NS-3当中的（伪）随机数生成器。NS-3提供了简单方便的随机数类型，可以生成各种分布的随机数。随机数生成器也属于NS-3对象框架的类，适用一切对象框架中的特性。此外，随机数可以作为属性值，并且方便地从字符串创建。为了生成互不相交的随机数序列，NS-3使用了随机数流的概念，保证不同的随机数生成器的实例当中，生成的随机数尽量不存在相互交叉的情况。">
@@ -130,7 +130,7 @@
 
 
 
-  <link rel="canonical" href="http://rainsia.gitee.io/2018/11/17/ns3-013/"/>
+  <link rel="canonical" href="http://rainsia.github.io/2018/11/17/ns3-013/"/>
 
 
 
@@ -315,7 +315,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://rainsia.gitee.io/2018/11/17/ns3-013/">
+    <link itemprop="mainEntityOfPage" href="http://rainsia.github.io/2018/11/17/ns3-013/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Rain Sia <rainsia@163.com>">
@@ -374,7 +374,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2018-11-20 01:24:28" itemprop="dateModified" datetime="2018-11-20T01:24:28+08:00">2018-11-20</time>
+                <time title="修改时间：2018-11-21 21:19:37" itemprop="dateModified" datetime="2018-11-21T21:19:37+08:00">2018-11-21</time>
               
             
           </span>
@@ -481,23 +481,6 @@
 <p>因此我们期望有一种简单的方式，来保证不同的随机数生成器能够产生相互独立的随机数序列。</p>
 <h2 id="1-3-随机数的周期"><a href="#1-3-随机数的周期" class="headerlink" title="1.3. 随机数的周期"></a>1.3. 随机数的周期</h2><p>大部分的随机数生成器，都只能生成预定的随机数序列。而这个序列是有一定长度的。一个随机数所能生成的，最大的随机数序列长度，被称为随机数的周期（cycle或者period）。在我们生成随机数的数量，超过随机数的周期时，这个序列将重复已经生成过的值。因此我们一般希望随机数周期足够的长。</p>
 <p>如果能够提供一个周期足够长的随机数生成算法，那么第二个问题就将迎刃而解。例如，我们有一个周期足够长的随机数生成器，它能够生成的不重叠的随机数序列（流stream）的长度为N。那么我们可以将这个序列划分为m段，每一段称为一个子序列（或者子流substream）。因此，我们可以保证子序列和子序列之间，不会重叠，相互独立。</p>
-<h1 id="2-NS-3的随机数生成器"><a href="#2-NS-3的随机数生成器" class="headerlink" title="2. NS-3的随机数生成器"></a>2. NS-3的随机数生成器</h1><p>NS-3使用的随机数生成算法是加拿大蒙特利尔大学教授Pierre L’Ecuyer提出的MRG32k3a生成器（具体原理可以看<a href="http://www.iro.umontreal.ca/~lecuyer/myftp/papers/streams00.pdf" target="_blank" rel="noopener">这里</a>）。它能够生成的随机数序列的周期为$3.7\times 10^{57}$。这个周期是什么概念？夸张一点，假设我们可以一纳秒生成一个随机数，那么要达到这个周期需要约$1.189\times 10^{41}$年。可以对比的是根据大爆炸理论，现在宇宙的年龄为$1.382\times 10^{10}$……到宇宙毁灭都用不完这么多随机数啊。因此，我们可以将这么长的序列分成多段，形成不同的子流。L’Ecuyer等人将随机数流划分为$1.8\times 10^{19}$个相互独立的流，而每个流又划分为$2.3\times 10^{15}$，每个子流的长度为$7.6\times 10^{22}$。需要$2.443\times 10^{6}$年，即约20万年可以用完这个随机数子流。</p>
-<p>因此，对于上面提到的三个衡量准则，该算法：</p>
-<ul>
-<li>可以选择不同的流来获得随机性，同时，可以固定一个流来获得确定性。</li>
-<li>对于一个特定的流，不同的随机数生成器实例可以选择不同的子流来保证相互的独立性。</li>
-<li>随机数生成器的周期长到可以为所欲为。</li>
-</ul>
-<p>如果你足够细心的话可能还记得我们在配置路径一章提到过NS-3提供了5个全局属性。其中和随机数生成的属性一个有两个：RngSeed和RngRun。其中RngSeed即表示随机数种子。随机数的种子设置不同的值的话，可以保证随机数生成不同的序列，这可以用以保证随机性。但如果需要重复相同的程序结果，可以保持随机数种子不变，以保证确定性。除此之外，NS-3还提供了另外一个属性RngRun，通过修改这个参数，也可以改变随机数序列的随机性。那么这两个属性究竟有什么联系和区别呢？</p>
-<p>使用RngSeed和RunRun的一种典型的情况是对某个特定的仿真过程进行多次独立试验。以便根据大量的独立运行结果来计算统计信息。用户可以改变全局种子并再次运行该模拟过程，也可以推进随机数的流的状态,这被称为增加运行次数（run number）。</p>
-<p>那么设置新的种子和推进子流的状态,哪一个更好?当改变随机数种子的时候，我们无法保证流产生的两个随机种子不是互相重叠的，即两个不同的种子生成的随机数之间可能有一部分是相互重叠的。保证两个流不互相重叠的唯一办法是使用由生成算法实现提供的子流功能。使用子流功能来实现同一个模拟过程的多个彼此独立的运行。从统计意义上来说，设置独立的重复实验更严格的方法应该是使用固定的种子并改变运行次数（RngRun）。使用子流时，独立的重复实验的最大值为$2.3×10^{15}$（因为每个流只有这么多个子流）。</p>
-<p>总结：不同的随机数生成器实例对应不同的流，因此，各个生成器实例之间的随机数序列是相互独立的。不同的运行次数之间，某个生成器实例又使用不同的子流，因此，可以保证每个生成器实例在每次运行之间生成的随机数序列是独立的。</p>
-<p>除了设置全局属性之外，NS-3提供了另外一种方法来设置随机数的种子和运行次数：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">RngSeedManager::SetSeed (<span class="number">3</span>);  <span class="comment">// Changes seed from default of 1 to 3</span></span><br><span class="line">RngSeedManager::SetRun (<span class="number">7</span>);   <span class="comment">// Changes run number from default of 1 to 7</span></span><br></pre></td></tr></table></figure>
-<p>这和设置全局属性的效果是一样的。当然，设置随机数种子和运行次数需要在程序刚开始创建任何随机变量之前进行。</p>
-<p>当然这种方式每次修改种子和运行次数之后都会引起程序重新编译。由于RngSeed和RngRun都是全局属性，因此，我们也可以使用命令行一章介绍的方法来通过命令行参数修改他们的值：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ./waf --command-<span class="keyword">template</span>=<span class="string">"%s --RngSeed=3 --RngRun=7"</span> --run program-name</span><br></pre></td></tr></table></figure>
-<p>（未完待续……）</p>
 
       
     </div>
@@ -524,12 +507,12 @@
   <p><span>本文标题:</span><a href="/2018/11/17/ns3-013/">NS-3学习笔记（十三）：随机数生成器</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 Rain Sia <rainsia@163.com> 的个人博客">Rain Sia <rainsia@163.com></a></p>
   <p><span>发布时间:</span>2018年11月17日 - 23:11</p>
-  <p><span>最后更新:</span>2018年11月20日 - 01:11</p>
+  <p><span>最后更新:</span>2018年11月21日 - 21:11</p>
   <p><span>原始链接:</span>
 		<a href="/2018/11/17/ns3-013/" title="NS-3学习笔记（十三）：随机数生成器">
-			http://rainsia.gitee.io/2018/11/17/ns3-013/
+			http://rainsia.github.io/2018/11/17/ns3-013/
 		</a>
-    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="http://rainsia.gitee.io/2018/11/17/ns3-013/"  aria-label="复制成功！"></i></span>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="http://rainsia.github.io/2018/11/17/ns3-013/"  aria-label="复制成功！"></i></span>
   </p>
   <p><span>版权信息:</span>本文为作者原创文章，如需进行非商业性转载，请注明出处并保留原文链接及作者。如要进行商业性转载，请获得作者授权！</p>  
   <p><span>联系方式:</span>rainsia@163.com</p>  
@@ -830,7 +813,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-伪随机数生成器概述"><span class="nav-text">1. 伪随机数生成器概述</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1-确定的随机数序列"><span class="nav-text">1.1. 确定的随机数序列</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-2-独立的随机数序列"><span class="nav-text">1.2. 独立的随机数序列</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-3-随机数的周期"><span class="nav-text">1.3. 随机数的周期</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-NS-3的随机数生成器"><span class="nav-text">2. NS-3的随机数生成器</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-伪随机数生成器概述"><span class="nav-text">1. 伪随机数生成器概述</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1-确定的随机数序列"><span class="nav-text">1.1. 确定的随机数序列</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-2-独立的随机数序列"><span class="nav-text">1.2. 独立的随机数序列</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-3-随机数的周期"><span class="nav-text">1.3. 随机数的周期</span></a></li></ol></li></ol></div>
             
 
           </div>

@@ -116,11 +116,11 @@
 <meta name="keywords" content="NS-3,C++,Simulation,Hashing,Hash Functions,murmur3,FNV1a">
 <meta property="og:type" content="article">
 <meta property="og:title" content="NS-3学习笔记（十四）：NS-3中使用哈希函数（Hash functions）">
-<meta property="og:url" content="http://rainsia.gitee.io/2018/11/22/ns3-014/index.html">
+<meta property="og:url" content="http://rainsia.github.io/2018/11/22/ns3-014/index.html">
 <meta property="og:site_name" content="Rain&#39;s Blog">
 <meta property="og:description" content="本章主要介绍NS-3当中的哈希函数的使用。NS-3提供了一个使用哈希函数的通用的接口。可以方便地调用内置的哈希函数来将一个字节数组或者字符串转换成一个哈希值。根据底层算法的不同，哈希值可以是32位或者是64位的整数。NS-3默认使用的哈希算法是murmur3，它可以返回32和64位的值。可以轻易地使用其他哈希算法实现。如果NS-3所提供的哈希实现都无法达到要求，也可以方便地添加自己的实现。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-11-22T13:06:44.434Z">
+<meta property="og:updated_time" content="2018-11-22T13:19:55.448Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="NS-3学习笔记（十四）：NS-3中使用哈希函数（Hash functions）">
 <meta name="twitter:description" content="本章主要介绍NS-3当中的哈希函数的使用。NS-3提供了一个使用哈希函数的通用的接口。可以方便地调用内置的哈希函数来将一个字节数组或者字符串转换成一个哈希值。根据底层算法的不同，哈希值可以是32位或者是64位的整数。NS-3默认使用的哈希算法是murmur3，它可以返回32和64位的值。可以轻易地使用其他哈希算法实现。如果NS-3所提供的哈希实现都无法达到要求，也可以方便地添加自己的实现。">
@@ -130,7 +130,7 @@
 
 
 
-  <link rel="canonical" href="http://rainsia.gitee.io/2018/11/22/ns3-014/"/>
+  <link rel="canonical" href="http://rainsia.github.io/2018/11/22/ns3-014/"/>
 
 
 
@@ -315,7 +315,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://rainsia.gitee.io/2018/11/22/ns3-014/">
+    <link itemprop="mainEntityOfPage" href="http://rainsia.github.io/2018/11/22/ns3-014/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Rain Sia <rainsia@163.com>">
@@ -357,7 +357,7 @@
                 
               
 
-              <time title="创建时间：2018-11-22 09:30:42 / 修改时间：21:06:44" itemprop="dateCreated datePublished" datetime="2018-11-22T09:30:42+08:00">2018-11-22</time>
+              <time title="创建时间：2018-11-22 09:30:42 / 修改时间：21:19:55" itemprop="dateCreated datePublished" datetime="2018-11-22T09:30:42+08:00">2018-11-22</time>
             
 
             
@@ -500,6 +500,7 @@
 <p>运行得到如下结果：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Waf: Entering directory `/home/rainsia/Applications/ns-allinone-3.29/ns-3.29/build&apos;</span><br><span class="line">[1918/2059] Compiling scratch/try-class-hash.cc</span><br><span class="line">[2019/2059] Linking build/scratch/try-class-hash</span><br><span class="line">Waf: Leaving directory `/home/rainsia/Applications/ns-allinone-3.29/ns-3.29/build&apos;</span><br><span class="line">Build commands will be stored in build/compile_commands.json</span><br><span class="line">&apos;build&apos; finished successfully (12.296s)</span><br><span class="line">32bit hash: 0x999142a1</span><br><span class="line">64bit hash: 0xc417fd9c29ee4733</span><br></pre></td></tr></table></figure>
 <p>可见，轻松的实现自己的哈希算法。</p>
+<p>到本章为止，NS-3网络仿真的基础部分的知识都已经完全介绍完了。这部分的内容都主要集中在core这个模块中，这个模块是所有NS-3功能的基础。从下一章开始主要介绍NS-3网络建模仿真的基本概念，主要涉及core以外的其他模块，包括network、internet、traffic-control、point-to-point、point-to-point-layout、csma、application、internet-apps等模块，当然也可能涉及到其他的模块。</p>
 
       
     </div>
@@ -529,9 +530,9 @@
   <p><span>最后更新:</span>2018年11月22日 - 21:11</p>
   <p><span>原始链接:</span>
 		<a href="/2018/11/22/ns3-014/" title="NS-3学习笔记（十四）：NS-3中使用哈希函数（Hash functions）">
-			http://rainsia.gitee.io/2018/11/22/ns3-014/
+			http://rainsia.github.io/2018/11/22/ns3-014/
 		</a>
-    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="http://rainsia.gitee.io/2018/11/22/ns3-014/"  aria-label="复制成功！"></i></span>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="http://rainsia.github.io/2018/11/22/ns3-014/"  aria-label="复制成功！"></i></span>
   </p>
   <p><span>版权信息:</span>本文为作者原创文章，如需进行非商业性转载，请注明出处并保留原文链接及作者。如要进行商业性转载，请获得作者授权！</p>  
   <p><span>联系方式:</span>rainsia@163.com</p>  
